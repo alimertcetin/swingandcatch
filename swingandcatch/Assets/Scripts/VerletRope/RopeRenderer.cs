@@ -11,7 +11,7 @@ namespace TheGame.VerletRope
 
         Vector3[] positions;
 
-        void Awake()
+        void Start()
         {
             positions = new Vector3[rope.Segments];
             lineRenderer.enabled = true;
