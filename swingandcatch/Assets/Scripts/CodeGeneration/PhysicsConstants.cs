@@ -20,6 +20,8 @@ public static class PhysicsConstants
 	public static readonly int RopeLayer = LayerMask.NameToLayer("Rope");
 	public const string Ground = "Ground";
 	public static readonly int GroundLayer = LayerMask.NameToLayer("Ground");
+	public const string Player = "Player";
+	public static readonly int PlayerLayer = LayerMask.NameToLayer("Player");
 	
 } // class PhysicsConstants
  
