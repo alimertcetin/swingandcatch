@@ -23,7 +23,10 @@ namespace TheGame.FSM
         public void EnterState(State comingFrom)
         {
 #if UNITY_EDITOR
-            Debug.LogWarning(nameof(OnStateEnter).ToColorGreen() + " = " + this.GetType().Name);
+            if (FSMDebugSettings.IsStateChangeLogsEnabled)
+            {
+                Debug.LogWarning(nameof(OnStateEnter).ToColorGreen() + " = " + this.GetType().Name);
+            }
 #endif
             previousState = comingFrom;
             childStates = ListPool<State>.Get();
@@ -74,7 +77,10 @@ namespace TheGame.FSM
         public void ExitState()
         {
 #if UNITY_EDITOR
-            Debug.LogWarning(nameof(OnStateExit).ToColorRed() + " = " + this.GetType().Name);
+            if (FSMDebugSettings.IsStateChangeLogsEnabled)
+            {
+                Debug.LogWarning(nameof(OnStateExit).ToColorRed() + " = " + this.GetType().Name);
+            }
 #endif
             int childStateCount = childStates.Count;
             for (int i = 0; i < childStateCount; i++)
