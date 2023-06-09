@@ -7,10 +7,9 @@ namespace TheGame.PlayerSystems.States
 {
     public class PlayerJumpState : State<PlayerFSM, PlayerStateFactory>
     {
-        float initialYPos;
-        Timer jumpTimer;
         Timer nearRopeTimer = new Timer(0.25f);
         Timer waitGroundedTimer = new Timer(0.25f);
+        float yVelocity;
         
         public PlayerJumpState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -18,23 +17,20 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            initialYPos = stateMachine.transform.position.y;
-            jumpTimer = new Timer(Mathf.Sqrt(stateMachine.jumpForce / (0.5f * stateMachine.jumpHeight)));
+            yVelocity = CalculateJumpVelocity(stateMachine.jumpHeight);
         }
 
         protected override void OnStateUpdate()
         {
+            yVelocity += Physics.gravity.y * (stateMachine.jumpGravityScale * Time.fixedDeltaTime);
             var transform = stateMachine.transform;
-            var transformPosition = transform.position;
-            var normalizedTime = EasingFunction.SmoothStop2(jumpTimer.NormalizedTime);
-            transformPosition = transformPosition.SetY(initialYPos + (stateMachine.jumpHeight * normalizedTime - 0.5f * Physics2D.gravity.magnitude * normalizedTime * normalizedTime));
-            transform.position = transformPosition;
-            jumpTimer.Update(Time.deltaTime);
+            var pos = transform.position;
+            pos.y += yVelocity * Time.fixedDeltaTime;
+            transform.position = pos;
         }
 
         protected override void OnStateExit()
         {
-            jumpTimer.Restart();
             nearRopeTimer.Restart();
             waitGroundedTimer.Restart();
         }
@@ -53,7 +49,7 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
             
-            if (jumpTimer.IsDone)
+            if (yVelocity < 0f)
             {
                 ChangeRootState(factory.GetState<PlayerFallingState>());
                 return;
@@ -64,7 +60,13 @@ namespace TheGame.PlayerSystems.States
         {
             AddChildState(factory.GetState<OnAirMovementState>());
         }
-        
+
+        float CalculateJumpVelocity(float jumpHeight)
+        {
+            float gravity = Physics.gravity.y * stateMachine.jumpGravityScale;
+            float initialVelocity = Mathf.Sqrt(2f * jumpHeight * -gravity);
+            return initialVelocity;
+        }
         
     }
 }

@@ -12,10 +12,10 @@ namespace TheGame.PlayerSystems
         public float walkSpeed = 5f;
         public float runSpeed = 10f;
         public float airMovementSpeed = 7.5f;
-        public float jumpForce = 10f;
-        public float jumpHeight = 1f;
+        public float jumpHeight = 2f;
+        public float jumpGravityScale = 0.5f;
         public float groundCheckDistance = 0.5f;
-        public float fallSpeed = 0.5f;
+        public float fallGravityScale = 0.5f;
         public float climbCheckRadius = 2f;
         public float climbSpeed = 5f;
 
