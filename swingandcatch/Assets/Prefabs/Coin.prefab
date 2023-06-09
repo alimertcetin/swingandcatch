@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7708672441546246761}
   - component: {fileID: 7708672441546246760}
+  - component: {fileID: 9214835585071310745}
+  - component: {fileID: 4623509538000989014}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -46,6 +48,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinCollectedChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
+--- !u!114 &9214835585071310745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7708672441546246759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b991af15a1304c2099e51ef28f5dafe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: {x: 0, y: 1, z: 0}
+  moveDistance: 1
+  moveSpeed: 1
+  ease: 46
+--- !u!114 &4623509538000989014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7708672441546246759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d194fac1247173747a86221b7f48a556, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  axis: {x: 0, y: 1, z: 0}
+  speed: 80
 --- !u!1001 &6876186795204563011
 PrefabInstance:
   m_ObjectHideFlags: 0
