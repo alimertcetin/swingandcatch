@@ -45,17 +45,18 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _BackgroundIntensity: 3.76
+    - _BackgroundIntensity: 1.47
     - _ColorLerpT: 0.5
-    - _NoiseScale: 100
-    - _NoiseSpeed: 0.007175
+    - _EmissionAmount: 0.5
+    - _NoiseScale: 1000
+    - _NoiseSpeed: 0.0007175
     - _animationSpeed: 0.5
     - _backgroundIntensity: 3.4
     - _clamp: 1.77
     - _minHeight: 1
     - _sineAmount: 0.25
     m_Colors:
-    - _BackgroundColor: {r: 0.16078432, g: 0.0015437115, b: 0, a: 1}
+    - _BackgroundColor: {r: 0.6415094, g: 0, b: 0, a: 1}
     - _Color1: {r: 0.6886792, g: 0.1851637, b: 0.1851637, a: 1}
     - _Color2: {r: 0.6415094, g: 0.3508267, b: 0.06354574, a: 0}
     - _Color3: {r: 0.7924528, g: 0.4479163, b: 0.2055892, a: 1}
