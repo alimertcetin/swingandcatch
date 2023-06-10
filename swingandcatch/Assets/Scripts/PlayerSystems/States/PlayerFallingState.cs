@@ -40,6 +40,7 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
             
+            // TODO : We can't catch the rope when fps is lower than 15
             if (stateMachine.GetNearestRope(out var rope))
             {
                 var pos = stateMachine.transform.position;
