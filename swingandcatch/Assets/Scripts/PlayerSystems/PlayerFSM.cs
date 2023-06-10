@@ -27,8 +27,8 @@ namespace TheGame.PlayerSystems
         
         public Rigidbody2D rb { get; private set; }
         public Vector3 velocity { get; private set; }
-
-        Vector3 previousPosition;
+        public Vector3 previousPosition { get; private set; }
+        
         Collider2D[] colliderBuffer = new Collider2D[2];
 
         protected override void Awake()
@@ -53,12 +53,30 @@ namespace TheGame.PlayerSystems
 
         public bool IsGrounded()
         {
-            var t = transform;
-            var pos = t.position + Vector3.down * (t.localScale.y * 0.5f);
+            const int DETAIL = 10;
+            const float ERROR = 0.1f;
+            
+            var transform = this.transform;
+            var down = -transform.up;
+            var currentPosition = transform.position;
+            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
+            var castStartPosition = previousPosition + down * localScaleYHalf;
+            
+            for (int i = 1; i <= DETAIL; i++)
+            {
 #if UNITY_EDITOR
-            XIV.Core.XIVDebug.DrawLine(pos, pos + Vector3.down * groundCheckDistance, Color.yellow);
+                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + down * groundCheckDistance, Color.Lerp(Color.yellow, Color.green, i / (float)DETAIL));
 #endif
-            return Physics.Raycast(pos, Vector3.down, groundCheckDistance, 1 << PhysicsConstants.GroundLayer);
+                if (Physics.Raycast(castStartPosition, down, groundCheckDistance, 1 << PhysicsConstants.GroundLayer))
+                {
+                    return true;
+                }
+
+                var time = i / (float)DETAIL;
+                castStartPosition = Vector3.Lerp(previousPosition, currentPosition, time) + down * localScaleYHalf;
+            }
+            
+            return false;
         }
 
         public bool GetNearestRope(out Rope rope)
