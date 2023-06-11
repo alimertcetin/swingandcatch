@@ -60,6 +60,12 @@ namespace TheGame.PlayerSystems.States
                 ChangeRootState(factory.GetState<PlayerGroundedState>());
                 return;
             }
+
+            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.LavaLayer))
+            {
+                ChangeRootState(factory.GetState<PlayerDiedByLavaState>());
+                return;
+            }
             
             // TODO : We can't catch the rope when fps is lower than 15
             if (stateMachine.GetNearestRope(out var rope))

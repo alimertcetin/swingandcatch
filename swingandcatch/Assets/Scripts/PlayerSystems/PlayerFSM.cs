@@ -1,5 +1,6 @@
 ﻿using TheGame.FSM;
 using TheGame.PlayerSystems.States;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.VerletRope;
 using UnityEngine;
 using XIV.Core;
@@ -20,6 +21,7 @@ namespace TheGame.PlayerSystems
         public float climbSpeed = 5f;
         [Header("Left to Right order")]
         public Transform[] playerFeet;
+        public TransformChannelSO playerDiedChannelSO;
 
         // TODO : Fix naming. Like hasMovementInput -> hasMovementInputX
         public bool hasMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;

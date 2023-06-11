@@ -18,6 +18,7 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerClimbState(stateMachine, this));
             AddState(new PlayerFeetMovementAnimationState(stateMachine, this));
             AddState(new PlayerBreathAnimationState(stateMachine, this));
+            AddState(new PlayerDiedByLavaState(stateMachine, this));
         }
     }
 }
