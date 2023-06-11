@@ -1,11 +1,14 @@
 ﻿using TheGame.ScriptableObjects.Channels;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Pool;
 using XIV.Core;
 using XIV.Core.Collections;
 using XIV.Core.Extensions;
 using XIV.Core.Utils;
 using XIV.Core.XIVMath;
+using XIV.EventSystem;
+using XIV.EventSystem.Events;
 using XIV.TweenSystem;
 using Random = UnityEngine.Random;
 
@@ -23,17 +26,30 @@ namespace TheGame.CoinSystems
         [SerializeField] CoinChannelSO coinCollectedChannelSO;
         [SerializeField] RectTransform coinUIItem;
         [SerializeField] TMP_Text coinText;
+        [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] EasingFunction.Ease coinCollectEase;
         EasingFunction.Function easing;
 
         Camera cam;
         int collectedCoinCount;
         DynamicArray<CollectCoinData> coinDatas = new DynamicArray<CollectCoinData>();
+        ObjectPool<GameObject> coinCollectedParticlePool;
 
         void Awake()
         {
             cam = Camera.main;
             easing = EasingFunction.GetEasingFunction(coinCollectEase);
+
+            GameObject CreateParticle()
+            {
+                var go = Instantiate(coinCollectedParticlePrefab);
+                go.SetActive(true);
+                return go;
+            }
+
+            void OnReleasedParticle(GameObject particle) => particle.SetActive(false);
+
+            coinCollectedParticlePool = new ObjectPool<GameObject>(CreateParticle, null, OnReleasedParticle, null, false);
         }
 
         void Update()
@@ -78,6 +94,26 @@ namespace TheGame.CoinSystems
                 curve = BezierMath.CreateCurve(coinScreenPos, coinUIItem.position.SetZ(coinScreenPos.z), Random.value * 3f),
                 timer = new Timer(Random.Range(0.5f, 1f)),
             };
+            
+            var particleGo = coinCollectedParticlePool.Get();
+            particleGo.transform.position = coinTransformPosition;
+            var particleSystems = particleGo.GetComponentsInChildren<ParticleSystem>(true);
+            XIVEventSystem.SendEvent(new InvokeUntilEvent().AddCancelCondition(() =>
+            {
+                bool isDone = true;
+                for (int i = 0; i < particleSystems.Length; i++)
+                {
+                    if (particleSystems[i].isStopped == false)
+                    {
+                        isDone = false;
+                        break;
+                    }
+                }
+                return isDone;
+            }).OnCanceled(() =>
+            {
+                coinCollectedParticlePool.Release(particleGo);
+            }));
         }
 
         void OnCoinCollected(int index)
