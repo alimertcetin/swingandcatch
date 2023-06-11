@@ -14,9 +14,9 @@ namespace TheGame.FSM
             AddState(new EmptyState(stateMachine));
         }
 
-        public State GetState<T>() where T : State
+        public T GetState<T>() where T : State
         {
-            return dic[typeof(T)];
+            return (T)dic[typeof(T)];
         }
 
         protected void AddState<T>(T state) where T : State
