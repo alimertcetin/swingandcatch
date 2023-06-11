@@ -10,6 +10,7 @@ namespace TheGame
     {
         public float distanceFromCamera = 5f;
         public float movementSharpness = 10f;
+        public Vector3 positionOffset;
         Camera cam;
         Material material;
         Vector3 camInitialPosition;
@@ -19,7 +20,7 @@ namespace TheGame
             cam = Camera.main;
             material = GetComponent<Renderer>().material;
             var camTransform = cam.transform;
-            transform.position = camTransform.position + Vector3.forward * distanceFromCamera;
+            transform.position = camTransform.position + Vector3.forward * distanceFromCamera + positionOffset;
             transform.localScale = FrustumMath.GetFrustum(cam, distanceFromCamera);
             transform.SetParent(camTransform);
             camInitialPosition = camTransform.position;
@@ -46,7 +47,7 @@ namespace TheGame
         void OnValidate()
         {
             var cam = Camera.main;
-            transform.position = cam.transform.position + Vector3.forward * distanceFromCamera;
+            transform.position = cam.transform.position + Vector3.forward * distanceFromCamera + positionOffset;
             transform.localScale = FrustumMath.GetFrustum(cam, distanceFromCamera);
         }
 #endif

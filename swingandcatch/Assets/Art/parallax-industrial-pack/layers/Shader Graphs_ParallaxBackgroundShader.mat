@@ -42,19 +42,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texture_1:
-        m_Texture: {fileID: 2800000, guid: cd33b724a311ee1459ecfb025f3b00d3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 538820ce91983f543a2d94788ccb2d25, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texture_2:
-        m_Texture: {fileID: 2800000, guid: 23506d10bce427e41aabd14d84638713, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2d2a9434b8aae46418d201e4e9153bce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texture_3:
-        m_Texture: {fileID: 2800000, guid: d2908e12c62b1594b916f6b99913f8eb, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1a8af337dd0f8fa4ebe223b5219e1654, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texture_4:
-        m_Texture: {fileID: 2800000, guid: a973cea5bc8b33a4985256e3558490e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 59031747233ec4a47ba899d0d2666dc6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -86,12 +86,12 @@ Material:
     - _ParallaxValue: {r: 0, g: 0, b: 0, a: 0}
     - _Strength: {r: 0, g: 0, b: 0, a: 0}
     - _Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _texture_1_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _texture_1_Offset: {r: 0, g: -0.25, b: 0, a: 0}
     - _texture_1_Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _texture_2_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _texture_2_Offset: {r: 0, g: -0.25, b: 0, a: 0}
     - _texture_2_Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _texture_3_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _texture_3_Offset: {r: 0, g: -0.25, b: 0, a: 0}
     - _texture_3_Tiling: {r: 1, g: 1, b: 0, a: 0}
-    - _texture_4_Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _texture_4_Offset: {r: 0, g: -0.25, b: 0, a: 0}
     - _texture_4_Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
