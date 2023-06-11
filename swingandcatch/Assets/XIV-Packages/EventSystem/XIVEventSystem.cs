@@ -43,12 +43,6 @@ namespace XIV.EventSystem
 
         public static void SendEvent(IEvent @event)
         {
-#if UNITY_EDITOR
-            if (@event is InvokeUntilEvent)
-            {
-                Debug.Log("Sent InvokeUntilEvent " + StackTraceUtility.ExtractStackTrace());
-            }
-#endif
             Helper.events.Add(@event);
         }
 
