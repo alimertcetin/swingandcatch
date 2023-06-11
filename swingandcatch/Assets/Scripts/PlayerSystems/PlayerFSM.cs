@@ -18,6 +18,8 @@ namespace TheGame.PlayerSystems
         public float fallGravityScale = 0.5f;
         public float climbCheckRadius = 2f;
         public float climbSpeed = 5f;
+        [Header("Left to Right order")]
+        public Transform[] playerFeet;
 
         // TODO : Fix naming. Like hasMovementInput -> hasMovementInputX
         public bool hasMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;

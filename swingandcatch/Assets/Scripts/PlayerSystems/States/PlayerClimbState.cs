@@ -4,7 +4,9 @@ using TheGame.VerletRope;
 using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core;
+using XIV.Core.Utils;
 using XIV.Core.XIVMath;
+using XIV.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -35,6 +37,11 @@ namespace TheGame.PlayerSystems.States
             stateMachine.transform.position = positionOnSegment;
             
             currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * INITIAL_FORCE);
+            
+            stateMachine.CancelTween();
+            stateMachine.XIVTween()
+                .Scale(stateMachine.transform.localScale, Vector3.one * 1.25f, 0.15f, EasingFunction.EaseInOutBounce, true)
+                .Start();
         }
 
         protected override void OnStateUpdate()
@@ -68,6 +75,7 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateExit()
         {
             ListPool<Vector3>.Release(positionBuffer);
+            stateMachine.CancelTween();
         }
 
         protected override void CheckTransitions()

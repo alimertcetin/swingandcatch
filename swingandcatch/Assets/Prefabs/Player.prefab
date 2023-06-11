@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 4617712201370327531}
   - component: {fileID: 4617712201370327528}
   m_Layer: 8
-  m_Name: Cube_1
+  m_Name: Feet_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -262,6 +262,9 @@ MonoBehaviour:
   fallGravityScale: 1
   climbCheckRadius: 1.1
   climbSpeed: 1
+  playerFeet:
+  - {fileID: 4617712202988879445}
+  - {fileID: 4617712201370327529}
 --- !u!1 &4617712201605241933
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,7 +452,7 @@ GameObject:
   - component: {fileID: 4617712202988879447}
   - component: {fileID: 4617712202988879444}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: Feet_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

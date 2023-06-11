@@ -1,5 +1,6 @@
 ﻿using TheGame.FSM;
 using TheGame.PlayerSystems.States;
+using TheGame.PlayerSystems.States.AnimationStates;
 
 namespace TheGame.PlayerSystems
 {
@@ -15,6 +16,8 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerJumpState(stateMachine, this));
             AddState(new OnAirMovementState(stateMachine, this));
             AddState(new PlayerClimbState(stateMachine, this));
+            AddState(new PlayerFeetMovementAnimationState(stateMachine, this));
+            AddState(new PlayerBreathAnimationState(stateMachine, this));
         }
     }
 }

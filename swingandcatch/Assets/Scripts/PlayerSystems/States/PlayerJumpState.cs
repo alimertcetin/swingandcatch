@@ -1,7 +1,7 @@
 ﻿using TheGame.FSM;
 using UnityEngine;
-using XIV.Core.Extensions;
 using XIV.Core.Utils;
+using XIV.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -18,6 +18,12 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateEnter(State comingFrom)
         {
             yVelocity = CalculateJumpVelocity(stateMachine.jumpHeight);
+
+            if (comingFrom is PlayerClimbState) return;
+            stateMachine.CancelTween();
+            stateMachine.XIVTween()
+                .ScaleX(stateMachine.transform.localScale.x, 0.75f, 0.25f, EasingFunction.EaseInOutBounce, true)
+                .Start();
         }
 
         protected override void OnStateUpdate()
@@ -33,6 +39,7 @@ namespace TheGame.PlayerSystems.States
         {
             nearRopeTimer.Restart();
             waitGroundedTimer.Restart();
+            stateMachine.CancelTween();
         }
 
         protected override void CheckTransitions()

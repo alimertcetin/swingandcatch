@@ -1,10 +1,13 @@
 ﻿using TheGame.FSM;
+using TheGame.PlayerSystems.States.AnimationStates;
 using UnityEngine;
 
 namespace TheGame.PlayerSystems.States
 {
     public class PlayerWalkState : State<PlayerFSM, PlayerStateFactory>
     {
+        const float FEET_ANIMATION_DURATION = 0.15f;
+        
         public PlayerWalkState(PlayerFSM stateMachine, PlayerStateFactory factory) : base(stateMachine, factory)
         {
         }
@@ -12,6 +15,13 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateUpdate()
         {
             stateMachine.transform.position += stateMachine.movementInput.normalized * (stateMachine.walkSpeed * Time.deltaTime);
+        }
+
+        protected override void InitializeChildStates()
+        {
+            var feetAnimationState = factory.GetState<PlayerFeetMovementAnimationState>();
+            feetAnimationState.animationTime = FEET_ANIMATION_DURATION;
+            AddChildState(feetAnimationState);
         }
 
         protected override void CheckTransitions()
