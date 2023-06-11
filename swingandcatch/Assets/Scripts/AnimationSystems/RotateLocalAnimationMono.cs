@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace TheGame.AnimationSystems
 {
-    public class RotateLocal : MonoBehaviour
+    public class RotateLocalAnimationMono : AnimationMonoBase
     {
         public Vector3 axis;
         public float speed;

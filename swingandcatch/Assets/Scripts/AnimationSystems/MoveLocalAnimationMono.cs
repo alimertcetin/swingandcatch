@@ -4,7 +4,7 @@ using XIV.Core.Utils;
 
 namespace TheGame.AnimationSystems
 {
-    public class MoveLocal : MonoBehaviour
+    public class MoveLocalAnimationMono : AnimationMonoBase
     {
         public Vector3 axis;
         public float moveDistance;
