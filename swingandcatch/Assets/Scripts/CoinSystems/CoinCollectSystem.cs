@@ -1,5 +1,6 @@
 ﻿using TheGame.ScriptableObjects.Channels;
-using TMPro;
+using TheGame.UISystems;
+using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core;
@@ -9,7 +10,6 @@ using XIV.Core.Utils;
 using XIV.Core.XIVMath;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
-using XIV.TweenSystem;
 using Random = UnityEngine.Random;
 
 namespace TheGame.CoinSystems
@@ -23,9 +23,7 @@ namespace TheGame.CoinSystems
     
     public class CoinCollectSystem : MonoBehaviour
     {
-        [SerializeField] CoinChannelSO coinCollectedChannelSO;
-        [SerializeField] RectTransform coinUIItem;
-        [SerializeField] TMP_Text coinText;
+        [SerializeField] CoinChannelSO coinTriggeredChannelSO;
         [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] EasingFunction.Ease coinCollectEase;
         EasingFunction.Function easing;
@@ -79,8 +77,8 @@ namespace TheGame.CoinSystems
             }
         }
 
-        void OnEnable() => coinCollectedChannelSO.Register(OnCoinTriggered);
-        void OnDisable() => coinCollectedChannelSO.Unregister(OnCoinTriggered);
+        void OnEnable() => coinTriggeredChannelSO.Register(OnCoinTriggered);
+        void OnDisable() => coinTriggeredChannelSO.Unregister(OnCoinTriggered);
 
         void OnCoinTriggered(Coin coin)
         {
@@ -88,10 +86,11 @@ namespace TheGame.CoinSystems
             var coinTransform = coin.transform;
             var coinTransformPosition = coinTransform.position;
             var coinScreenPos = cam.WorldToScreenPoint(coinTransformPosition);
+            var coinUIItemRectPosition = UISystem.GetUI<HudUI>().coinPageUI.coinUIItemRectPosition;
             coinDatas.Add() = new CollectCoinData
             {
                 transform = coinTransform,
-                curve = BezierMath.CreateCurve(coinScreenPos, coinUIItem.position.SetZ(coinScreenPos.z), Random.value * 3f),
+                curve = BezierMath.CreateCurve(coinScreenPos, coinUIItemRectPosition.SetZ(coinScreenPos.z), Random.value * 3f),
                 timer = new Timer(Random.Range(0.5f, 1f)),
             };
             
@@ -100,16 +99,14 @@ namespace TheGame.CoinSystems
             var particleSystems = particleGo.GetComponentsInChildren<ParticleSystem>(true);
             XIVEventSystem.SendEvent(new InvokeUntilEvent().AddCancelCondition(() =>
             {
-                bool isDone = true;
                 for (int i = 0; i < particleSystems.Length; i++)
                 {
                     if (particleSystems[i].isStopped == false)
                     {
-                        isDone = false;
-                        break;
+                        return false;
                     }
                 }
-                return isDone;
+                return true;
             }).OnCanceled(() =>
             {
                 coinCollectedParticlePool.Release(particleGo);
@@ -119,15 +116,9 @@ namespace TheGame.CoinSystems
         void OnCoinCollected(int index)
         {
             collectedCoinCount++;
-            coinText.text = collectedCoinCount.ToString();
-            
+            UISystem.GetUI<HudUI>().coinPageUI.ChangeDisplayAmount(collectedCoinCount);
             Destroy(coinDatas[index].transform.gameObject);
             coinDatas.RemoveAt(index);
-            
-            coinUIItem.CancelTween();
-            coinUIItem.XIVTween()
-                .Scale(Vector3.one, Vector3.one * 1.25f, 0.18f, EasingFunction.EaseInCubic, true)
-                .Start();
         }
     }
 }
