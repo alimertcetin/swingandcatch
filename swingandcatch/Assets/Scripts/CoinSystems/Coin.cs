@@ -1,4 +1,5 @@
 using System.Buffers;
+using TheGame.AnimationSystems;
 using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 using XIV.Core;
@@ -29,7 +30,7 @@ namespace TheGame.CoinSystems
 
             if (count != 0)
             {
-                coinCollectedChannelSO.RaiseEvent(this);
+                Collect();
             }
             
             ArrayPool<Collider2D>.Shared.Return(buffer);
@@ -47,6 +48,11 @@ namespace TheGame.CoinSystems
         [Button]
         void Collect()
         {
+            var animations = GetComponentsInChildren<AnimationMonoBase>();
+            for (int i = 0; i < animations.Length; i++)
+            {
+                animations[i].enabled = false;
+            }
             coinCollectedChannelSO.RaiseEvent(this);
         }
     }
