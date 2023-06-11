@@ -55,21 +55,27 @@ namespace TheGame.PlayerSystems
 
         public bool IsGrounded()
         {
+            int layerMask = 1 << PhysicsConstants.GroundLayer;
+            return CheckIsTouching(layerMask);
+        }
+
+        public bool CheckIsTouching(int layerMask)
+        {
             const int DETAIL = 10;
             const float ERROR = 0.1f;
-            
+
             var transform = this.transform;
             var down = -transform.up;
             var currentPosition = transform.position;
             var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
             var castStartPosition = previousPosition + down * localScaleYHalf;
-            
+
             for (int i = 1; i <= DETAIL; i++)
             {
 #if UNITY_EDITOR
                 XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + down * groundCheckDistance, Color.Lerp(Color.yellow, Color.green, i / (float)DETAIL));
 #endif
-                if (Physics.Raycast(castStartPosition, down, groundCheckDistance, 1 << PhysicsConstants.GroundLayer))
+                if (Physics.Raycast(castStartPosition, down, groundCheckDistance, layerMask))
                 {
                     return true;
                 }
@@ -77,7 +83,7 @@ namespace TheGame.PlayerSystems
                 var time = i / (float)DETAIL;
                 castStartPosition = Vector3.Lerp(previousPosition, currentPosition, time) + down * localScaleYHalf;
             }
-            
+
             return false;
         }
 
