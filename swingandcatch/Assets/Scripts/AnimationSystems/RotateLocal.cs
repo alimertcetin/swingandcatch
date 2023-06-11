@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace TheGame.Animations
+namespace TheGame.AnimationSystems
 {
     public class RotateLocal : MonoBehaviour
     {

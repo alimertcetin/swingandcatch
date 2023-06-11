@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using XIV.Core.XIVMath;
 
-namespace TheGame
+namespace TheGame.VisualSystems
 {
     public class ParallaxPlane : MonoBehaviour
     {
@@ -14,6 +11,8 @@ namespace TheGame
         Camera cam;
         Material material;
         Vector3 camInitialPosition;
+        Vector4 offsetVec;
+        Vector3 localScale;
 
         void Awake()
         {
@@ -24,23 +23,21 @@ namespace TheGame
             transform.localScale = FrustumMath.GetFrustum(cam, distanceFromCamera);
             transform.SetParent(camTransform);
             camInitialPosition = camTransform.position;
+            localScale = transform.localScale;
         }
 
         void Update()
         {
-            var camCurrentPosition = cam.transform.position;
-            Vector3 diff = camCurrentPosition - camInitialPosition;
-            var localScale = transform.localScale;
+            Vector3 diff = cam.transform.position - camInitialPosition;
+            if (diff.sqrMagnitude < Mathf.Epsilon) return;
+            
             var offsetX = diff.x / localScale.x;
             var offsetY = diff.y / localScale.y;
-
-            int parallaxOffsetVectorID = ShaderConstants.ShaderGraphs_ParallaxBackgroundShader.ParallaxOffset_VectorID;
-            var offsetVec = material.GetVector(parallaxOffsetVectorID);
-
-            offsetX = Mathf.MoveTowards(offsetVec.x, offsetX, movementSharpness * Time.deltaTime);
-            offsetY = Mathf.MoveTowards(offsetVec.y, offsetY, movementSharpness * Time.deltaTime);
             
-            material.SetVector(parallaxOffsetVectorID, new Vector4(offsetX, offsetY, 0f, 0f));
+            offsetVec.x = Mathf.MoveTowards(offsetVec.x, offsetX, movementSharpness * Time.deltaTime);
+            offsetVec.y = Mathf.MoveTowards(offsetVec.y, offsetY, movementSharpness * Time.deltaTime);
+            
+            material.SetVector(ShaderConstants.ShaderGraphs_ParallaxBackgroundShader.ParallaxOffset_VectorID, offsetVec);
         }
 
 #if UNITY_EDITOR

@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_ParallaxBackgroundShader
+  m_Name: ParallaxBackgroundMaterial
   m_Shader: {fileID: -6465566751694194690, guid: f05385a94dfc1d241bf28c6a2d2f8131, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

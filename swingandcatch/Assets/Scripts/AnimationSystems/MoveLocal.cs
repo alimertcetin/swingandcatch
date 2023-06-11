@@ -2,7 +2,7 @@
 using XIV.Core;
 using XIV.Core.Utils;
 
-namespace TheGame.Animations
+namespace TheGame.AnimationSystems
 {
     public class MoveLocal : MonoBehaviour
     {
