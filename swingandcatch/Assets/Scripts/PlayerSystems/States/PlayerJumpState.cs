@@ -7,7 +7,6 @@ namespace TheGame.PlayerSystems.States
 {
     public class PlayerJumpState : State<PlayerFSM, PlayerStateFactory>
     {
-        Timer nearRopeTimer = new Timer(0.25f);
         Timer waitGroundedTimer = new Timer(0.25f);
         float yVelocity;
         
@@ -37,14 +36,13 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateExit()
         {
-            nearRopeTimer.Restart();
             waitGroundedTimer.Restart();
             stateMachine.CancelTween();
         }
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.GetNearestRope(out var rope) && nearRopeTimer.Update(Time.deltaTime) && rope.GetClosestPoint(stateMachine.transform.position).index != 0)
+            if (stateMachine.GetNearestRope(out var rope) && yVelocity < 0.25f && rope.GetClosestPoint(stateMachine.transform.position).index != 0)
             {
                 ChangeRootState(factory.GetState<PlayerClimbState>());
                 return;
