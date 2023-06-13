@@ -19,6 +19,9 @@ namespace TheGame.PlayerSystems
         public float fallGravityScale = 0.5f;
         public float climbCheckRadius = 2f;
         public float climbSpeed = 5f;
+        public float ropeSwingForce = 2f;
+        public float ropeSwingInitialForce = 120f;
+
         [Header("Left to Right order")]
         public Transform[] playerFeet;
         public TransformChannelSO playerDiedChannelSO;

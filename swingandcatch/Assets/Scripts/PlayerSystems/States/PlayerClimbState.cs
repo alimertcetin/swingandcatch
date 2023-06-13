@@ -13,8 +13,6 @@ namespace TheGame.PlayerSystems.States
     public class PlayerClimbState : State<PlayerFSM, PlayerStateFactory>
     {
         Rope currentRope;
-        const float INITIAL_FORCE = 120f;
-        const float MOVEMENT_FORCE = 2f;
         float currentT;
         List<Vector3> positionBuffer;
         Vector3 movementInput;
@@ -36,7 +34,7 @@ namespace TheGame.PlayerSystems.States
             Vector3 positionOnSegment = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = positionOnSegment;
             
-            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * INITIAL_FORCE);
+            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.ropeSwingInitialForce);
             
             stateMachine.CancelTween();
             stateMachine.XIVTween()
@@ -69,7 +67,7 @@ namespace TheGame.PlayerSystems.States
             var nextPosition = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = nextPosition;
 
-            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * MOVEMENT_FORCE);
+            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.ropeSwingForce);
         }
 
         protected override void OnStateExit()
