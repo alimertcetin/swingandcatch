@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab95624081807d4586aff8319bc3a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segments: 10
-  segmentLength: 1
+  segments: 40
+  segmentLength: 0.25
   correctionSteps: 30
   gravity: {x: 0, y: -9.81, z: 0}
   drag: 0.1
