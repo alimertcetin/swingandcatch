@@ -274,7 +274,7 @@ namespace TheGame.VerletRope
 
             for (int i = closestRopePoint.index + 1; i < segments; i++)
             {
-                var forceMultiplier = (i - closestRopePoint.index) / (float)closestRopePoint.index;
+                var forceMultiplier = (i - closestRopePoint.index) / (float)(segments - 1);
                 if (float.IsNaN(forceMultiplier) || float.IsInfinity(forceMultiplier)) forceMultiplier = 1f;
                 ref var point = ref ropePoints[i];
                 point.force += (force) * forceMultiplier;
