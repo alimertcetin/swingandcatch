@@ -3267,6 +3267,10 @@ PrefabInstance:
       value: -0.007
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: ropeSwingForce
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: showCurrentState
       value: 1
       objectReference: {fileID: 0}
@@ -3274,6 +3278,10 @@ PrefabInstance:
       propertyPath: playerDiedChannelSO
       value: 
       objectReference: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: ropeSwingInitialForce
+      value: 480
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
 --- !u!1001 &7708672442068558704
