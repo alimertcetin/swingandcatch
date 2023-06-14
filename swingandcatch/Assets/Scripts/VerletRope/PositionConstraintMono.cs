@@ -27,10 +27,24 @@ namespace TheGame.VerletRope
         }
 
 #if UNITY_EDITOR
-        void OnDrawGizmos()
+        static GUIStyle guiStyle;
+        void OnDrawGizmosSelected()
         {
             var pos = transform.TransformPoint(localPosition);
             XIVDebug.DrawCircle(pos, 0.25f, Vector3.forward, Color.magenta);
+            GUIStyle style;
+            if (guiStyle == null)
+            {
+                guiStyle = new GUIStyle(GUI.skin.label);
+                guiStyle.normal.textColor = Color.red;
+                guiStyle.fontStyle = FontStyle.Bold;
+                style = guiStyle;
+            }
+            else
+            {
+                style = guiStyle;
+            }
+            UnityEditor.Handles.Label(transform.position, nameof(PositionConstraintMono), style);
         }
 #endif
     }
