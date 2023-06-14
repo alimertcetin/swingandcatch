@@ -224,9 +224,10 @@ namespace TheGame.VerletRope
         }
 
 #if UNITY_EDITOR
+        [SerializeField] bool showSegments;
         void OnDrawGizmos()
         {
-            if (Application.isPlaying == false) return;
+            if (showSegments == false || Application.isPlaying == false) return;
             var positions = ListPool<Vector3>.Get();
             for (int i = 0; i < segments; i++)
             {

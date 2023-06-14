@@ -1354,6 +1354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8da35250d01843ceb91d7f8df0e8755a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showCurrentState: 1
+  textOffsetX: -0.5
+  textOffsetY: 0.5
   target: {fileID: 729974180}
   offset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
@@ -3250,6 +3253,22 @@ PrefabInstance:
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: log
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: textOffsetX
+      value: 0.014
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: textOffsetY
+      value: -0.007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: showCurrentState
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: playerDiedChannelSO
