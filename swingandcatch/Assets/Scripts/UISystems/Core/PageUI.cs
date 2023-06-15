@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using XIV.Core.Utils;
 using XIV.TweenSystem;
 
@@ -8,6 +9,12 @@ namespace TheGame.UISystems.Core
     {
         [SerializeField] protected GameObject uiGameObject;
         public bool isActive { get; protected set; }
+
+        protected virtual void Awake()
+        {
+            isActive = uiGameObject.activeSelf;
+        }
+
         public virtual void Show()
         {
             uiGameObject.transform.localScale = Vector3.zero;
