@@ -1,6 +1,7 @@
 ﻿using TheGame.FSM;
 using TheGame.PlayerSystems.States;
 using TheGame.PlayerSystems.States.AnimationStates;
+using TheGame.PlayerSystems.States.DamageStates;
 
 namespace TheGame.PlayerSystems
 {
@@ -19,6 +20,8 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerFeetMovementAnimationState(stateMachine, this));
             AddState(new PlayerBreathAnimationState(stateMachine, this));
             AddState(new PlayerDiedByLavaState(stateMachine, this));
+            AddState(new CheckDamageState(stateMachine, this));
+            AddState(new DamageImmuneState(stateMachine, this));
         }
     }
 }

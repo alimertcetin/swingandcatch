@@ -24,6 +24,8 @@ public static class PhysicsConstants
 	public static readonly int PlayerLayer = LayerMask.NameToLayer("Player");
 	public const string Lava = "Lava";
 	public static readonly int LavaLayer = LayerMask.NameToLayer("Lava");
+	public const string Hazzard = "Hazzard";
+	public static readonly int HazzardLayer = LayerMask.NameToLayer("Hazzard");
 	
 } // class PhysicsConstants
  

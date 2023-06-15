@@ -1,4 +1,5 @@
-﻿using TheGame.FSM;
+﻿using System;
+using TheGame.FSM;
 using TheGame.PlayerSystems.States;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.VerletRope;
@@ -10,13 +11,21 @@ namespace TheGame.PlayerSystems
 {
     public class PlayerFSM : StateMachine
     {
+        [Header("Health and Damage Settings")]
+        public float health = 100f;
+        public float damageImmuneDuration = 5f;
+        public float recieveDamageRadius = 1.5f;
+
+        [Header("Movement")]
         public float walkSpeed = 5f;
         public float runSpeed = 10f;
         public float airMovementSpeed = 7.5f;
+        [Header("Jump Movement")]
         public float jumpHeight = 2f;
         public float jumpGravityScale = 0.5f;
         public float groundCheckDistance = 0.5f;
         public float fallGravityScale = 0.5f;
+        [Header("Climb Movement")]
         public float climbCheckRadius = 2f;
         public float climbSpeed = 5f;
         public float ropeSwingForce = 2f;
@@ -25,6 +34,7 @@ namespace TheGame.PlayerSystems
         [Header("Left to Right order")]
         public Transform[] playerFeet;
         public TransformChannelSO playerDiedChannelSO;
+        public TransformChannelSO playerRecievedDamageChannelSO;
 
         // TODO : Fix naming. Like hasMovementInput -> hasMovementInputX
         public bool hasMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;
@@ -102,5 +112,16 @@ namespace TheGame.PlayerSystems
             rope = colliderBuffer.GetClosest(position, count).GetComponent<Rope>();
             return true;
         }
+
+#if UNITY_EDITOR
+        void OnDrawGizmos()
+        {
+            if (Application.isPlaying == false) return;
+            Vector3 lineStart = transform.position + Vector3.right + Vector3.up * 2f;
+
+            var healthNormalized = health / 100f;
+            XIVDebug.DrawLine(lineStart, lineStart + (Vector3.right * healthNormalized), Color.Lerp(Color.red, Color.green, healthNormalized));
+        }
+#endif
     }
 }

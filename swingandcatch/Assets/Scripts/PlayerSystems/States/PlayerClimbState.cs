@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TheGame.FSM;
+using TheGame.PlayerSystems.States.DamageStates;
 using TheGame.VerletRope;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -74,6 +75,11 @@ namespace TheGame.PlayerSystems.States
         {
             ListPool<Vector3>.Release(positionBuffer);
             stateMachine.CancelTween();
+        }
+
+        protected override void InitializeChildStates()
+        {
+            AddChildState(factory.GetState<CheckDamageState>());
         }
 
         protected override void CheckTransitions()

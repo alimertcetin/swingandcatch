@@ -1,5 +1,6 @@
 ﻿using System.Buffers;
 using TheGame.FSM;
+using TheGame.PlayerSystems.States.DamageStates;
 using UnityEngine;
 
 namespace TheGame.PlayerSystems.States
@@ -21,6 +22,7 @@ namespace TheGame.PlayerSystems.States
         protected override void InitializeChildStates()
         {
             AddChildState(factory.GetState<PlayerIdleState>());
+            AddChildState(factory.GetState<CheckDamageState>());
         }
 
         protected override void CheckTransitions()

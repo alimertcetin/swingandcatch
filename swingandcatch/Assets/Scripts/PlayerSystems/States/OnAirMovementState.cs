@@ -1,4 +1,5 @@
 ﻿using TheGame.FSM;
+using TheGame.PlayerSystems.States.DamageStates;
 using UnityEngine;
 
 namespace TheGame.PlayerSystems.States
@@ -15,6 +16,11 @@ namespace TheGame.PlayerSystems.States
             Vector3 pos = transform.position;
             pos += stateMachine.movementInput.normalized * (stateMachine.airMovementSpeed * Time.deltaTime);
             transform.position = pos;
+        }
+
+        protected override void InitializeChildStates()
+        {
+            AddChildState(factory.GetState<CheckDamageState>());
         }
     }
 }
