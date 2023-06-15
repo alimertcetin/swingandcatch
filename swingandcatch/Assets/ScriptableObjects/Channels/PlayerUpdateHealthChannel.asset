@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 383b44124af94316b700e63cf5f686e9, type: 3}
-  m_Name: PlayerRecievedDamageChannel
+  m_Name: PlayerUpdateHealthChannel
   m_EditorClassIdentifier: 
   description: 

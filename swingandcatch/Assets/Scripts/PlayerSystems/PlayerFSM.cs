@@ -34,7 +34,7 @@ namespace TheGame.PlayerSystems
         [Header("Left to Right order")]
         public Transform[] playerFeet;
         public TransformChannelSO playerDiedChannelSO;
-        public TransformChannelSO playerRecievedDamageChannelSO;
+        public TransformChannelSO playerUpdateHealthChannelSO;
 
         // TODO : Fix naming. Like hasMovementInput -> hasMovementInputX
         public bool hasMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;
