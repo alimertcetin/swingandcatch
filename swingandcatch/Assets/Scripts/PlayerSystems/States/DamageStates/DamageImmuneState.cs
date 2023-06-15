@@ -31,7 +31,7 @@ namespace TheGame.PlayerSystems.States.DamageStates
                     .Start();
             }
             stateMachine.XIVTween()
-                .Scale(Vector3.one, Vector3.one * 0.75f, colorFlashDuration, easing, true, COLOR_FLASH_COUNT)
+                .ScaleX(1f, 0.75f, colorFlashDuration, easing, true, COLOR_FLASH_COUNT)
                 .Start();
         }
 
@@ -44,7 +44,6 @@ namespace TheGame.PlayerSystems.States.DamageStates
         {
             if (timer.IsDone)
             {
-                Debug.Log("timePassed = " + timer.PassedTime);
                 ChangeChildState(previousState);
             }
         }
