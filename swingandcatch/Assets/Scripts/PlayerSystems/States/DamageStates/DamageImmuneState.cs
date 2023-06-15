@@ -18,7 +18,7 @@ namespace TheGame.PlayerSystems.States.DamageStates
         protected override void OnStateEnter(State comingFrom)
         {
             float colorFlashDuration = (stateMachine.damageImmuneDuration / (COLOR_FLASH_COUNT + 1));
-            timer = new Timer(colorFlashDuration);
+            timer = new Timer(stateMachine.damageImmuneDuration);
             stateMachine.CancelTween();
             playerRenderers = stateMachine.GetComponentsInChildren<Renderer>();
             EasingFunction.Function easing = EasingFunction.EaseInOutCirc;
