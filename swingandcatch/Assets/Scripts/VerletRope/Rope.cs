@@ -227,7 +227,19 @@ namespace TheGame.VerletRope
         [SerializeField] bool showSegments;
         void OnDrawGizmos()
         {
-            if (showSegments == false || Application.isPlaying == false) return;
+            if (showSegments == false)
+            {
+                return;
+            }
+
+            if (Application.isPlaying == false)
+            {
+                var length = segments * segmentLength;
+                var ropeEndPos = transform.position + creationDirection.normalized * length;
+                XIV.Core.XIVDebug.DrawLine(transform.position, ropeEndPos, Color.green);
+                return;
+            }
+
             var positions = ListPool<Vector3>.Get();
             for (int i = 0; i < segments; i++)
             {
