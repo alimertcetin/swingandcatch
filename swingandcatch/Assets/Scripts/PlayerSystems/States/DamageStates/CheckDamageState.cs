@@ -30,9 +30,11 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
             for (int i = 0; i < count; i++)
             {
-                var damageAmount = buffer[i].transform.GetComponent<HazzardMono>().damageAmount;
+                var hazzarMono = buffer[i].transform.GetComponent<HazzardMono>();
+                var damageAmount = hazzarMono.damageAmount;
                 stateMachine.health -= damageAmount;
                 stateMachine.playerUpdateHealthChannelSO.RaiseEvent(stateMachine.transform);
+                hazzarMono.RaiseEvent(stateMachine.transform);
             }
         }
 
