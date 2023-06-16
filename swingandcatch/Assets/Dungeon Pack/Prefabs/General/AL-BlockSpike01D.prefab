@@ -9,44 +9,44 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1649872482601046}
+  m_RootGameObject: {fileID: 1231184306242416}
   m_IsPrefabParent: 1
---- !u!1 &1649872482601046
+--- !u!1 &1231184306242416
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4341673273649340}
-  - component: {fileID: 33751404828048800}
-  - component: {fileID: 23728360603793068}
+  - component: {fileID: 4572184595132250}
+  - component: {fileID: 33823310613707312}
+  - component: {fileID: 23730838014588458}
   m_Layer: 0
-  m_Name: Pillar01RedD
+  m_Name: AL-BlockSpike01D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4341673273649340
+--- !u!4 &4572184595132250
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1649872482601046}
+  m_GameObject: {fileID: 1231184306242416}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.9, y: 2.27, z: 34.96}
+  m_LocalPosition: {x: -34.83488, y: 5.0702243, z: 45.079815}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &23728360603793068
+--- !u!23 &23730838014588458
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1649872482601046}
+  m_GameObject: {fileID: 1231184306242416}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -75,10 +75,10 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33751404828048800
+--- !u!33 &33823310613707312
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1649872482601046}
-  m_Mesh: {fileID: 4300000, guid: cc9aa7f92b832314cb6792844df56284, type: 3}
+  m_GameObject: {fileID: 1231184306242416}
+  m_Mesh: {fileID: 4300000, guid: 1a5dcf5c28e4b4049941bd2c8cb7b878, type: 3}

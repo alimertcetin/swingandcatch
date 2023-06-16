@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33338401280110110}
   - component: {fileID: 23922715005495336}
   m_Layer: 0
-  m_Name: BrazRedD
+  m_Name: AL-BrazRedD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

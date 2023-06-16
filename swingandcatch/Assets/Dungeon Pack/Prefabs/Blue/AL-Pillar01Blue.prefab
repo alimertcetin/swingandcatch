@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33607727925895486}
   - component: {fileID: 23591896072547732}
   m_Layer: 0
-  m_Name: Pillar01Blue
+  m_Name: AL-Pillar01Blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 95737415982673008}
   - component: {fileID: 114402683806712534}
   m_Layer: 0
-  m_Name: ChestCompleteD
+  m_Name: AL-ChestCompleteD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 95846521961778924}
   - component: {fileID: 114953712324284294}
   m_Layer: 0
-  m_Name: SpikeTrapD
+  m_Name: AL-SpikeTrapD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
