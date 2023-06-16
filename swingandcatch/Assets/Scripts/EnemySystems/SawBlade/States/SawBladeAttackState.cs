@@ -19,7 +19,7 @@ namespace TheGame.EnemySystems.SawBlade.States
         
         public SawBladeAttackState(SawBladeFSM stateMachine, SawBladeStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
-            projectilePool = new ObjectPool<GameObject>(() => Object.Instantiate(base.stateMachine.projectilePrefab), 
+            projectilePool = new ObjectPool<GameObject>(() => Object.Instantiate(this.stateMachine.attackStateDataSO.projectilePrefab), 
                 (go) => go.SetActive(true), 
                 (go) => go.SetActive(false));
         }
@@ -28,7 +28,7 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            attackTimer = new Timer(stateMachine.attackDuration);
+            attackTimer = new Timer(stateMachine.attackStateDataSO.attackDuration);
             buffer = ArrayPool<Collider2D>.Shared.Rent(2);
         }
 
@@ -69,8 +69,9 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         protected override void CheckTransitions()
         {
+            var attackStateData = stateMachine.attackStateDataSO;
             var center = Vector3.Lerp(stateMachine.idleStartPosition, stateMachine.idleEndPosition, 0.5f);
-            int count = Physics2D.OverlapCircleNonAlloc(center, stateMachine.attackFieldRadius, buffer, 1 << PhysicsConstants.PlayerLayer);
+            int count = Physics2D.OverlapCircleNonAlloc(center, attackStateData.attackFieldRadius, buffer, 1 << PhysicsConstants.PlayerLayer);
 
             if (count == 0)
             {
@@ -81,13 +82,14 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         void HandleMovement()
         {
+            var attackStateData = stateMachine.attackStateDataSO;
             var dir = target.position - connectedPoint;
             var distance = dir.magnitude;
-            if (distance > stateMachine.followDistance)
+            if (distance > attackStateData.followDistance)
             {
                 var pos = stateMachine.transform.position;
-                var targetPos = target.position - dir.normalized * stateMachine.followDistance;
-                var newPos = Vector3.MoveTowards(pos, targetPos, stateMachine.followSpeed * Time.deltaTime);
+                var targetPos = target.position - dir.normalized * attackStateData.followDistance;
+                var newPos = Vector3.MoveTowards(pos, targetPos, attackStateData.followSpeed * Time.deltaTime);
                 stateMachine.transform.position = newPos;
             }
         }

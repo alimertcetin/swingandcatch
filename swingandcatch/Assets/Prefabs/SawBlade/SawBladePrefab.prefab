@@ -79,16 +79,9 @@ MonoBehaviour:
   showCurrentState: 0
   textOffsetX: 0
   textOffsetY: 0
-  idleMovementAxis: {x: 1, y: 0, z: 0}
-  idleMovementDistance: 2
-  idleMovementSpeed: 2
-  ease: 0
-  goToStartPositionSpeed: 5
-  attackDuration: 1
-  followDistance: 2
-  followSpeed: 2
-  attackFieldRadius: 5
-  projectilePrefab: {fileID: 843538939233883306, guid: 406abb337b9a87c46be65ececf84a163, type: 3}
+  idleStateDataSO: {fileID: 11400000, guid: 9f1c08036aa0f9444b3010e53e7efa68, type: 2}
+  transitionToIdleStateDataSO: {fileID: 11400000, guid: 9c3c69cdaf15b9e4db30b77d653d76c0, type: 2}
+  attackStateDataSO: {fileID: 11400000, guid: 35f74c2bf377ba948b248d39c6e0f090, type: 2}
 --- !u!1001 &3840673186075390642
 PrefabInstance:
   m_ObjectHideFlags: 0

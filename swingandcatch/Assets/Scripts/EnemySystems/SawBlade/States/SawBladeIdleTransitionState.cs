@@ -13,7 +13,7 @@ namespace TheGame.EnemySystems.SawBlade.States
         {
             var pos = stateMachine.transform.position;
             var closestPos = GetClosestIdlePosition(pos);
-            var newPos = Vector3.MoveTowards(pos, closestPos, stateMachine.idleMovementSpeed * Time.deltaTime);
+            var newPos = Vector3.MoveTowards(pos, closestPos, stateMachine.idleStateDataSO.idleMovementSpeed * Time.deltaTime);
             stateMachine.transform.position = newPos;
         }
 

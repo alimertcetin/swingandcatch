@@ -12,6 +12,7 @@ namespace TheGame.EnemySystems.SawBlade.States
         Timer timer;
         EasingFunction.Function easingFunc;
         Collider2D[] buffer;
+        bool hasMovement;
 
         public SawBladeIdleState(SawBladeFSM stateMachine, SawBladeStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -19,14 +20,26 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            var time = Vector3.Distance(movementStart, movementEnd) / stateMachine.idleMovementSpeed;
+            var idleStateData = stateMachine.idleStateDataSO;
+            var distance = Vector3.Distance(movementStart, movementEnd);
+            if (distance < 0.0001f)
+            {
+                hasMovement = false;
+                buffer = ArrayPool<Collider2D>.Shared.Rent(2);
+                return;
+            }
+
+            hasMovement = true;
+            
+            var time = distance / idleStateData.idleMovementSpeed;
             timer = new Timer(time);
-            easingFunc = EasingFunction.GetEasingFunction(stateMachine.ease);
+            easingFunc = EasingFunction.GetEasingFunction(idleStateData.ease);
             buffer = ArrayPool<Collider2D>.Shared.Rent(2);
         }
 
         protected override void OnStateUpdate()
         {
+            if (hasMovement == false) return;
             timer.Update(Time.deltaTime);
             stateMachine.transform.localPosition = Vector3.Lerp(movementStart, movementEnd, easingFunc.Invoke(0f, 1f, timer.NormalizedTime));
             if (timer.IsDone)
@@ -43,8 +56,8 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         protected override void CheckTransitions()
         {
-            var center = Vector3.Lerp(stateMachine.idleStartPosition, stateMachine.idleEndPosition, 0.5f);
-            int count = Physics2D.OverlapCircleNonAlloc(center, stateMachine.attackFieldRadius, buffer, 1 << PhysicsConstants.PlayerLayer);
+            var center = hasMovement ? Vector3.Lerp(stateMachine.idleStartPosition, stateMachine.idleEndPosition, 0.5f) : stateMachine.transform.position;
+            int count = Physics2D.OverlapCircleNonAlloc(center, stateMachine.attackStateDataSO.attackFieldRadius, buffer, 1 << PhysicsConstants.PlayerLayer);
 
             if (count > 0)
             {
