@@ -4081,50 +4081,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: log
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: textOffsetX
-      value: 0.014
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: textOffsetY
-      value: -0.007
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: ropeSwingForce
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: showCurrentState
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: playerDiedChannelSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: recieveDamageRadius
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: damageImmuneDuration
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: ropeSwingInitialForce
-      value: 480
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: playerUpdateHealthChannelSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 40bb719cb9ab63c4a844230023235343, type: 2}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: playerRecievedDamageChannelSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 40bb719cb9ab63c4a844230023235343, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
 --- !u!1001 &6383873117071041064

@@ -50,7 +50,7 @@ namespace TheGame.PlayerSystems.States
             var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
             var previousPosition = stateMachine.previousPosition;
             var castStartPosition = previousPosition + down * localScaleYHalf;
-            var groundCheckDistance = stateMachine.groundCheckDistance;
+            var groundCheckDistance = stateMachine.groundedStateDataSO.groundCheckDistance;
 
             var raycastHitBuffer = ArrayPool<RaycastHit>.Shared.Rent(2);
 

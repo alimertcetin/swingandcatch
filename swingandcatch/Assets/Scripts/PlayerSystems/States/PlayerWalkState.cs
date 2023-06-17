@@ -14,7 +14,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            stateMachine.transform.position += stateMachine.movementInput.normalized * (stateMachine.walkSpeed * Time.deltaTime);
+            stateMachine.transform.position += stateMachine.movementInput.normalized * (stateMachine.walkStateDataSO.walkSpeed * Time.deltaTime);
         }
 
         protected override void InitializeChildStates()
