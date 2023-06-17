@@ -1044,6 +1044,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiGameObject: {fileID: 869042516}
+  btn_Restart: {fileID: 736237584}
 --- !u!1 &599835083
 GameObject:
   m_ObjectHideFlags: 0
