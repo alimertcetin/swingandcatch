@@ -101,12 +101,38 @@ namespace TheGame.PlayerSystems
             return false;
         }
 
+        public bool CanMove(Vector3 newPosition, int layerMask)
+        {
+            const int DETAIL = 10;
+            const float ERROR = 0.1f;
+
+            var transform = this.transform;
+            var dir = (newPosition - previousPosition).normalized;
+            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
+            var castStartPosition = previousPosition + dir * localScaleYHalf;
+
+            for (int i = 1; i <= DETAIL; i++)
+            {
+#if UNITY_EDITOR
+                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + dir * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.blue, Color.red, i / (float)DETAIL));
+#endif
+                if (Physics.Raycast(castStartPosition, dir, groundedStateDataSO.groundCheckDistance, layerMask))
+                {
+                    return false;
+                }
+
+                var time = i / (float)DETAIL;
+                castStartPosition = Vector3.Lerp(previousPosition, newPosition, time) + dir * localScaleYHalf;
+            }
+
+            return true;
+        }
+
         public bool GetNearestRope(out Rope rope)
         {
             rope = default;
             var position = transform.position;
             int count = Physics2D.OverlapCircleNonAlloc(position, climbStateDataSO.climbCheckRadius, colliderBuffer, 1 << PhysicsConstants.RopeLayer);
-            XIVDebug.DrawCircle(position, climbStateDataSO.climbCheckRadius, Color.blue, 0.5f);
             if (count == 0) return false;
             rope = colliderBuffer.GetClosest(position, count).GetComponent<Rope>();
             return true;

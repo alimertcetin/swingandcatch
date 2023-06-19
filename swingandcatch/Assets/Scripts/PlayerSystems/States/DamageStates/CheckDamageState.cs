@@ -2,7 +2,6 @@
 using TheGame.FSM;
 using TheGame.HazzardSystems;
 using UnityEngine;
-using XIV.Core;
 
 namespace TheGame.PlayerSystems.States.DamageStates
 {
@@ -23,9 +22,6 @@ namespace TheGame.PlayerSystems.States.DamageStates
         protected override void OnStateUpdate()
         {
             var pos = stateMachine.transform.position;
-#if UNITY_EDITOR
-            XIVDebug.DrawCircle(pos, stateMachine.recieveDamageRadius, Color.magenta, 0.1f);
-#endif
             count = Physics2D.OverlapCircleNonAlloc(pos, stateMachine.recieveDamageRadius * 0.5f, buffer, 1 << PhysicsConstants.HazzardLayer);
 
             for (int i = 0; i < count; i++)

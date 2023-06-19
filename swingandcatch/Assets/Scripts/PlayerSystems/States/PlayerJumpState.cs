@@ -28,10 +28,16 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateUpdate()
         {
             yVelocity += Physics.gravity.y * (stateMachine.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
-            var transform = stateMachine.transform;
-            var pos = transform.position;
+            var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
-            transform.position = pos;
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            {
+                stateMachine.transform.position = pos;
+            }
+            else
+            {
+                yVelocity = 0f;
+            }
         }
 
         protected override void OnStateExit()
