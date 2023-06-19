@@ -1,7 +1,7 @@
 ﻿using TheGame.FSM;
 using UnityEngine;
 using XIV.Core.Utils;
-using XIV.TweenSystem;
+using XIV.Core.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {

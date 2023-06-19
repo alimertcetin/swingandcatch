@@ -1,8 +1,8 @@
 ﻿using TheGame.FSM;
 using XIV.Core.Utils;
+using XIV.Core.TweenSystem;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
-using XIV.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {

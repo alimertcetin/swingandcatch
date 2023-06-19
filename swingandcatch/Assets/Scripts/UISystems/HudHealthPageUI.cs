@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using XIV.Core.Utils;
-using XIV.TweenSystem;
+using XIV.Core.TweenSystem;
 
 namespace TheGame.UISystems
 {

@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core;
 using XIV.Core.Utils;
+using XIV.Core.TweenSystem;
 using XIV.Core.XIVMath;
-using XIV.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {
