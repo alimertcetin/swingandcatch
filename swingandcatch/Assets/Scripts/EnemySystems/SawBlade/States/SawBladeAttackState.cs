@@ -54,10 +54,10 @@ namespace TheGame.EnemySystems.SawBlade.States
                 void OnPlayerHit(Transform player)
                 {
                     // TODO : Create particle pool
+                    hazzarMono.UnregisterHit(OnPlayerHit);
                     var particleGo = Object.Instantiate(projectile.particlePrefab, projectile.transform.position, Quaternion.identity);
                     Object.Destroy(particleGo, 7f);
                     projectilePool.Release(projectile.gameObject);
-                    hazzarMono.UnregisterHit(OnPlayerHit);
                 }
             }
         }

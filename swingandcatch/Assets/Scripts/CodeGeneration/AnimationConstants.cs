@@ -5,6 +5,160 @@ using UnityEngine;
 
 public static class AnimationConstants 
 {
+	// Inner Classes
+	public static class BannerDAnim 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string BannerDAnim_BannerWave = "BannerWave";
+			public static readonly int BannerDAnim_BannerWaveHash = Animator.StringToHash("BannerWave");
+			
+		} // class Clips
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int BannerDAnim_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class BannerDAnim
+	 
+	public static class ChestD 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string ChestD_ChestAnimD = "ChestAnimD";
+			public static readonly int ChestD_ChestAnimDHash = Animator.StringToHash("ChestAnimD");
+			
+		} // class Clips
+		 
+		public static class Parameters 
+		{
+			// Members
+			public const string ChestD_open_Trigger = "open";
+			public const string ChestD_close_Trigger = "close";
+			
+		} // class Parameters
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int ChestD_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class ChestD
+	 
+	public static class SpikeTrapD 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string SpikeTrapD_SpikeTrapAnimD = "SpikeTrapAnimD";
+			public static readonly int SpikeTrapD_SpikeTrapAnimDHash = Animator.StringToHash("SpikeTrapAnimD");
+			
+		} // class Clips
+		 
+		public static class Parameters 
+		{
+			// Members
+			public const string SpikeTrapD_open_Trigger = "open";
+			public const string SpikeTrapD_close_Trigger = "close";
+			
+		} // class Parameters
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int SpikeTrapD_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class SpikeTrapD
+	 
+	public static class SwingTrapD 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string SwingTrapD_SwingTrapAnimD = "SwingTrapAnimD";
+			public static readonly int SwingTrapD_SwingTrapAnimDHash = Animator.StringToHash("SwingTrapAnimD");
+			
+		} // class Clips
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int SwingTrapD_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class SwingTrapD
+	 
+	public static class TrapDoorD 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string TrapDoorD_TrapDoorAnimD = "TrapDoorAnimD";
+			public static readonly int TrapDoorD_TrapDoorAnimDHash = Animator.StringToHash("TrapDoorAnimD");
+			
+		} // class Clips
+		 
+		public static class Parameters 
+		{
+			// Members
+			public const string TrapDoorD_open_Trigger = "open";
+			public const string TrapDoorD_close_Trigger = "close";
+			
+		} // class Parameters
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int TrapDoorD_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class TrapDoorD
+	 
+	public static class EndGate 
+	{
+		// Inner Classes
+		public static class Clips 
+		{
+			// Members
+			public const string EndGate_Open = "Open";
+			public static readonly int EndGate_OpenHash = Animator.StringToHash("Open");
+			public const string EndGate_Close = "Close";
+			public static readonly int EndGate_CloseHash = Animator.StringToHash("Close");
+			
+		} // class Clips
+		 
+		public static class Layers 
+		{
+			// Members
+			public const int EndGate_Base_Layer = 0;
+			
+		} // class Layers
+		 
+		
+	} // class EndGate
+	 
+	
 } // class AnimationConstants
  
 

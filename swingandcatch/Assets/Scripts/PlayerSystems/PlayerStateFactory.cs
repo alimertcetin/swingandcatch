@@ -22,6 +22,7 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerDiedByLavaState(stateMachine, this));
             AddState(new CheckDamageState(stateMachine, this));
             AddState(new DamageImmuneState(stateMachine, this));
+            AddState(new PlayerWinState(stateMachine, this));
         }
     }
 }
