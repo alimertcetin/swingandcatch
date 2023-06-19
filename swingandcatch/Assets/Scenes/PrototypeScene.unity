@@ -4870,14 +4870,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: showCurrentState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4617712201470520611, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: playerReachedEndChannelSO
-      value: 
-      objectReference: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
 --- !u!1001 &6301118237937140101
