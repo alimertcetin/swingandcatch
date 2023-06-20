@@ -6,6 +6,30 @@ using UnityEngine;
 public static class ShaderConstants 
 {
 	// Inner Classes
+	public static class Unlit_HealthbarShader 
+	{
+		// Members
+		public const string HealthLowColor_Color = "_HealthLowColor";
+		public static readonly int HealthLowColor_ColorID = Shader.PropertyToID("_HealthLowColor");
+		public const string BorderColor_Color = "_BorderColor";
+		public static readonly int BorderColor_ColorID = Shader.PropertyToID("_BorderColor");
+		public const string HealthInnerBorderColor_Color = "_HealthInnerBorderColor";
+		public static readonly int HealthInnerBorderColor_ColorID = Shader.PropertyToID("_HealthInnerBorderColor");
+		public const string BackgroundColor_Color = "_BackgroundColor";
+		public static readonly int BackgroundColor_ColorID = Shader.PropertyToID("_BackgroundColor");
+		public const string Radius_Range = "_Radius";
+		public static readonly int Radius_RangeID = Shader.PropertyToID("_Radius");
+		public const string BorderRadius_Range = "_BorderRadius";
+		public static readonly int BorderRadius_RangeID = Shader.PropertyToID("_BorderRadius");
+		public const string HealthInnerBorderSize_Range = "_HealthInnerBorderSize";
+		public static readonly int HealthInnerBorderSize_RangeID = Shader.PropertyToID("_HealthInnerBorderSize");
+		public const string FlashStart_Range = "_FlashStart";
+		public static readonly int FlashStart_RangeID = Shader.PropertyToID("_FlashStart");
+		public const string Health_Range = "_Health";
+		public static readonly int Health_RangeID = Shader.PropertyToID("_Health");
+		
+	} // class Unlit_HealthbarShader
+	 
 	public static class ShaderGraphs_LavaShader 
 	{
 		// Members
