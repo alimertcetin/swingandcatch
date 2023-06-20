@@ -44,13 +44,15 @@ namespace TheGame.EnemySystems.SawBlade.States
                 projectile.transform.position = stateMachineTransformPosition;
                 projectile.target = target;
                 projectile.direction = (target.position - stateMachineTransformPosition).normalized.SetZ(0f);
-                projectile.onOutsideOfTheView = () =>
-                {
-                    projectilePool.Release(projectile.gameObject);
-                };
+                
                 var hazzarMono = projectile.GetComponent<HazzardMono>();
                 hazzarMono.RegisterHit(OnPlayerHit);
 
+                projectile.onOutsideOfTheView = () =>
+                {
+                    hazzarMono.UnregisterHit(OnPlayerHit);
+                    projectilePool.Release(projectile.gameObject);
+                };
                 void OnPlayerHit(Transform player)
                 {
                     // TODO : Create particle pool
