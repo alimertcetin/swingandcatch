@@ -41,7 +41,6 @@ namespace TheGame.PlayerSystems
         public bool isRunPressed => Input.GetKey(KeyCode.LeftShift);
         public bool isJumpPressed => Input.GetKey(KeyCode.Space);
         
-        public Rigidbody2D rb { get; private set; }
         public Vector3 velocity { get; private set; }
         public Vector3 previousPosition { get; private set; }
         
@@ -49,7 +48,6 @@ namespace TheGame.PlayerSystems
 
         protected override void Awake()
         {
-            rb = GetComponent<Rigidbody2D>();
             previousPosition = transform.position;
             base.Awake();
         }
