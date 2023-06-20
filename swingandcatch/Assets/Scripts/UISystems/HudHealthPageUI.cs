@@ -1,4 +1,5 @@
-﻿using TheGame.UISystems.Core;
+﻿using System;
+using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using XIV.Core.Utils;
@@ -37,7 +38,6 @@ namespace TheGame.UISystems
                     var easedTime = EasingFunction.Linear(timer.NormalizedTime);
                     var healthAmount = Mathf.Lerp(currentAmount, newAmount, easedTime);
                     image.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, healthAmount);
-                    Debug.Log("timer = " + timer);
                 })
                 .OnCanceled(SetHealthToNewAmount)
                 .OnCompleted(SetHealthToNewAmount);
@@ -50,5 +50,9 @@ namespace TheGame.UISystems
             XIVEventSystem.SendEvent(fillEvent);
         }
 
+        void OnDestroy()
+        {
+            image.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, 1f);
+        }
     }
 }
