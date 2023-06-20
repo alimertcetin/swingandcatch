@@ -1,41 +1,58 @@
-﻿using TheGame.UISystems.Core;
-using TMPro;
+﻿using System;
+using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.UI;
 using XIV.Core.Utils;
-using XIV.TweenSystem;
+using XIV.EventSystem;
+using XIV.EventSystem.Events;
 
 namespace TheGame.UISystems
 {
     public class HudHealthPageUI : PageUI
     {
         [SerializeField] Image image;
-        Color initialColor;
+        float currentAmount;
+        const float IMAGE_FILL_DURATION = 0.5f;
+        InvokeForSecondsEvent fillEvent;
 
         protected override void Awake()
         {
             base.Awake();
-            initialColor = image.color;
+            ChangeDisplayAmount(1f);
         }
 
         public void ChangeDisplayAmount(float newAmount)
         {
+            if (fillEvent != null) XIVEventSystem.CancelEvent(fillEvent);
+
             if (isActive == false)
             {
-                image.fillAmount = newAmount;
+                currentAmount = newAmount;
+                image.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, currentAmount);
                 return;
             }
+            
+            fillEvent = new InvokeForSecondsEvent(IMAGE_FILL_DURATION)
+                .AddAction((timer) =>
+                {
+                    var easedTime = EasingFunction.Linear(timer.NormalizedTime);
+                    var healthAmount = Mathf.Lerp(currentAmount, newAmount, easedTime);
+                    image.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, healthAmount);
+                })
+                .OnCanceled(SetHealthToNewAmount)
+                .OnCompleted(SetHealthToNewAmount);
+            
+            void SetHealthToNewAmount()
+            {
+                currentAmount = newAmount;
+            }
 
-            image.CancelTween();
-            var current = image.fillAmount;
-            var duration = 0.5f;
-            var currentColor = image.color;
-            var targetColor = Color.Lerp(Color.red, initialColor, newAmount);
-            image.XIVTween()
-                .ImageFill(current, newAmount, duration, EasingFunction.Linear)
-                .And()
-                .ImageColor(currentColor, targetColor, duration, EasingFunction.Linear)
-                .Start();
+            XIVEventSystem.SendEvent(fillEvent);
+        }
+
+        void OnDestroy()
+        {
+            image.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, 1f);
         }
     }
 }

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c62e4b3e142c4976a1240d9baa60b49f, type: 3}
+  m_Name: SawBlade_Attack_Default
+  m_EditorClassIdentifier: 
+  attackDuration: 1
+  followDistance: 1.5
+  followSpeed: 2
+  attackFieldRadius: 2
+  projectilePrefab: {fileID: 843538939233883306, guid: 406abb337b9a87c46be65ececf84a163, type: 3}

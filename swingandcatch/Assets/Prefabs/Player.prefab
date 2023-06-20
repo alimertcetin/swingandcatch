@@ -253,18 +253,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740dbe2ff84d4a42aba881267f4210c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 10
-  airMovementSpeed: 7.5
-  jumpHeight: 3
-  jumpGravityScale: 1
-  groundCheckDistance: 0.15
-  fallGravityScale: 1
-  climbCheckRadius: 1.1
-  climbSpeed: 1
+  showCurrentState: 0
+  textOffsetX: 0.014
+  textOffsetY: -0.007
+  health: 100
+  damageImmuneDuration: 0.75
+  recieveDamageRadius: 1
+  walkStateDataSO: {fileID: 11400000, guid: ec5d067ca47e76642b30561f792a3a4c, type: 2}
+  runStateDataSO: {fileID: 11400000, guid: bd824c5c3dd76c04389f451ba5016d58, type: 2}
+  airMovementStateDataSO: {fileID: 11400000, guid: 3c55b9d6810ff404ea623b53519c53ec, type: 2}
+  jumpStateDataSO: {fileID: 11400000, guid: 50a80a2f2ce418a4aab9147d03cfd1bf, type: 2}
+  groundedStateDataSO: {fileID: 11400000, guid: 4fa6ae2f0e2aadc45900e05f607a088c, type: 2}
+  fallStateDataSO: {fileID: 11400000, guid: 0827410db021f2c46a9c78078b5ccd3b, type: 2}
+  climbStateDataSO: {fileID: 11400000, guid: 2b0b222f7c0552748b021f9fab287b00, type: 2}
   playerFeet:
   - {fileID: 4617712202988879445}
   - {fileID: 4617712201370327529}
+  playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
+  playerUpdateHealthChannelSO: {fileID: 11400000, guid: 40bb719cb9ab63c4a844230023235343, type: 2}
+  playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
 --- !u!1 &4617712201605241933
 GameObject:
   m_ObjectHideFlags: 0

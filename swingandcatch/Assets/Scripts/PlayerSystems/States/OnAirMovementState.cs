@@ -14,8 +14,11 @@ namespace TheGame.PlayerSystems.States
         {
             Transform transform = stateMachine.transform;
             Vector3 pos = transform.position;
-            pos += stateMachine.movementInput.normalized * (stateMachine.airMovementSpeed * Time.deltaTime);
-            transform.position = pos;
+            pos += stateMachine.movementInput.normalized * (stateMachine.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            {
+                transform.position = pos;
+            }
         }
 
         protected override void InitializeChildStates()

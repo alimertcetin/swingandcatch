@@ -1,7 +1,7 @@
 ﻿using TheGame.FSM;
 using UnityEngine;
 using XIV.Core.Utils;
-using XIV.TweenSystem;
+using XIV.Core.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -16,7 +16,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            yVelocity = CalculateJumpVelocity(stateMachine.jumpHeight);
+            yVelocity = CalculateJumpVelocity(stateMachine.jumpStateDataSO.jumpHeight);
 
             if (comingFrom is PlayerClimbState) return;
             stateMachine.CancelTween();
@@ -27,11 +27,17 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            yVelocity += Physics.gravity.y * (stateMachine.jumpGravityScale * Time.fixedDeltaTime);
-            var transform = stateMachine.transform;
-            var pos = transform.position;
+            yVelocity += Physics.gravity.y * (stateMachine.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
+            var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
-            transform.position = pos;
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            {
+                stateMachine.transform.position = pos;
+            }
+            else
+            {
+                yVelocity = 0f;
+            }
         }
 
         protected override void OnStateExit()
@@ -68,7 +74,7 @@ namespace TheGame.PlayerSystems.States
 
         float CalculateJumpVelocity(float jumpHeight)
         {
-            float gravity = Physics.gravity.y * stateMachine.jumpGravityScale;
+            float gravity = Physics.gravity.y * stateMachine.jumpStateDataSO.jumpGravityScale;
             float initialVelocity = Mathf.Sqrt(2f * jumpHeight * -gravity);
             return initialVelocity;
         }

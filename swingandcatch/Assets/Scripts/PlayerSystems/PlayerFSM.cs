@@ -17,24 +17,23 @@ namespace TheGame.PlayerSystems
         public float recieveDamageRadius = 1.5f;
 
         [Header("Movement")]
-        public float walkSpeed = 5f;
-        public float runSpeed = 10f;
-        public float airMovementSpeed = 7.5f;
+        public PlayerWalkStateDataSO walkStateDataSO;
+        public PlayerRunStateDataSO runStateDataSO;
+        public PlayerAirMovementStateDataSO airMovementStateDataSO;
+
         [Header("Jump Movement")]
-        public float jumpHeight = 2f;
-        public float jumpGravityScale = 0.5f;
-        public float groundCheckDistance = 0.5f;
-        public float fallGravityScale = 0.5f;
+        public PlayerJumpStateDataSO jumpStateDataSO;
+        public PlayerGroundedStateDataSO groundedStateDataSO;
+        public PlayerFallStateDataSO fallStateDataSO;
+
         [Header("Climb Movement")]
-        public float climbCheckRadius = 2f;
-        public float climbSpeed = 5f;
-        public float ropeSwingForce = 2f;
-        public float ropeSwingInitialForce = 120f;
+        public PlayerClimbStateDataSO climbStateDataSO;
 
         [Header("Left to Right order")]
         public Transform[] playerFeet;
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerUpdateHealthChannelSO;
+        public TransformChannelSO playerReachedEndChannelSO;
 
         // TODO : Fix naming. Like hasMovementInput -> hasMovementInputX
         public bool hasMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;
@@ -42,7 +41,6 @@ namespace TheGame.PlayerSystems
         public bool isRunPressed => Input.GetKey(KeyCode.LeftShift);
         public bool isJumpPressed => Input.GetKey(KeyCode.Space);
         
-        public Rigidbody2D rb { get; private set; }
         public Vector3 velocity { get; private set; }
         public Vector3 previousPosition { get; private set; }
         
@@ -50,7 +48,6 @@ namespace TheGame.PlayerSystems
 
         protected override void Awake()
         {
-            rb = GetComponent<Rigidbody2D>();
             previousPosition = transform.position;
             base.Awake();
         }
@@ -88,9 +85,9 @@ namespace TheGame.PlayerSystems
             for (int i = 1; i <= DETAIL; i++)
             {
 #if UNITY_EDITOR
-                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + down * groundCheckDistance, Color.Lerp(Color.yellow, Color.green, i / (float)DETAIL));
+                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + down * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.yellow, Color.green, i / (float)DETAIL));
 #endif
-                if (Physics.Raycast(castStartPosition, down, groundCheckDistance, layerMask))
+                if (Physics.Raycast(castStartPosition, down, groundedStateDataSO.groundCheckDistance, layerMask))
                 {
                     return true;
                 }
@@ -102,12 +99,38 @@ namespace TheGame.PlayerSystems
             return false;
         }
 
+        public bool CanMove(Vector3 newPosition, int layerMask)
+        {
+            const int DETAIL = 10;
+            const float ERROR = 0.1f;
+
+            var transform = this.transform;
+            var dir = (newPosition - previousPosition).normalized;
+            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
+            var castStartPosition = previousPosition + dir * localScaleYHalf;
+
+            for (int i = 1; i <= DETAIL; i++)
+            {
+#if UNITY_EDITOR
+                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + dir * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.blue, Color.red, i / (float)DETAIL));
+#endif
+                if (Physics.Raycast(castStartPosition, dir, groundedStateDataSO.groundCheckDistance, layerMask))
+                {
+                    return false;
+                }
+
+                var time = i / (float)DETAIL;
+                castStartPosition = Vector3.Lerp(previousPosition, newPosition, time) + dir * localScaleYHalf;
+            }
+
+            return true;
+        }
+
         public bool GetNearestRope(out Rope rope)
         {
             rope = default;
             var position = transform.position;
-            int count = Physics2D.OverlapCircleNonAlloc(position, climbCheckRadius, colliderBuffer, 1 << PhysicsConstants.RopeLayer);
-            XIVDebug.DrawCircle(position, climbCheckRadius, Color.blue, 0.5f);
+            int count = Physics2D.OverlapCircleNonAlloc(position, climbStateDataSO.climbCheckRadius, colliderBuffer, 1 << PhysicsConstants.RopeLayer);
             if (count == 0) return false;
             rope = colliderBuffer.GetClosest(position, count).GetComponent<Rope>();
             return true;

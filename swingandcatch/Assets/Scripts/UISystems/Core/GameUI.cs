@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using XIV.Core.Utils;
-using XIV.TweenSystem;
+using XIV.Core.TweenSystem;
 
 namespace TheGame.UISystems.Core
 {

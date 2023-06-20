@@ -6,8 +6,8 @@ using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core;
 using XIV.Core.Utils;
+using XIV.Core.TweenSystem;
 using XIV.Core.XIVMath;
-using XIV.TweenSystem;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -35,7 +35,7 @@ namespace TheGame.PlayerSystems.States
             Vector3 positionOnSegment = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = positionOnSegment;
             
-            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.ropeSwingInitialForce);
+            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.climbStateDataSO.ropeSwingInitialForce);
             
             stateMachine.CancelTween();
             stateMachine.XIVTween()
@@ -63,12 +63,12 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
 
-            currentT -= stateMachine.climbSpeed * Time.deltaTime * movementInput.y;
+            currentT -= stateMachine.climbStateDataSO.climbSpeed * Time.deltaTime * movementInput.y;
             currentT = Mathf.Clamp01(currentT);
             var nextPosition = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = nextPosition;
 
-            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.ropeSwingForce);
+            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.climbStateDataSO.ropeSwingForce);
         }
 
         protected override void OnStateExit()

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6383873117298714057}
   - component: {fileID: 6383873117298714058}
   - component: {fileID: 6383873117298714059}
+  - component: {fileID: 4816358375933143557}
   m_Layer: 10
   m_Name: SawBladePrefab
   m_TagString: Untagged
@@ -63,6 +64,24 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.6
+--- !u!114 &4816358375933143557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6383873117298714103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0423b9e2e86468ca39c58de7c4a218d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showCurrentState: 0
+  textOffsetX: 0
+  textOffsetY: 0
+  idleStateDataSO: {fileID: 11400000, guid: 9f1c08036aa0f9444b3010e53e7efa68, type: 2}
+  transitionToIdleStateDataSO: {fileID: 11400000, guid: 9c3c69cdaf15b9e4db30b77d653d76c0, type: 2}
+  attackStateDataSO: {fileID: 11400000, guid: 35f74c2bf377ba948b248d39c6e0f090, type: 2}
 --- !u!1001 &3840673186075390642
 PrefabInstance:
   m_ObjectHideFlags: 0

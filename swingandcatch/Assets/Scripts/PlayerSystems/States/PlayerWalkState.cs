@@ -14,7 +14,12 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            stateMachine.transform.position += stateMachine.movementInput.normalized * (stateMachine.walkSpeed * Time.deltaTime);
+            var pos = stateMachine.transform.position;
+            pos += stateMachine.movementInput.normalized * (stateMachine.walkStateDataSO.walkSpeed * Time.deltaTime);
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            {
+                stateMachine.transform.position = pos;
+            }
         }
 
         protected override void InitializeChildStates()
