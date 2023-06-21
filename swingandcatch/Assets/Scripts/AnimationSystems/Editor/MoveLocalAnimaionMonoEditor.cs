@@ -5,7 +5,7 @@ using XIV.XIVEditor;
 
 namespace TheGame.AnimationSystems.Editor
 {
-    [CustomEditor(typeof(MoveLocalAnimationMono))]
+    [CustomEditor(typeof(MoveLocalAnimationMono)), CanEditMultipleObjects]
     public class MoveLocalAnimaionMonoEditor : XIVDefaulEditor
     {
         SerializedObject so;
@@ -29,6 +29,15 @@ namespace TheGame.AnimationSystems.Editor
             base.OnInspectorGUI();
 
             if (Application.isPlaying) return;
+            
+            if (GUILayout.Button("Reset"))
+            {
+                so.Update();
+                spAxis.vector3Value = Vector3.up;
+                so.FindProperty("moveDistance").floatValue = 2f;
+                so.FindProperty("moveSpeed").floatValue = 1f;
+                so.ApplyModifiedProperties();
+            }
 
             var buttontext = inEditMode ? "Exit Edit Mode" : "Enter Edit Mode";
             if (GUILayout.Button(buttontext))
