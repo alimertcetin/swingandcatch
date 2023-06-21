@@ -320,6 +320,10 @@ PrefabInstance:
       propertyPath: uiGameObject
       value: 
       objectReference: {fileID: 3602107534456340489}
+    - target: {fileID: 6378744895922087838, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
+      propertyPath: sceneLoadChannel
+      value: 
+      objectReference: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
     - target: {fileID: 6378744895987656966, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
       propertyPath: image
       value: 

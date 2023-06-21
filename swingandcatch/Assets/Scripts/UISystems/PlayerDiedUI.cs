@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ namespace TheGame.UISystems
 {
     public class PlayerDiedUI : GameUI
     {
+        [SerializeField] SceneLoadChannelSO sceneLoadChannel;
         [SerializeField] Button btn_Restart;
 
         void OnEnable()
@@ -22,7 +24,13 @@ namespace TheGame.UISystems
 
         void ReloadScene()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
+            {
+                activateImmediately = false,
+                displayLoadingScreen = true,
+                sceneToLoad = SceneManager.GetActiveScene().buildIndex,
+                unloadActiveScene = true,
+            });
         }
     }
 }
