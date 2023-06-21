@@ -3,7 +3,7 @@ using XIV.Core.XIVMath;
 
 namespace TheGame.VisualSystems
 {
-    public class ParallaxPlane : MonoBehaviour
+    public class ParallaxQuad : MonoBehaviour
     {
         public float distanceFromCamera = 5f;
         public float movementSharpness = 10f;
