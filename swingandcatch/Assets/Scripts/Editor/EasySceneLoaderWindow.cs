@@ -11,8 +11,8 @@ namespace LessonIsMath.XIVEditor.Windows
     public class EasySceneLoaderWindow : EditorWindow
     {
         bool isInitialized;
-        List<SceneAsset> scenes;
-        List<SceneAsset> testScenes;
+        List<SceneAsset> scenes = new List<SceneAsset>();
+        List<SceneAsset> testScenes = new List<SceneAsset>();
         Vector2 scenesScrollPos;
         Vector2 buttonsScrollPos;
         bool additiveLoadToggle;
@@ -32,25 +32,18 @@ namespace LessonIsMath.XIVEditor.Windows
             EditorWindow.GetWindow<EasySceneLoaderWindow>("Easy Scene Loader").Show();
         }
 
+        void OnEnable()
+        {
+            sceneFolder = EditorPrefs.GetString(sceneFolderKey, "Assets/Scenes");
+            testFolder = EditorPrefs.GetString(testFolderKey, "Assets/Tests");
+        }
+
         void Initialize()
         {
-            scenes = new List<SceneAsset>(8);
-            testScenes = new List<SceneAsset>(8);
-            try
-            {
-                AddScenes(sceneFolder, scenes);
-                AddScenes(testFolder, testScenes);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(e);
-            }
-            finally
-            {
-                labelStyle = EditorStyles.boldLabel;
-                labelStyle.alignment = TextAnchor.MiddleCenter;    
-            }
-            
+            AddScenes(sceneFolder, scenes);
+            AddScenes(testFolder, testScenes);
+            labelStyle = EditorStyles.boldLabel;
+            labelStyle.alignment = TextAnchor.MiddleCenter;
         }
 
         void OnProjectChange()
@@ -66,12 +59,6 @@ namespace LessonIsMath.XIVEditor.Windows
             base.SaveChanges();
             EditorPrefs.SetString(sceneFolderKey, sceneFolder);
             EditorPrefs.SetString(testFolderKey, testFolder);
-        }
-
-        void OnEnable()
-        {
-            sceneFolder = EditorPrefs.GetString(sceneFolderKey, "Scenes");
-            testFolder = EditorPrefs.GetString(testFolderKey, "Tests");
         }
 
         void OnDestroy()
@@ -182,6 +169,7 @@ namespace LessonIsMath.XIVEditor.Windows
 
         void AddScenes(string path, List<SceneAsset> collection)
         {
+            if (System.IO.Directory.Exists(path) == false) return;
             var valueCollection = AssetUtils.LoadAssetsOfType<SceneAsset>(path);
             collection.AddRange(valueCollection);
         }
