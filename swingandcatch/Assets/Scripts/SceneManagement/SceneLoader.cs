@@ -108,9 +108,7 @@ namespace TheGame.SceneManagement
         {
             LightProbes.Tetrahedralize();
             displayLoadingScreenChannel.RaiseEvent(false);
-            Debug.Log("SceneManager.GetActiveScene() BEFORE= " + SceneManager.GetActiveScene().name);
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneToLoad));
-            Debug.Log("SceneManager.GetActiveScene() AFTER = " + SceneManager.GetActiveScene().name);
         }
     }
 }
