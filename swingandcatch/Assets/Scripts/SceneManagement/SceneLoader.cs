@@ -8,8 +8,6 @@ namespace TheGame.SceneManagement
 {
     public class SceneLoader : MonoBehaviour
     {
-        // 0 = Initialization, 1 = PersistantManager, 2 = MainMenu
-        
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
         [SerializeField] BoolChannelSO displayLoadingScreenChannel;
         [SerializeField] FloatChannelSO sceneLoadingProgressChannel;
@@ -17,7 +15,7 @@ namespace TheGame.SceneManagement
         [SerializeField] VoidChannelSO activateNewlyLoadedScene;
         
         AsyncOperation currentLoadingOperation;
-        Timer sceneLoadTimer = new Timer(4f);
+        Timer sceneLoadTimer = new Timer(2f);
         
         int sceneToLoad;
         int sceneToUnload;
@@ -79,7 +77,8 @@ namespace TheGame.SceneManagement
                 while (sceneLoadTimer.IsDone == false)
                 {
                     sceneLoadTimer.Update(Time.deltaTime);
-                    sceneLoadingProgressChannel.RaiseEvent(currentLoadingOperation.progress * sceneLoadTimer.NormalizedTime);
+                    var t = EasingFunction.SmoothStop3(sceneLoadTimer.NormalizedTime);
+                    sceneLoadingProgressChannel.RaiseEvent(currentLoadingOperation.progress * t);
                     yield return null;
                 }
             }

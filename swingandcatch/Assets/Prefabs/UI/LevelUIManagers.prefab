@@ -129,7 +129,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiGameObject: {fileID: 0}
-  btn_PlayAgain: {fileID: 0}
+  levelListSO: {fileID: 11400000, guid: 57a8c2cfe67104b49acfc92c4c7bc497, type: 2}
+  sceneLoadChannel: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
+  txt_Info: {fileID: 0}
+  btn_Continue: {fileID: 0}
+  btn_MainMenu: {fileID: 0}
 --- !u!1 &6378744895922087832
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,6 +179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiGameObject: {fileID: 0}
+  sceneLoadChannel: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
   btn_Restart: {fileID: 0}
 --- !u!1 &6378744895987656960
 GameObject:

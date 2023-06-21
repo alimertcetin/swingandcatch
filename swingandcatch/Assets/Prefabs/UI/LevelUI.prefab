@@ -40,22 +40,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3251208420716960154}
     m_Modifications:
-    - target: {fileID: 2793442653604039186, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442653604039186, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442653604039186, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442653604039186, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2793442653790060976, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
       propertyPath: m_Name
       value: LevelUICanvas
@@ -144,24 +128,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2793442655393265989, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442655393265989, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442655393265989, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2793442655393265989, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
+--- !u!114 &1928287769760335601 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1007587500113475365, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
+  m_PrefabInstance: {fileID: 1673383015787049428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3602107533513185364 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2793442654147799424, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
@@ -225,14 +204,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6034047543275102890, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
   m_PrefabInstance: {fileID: 1673383015787049428}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &7211012142079970899 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8298908891322531719, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
+--- !u!114 &5941455992387493373 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4993724812581399593, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
   m_PrefabInstance: {fileID: 1673383015787049428}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7211012142121479630 stripped
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6005722326503952604 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8298908891530746906, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4927378201926050056, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
   m_PrefabInstance: {fileID: 1673383015787049428}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -241,6 +226,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &8007294602662126533 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8657797518689341969, guid: 20e2d44a1fb4a0d4e9f3e5752309f199, type: 3}
+  m_PrefabInstance: {fileID: 1673383015787049428}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1673383016428383187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -249,13 +239,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 3251208420716960154}
     m_Modifications:
     - target: {fileID: 6378744894715775635, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
+      propertyPath: txt_Info
+      value: 
+      objectReference: {fileID: 5941455992387493373}
+    - target: {fileID: 6378744894715775635, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
+      propertyPath: btn_Continue
+      value: 
+      objectReference: {fileID: 6005722326503952604}
+    - target: {fileID: 6378744894715775635, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
+      propertyPath: btn_MainMenu
+      value: 
+      objectReference: {fileID: 1928287769760335601}
+    - target: {fileID: 6378744894715775635, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
       propertyPath: uiGameObject
       value: 
-      objectReference: {fileID: 7211012142079970899}
-    - target: {fileID: 6378744894715775635, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
-      propertyPath: btn_PlayAgain
-      value: 
-      objectReference: {fileID: 7211012142121479630}
+      objectReference: {fileID: 8007294602662126533}
     - target: {fileID: 6378744895091923137, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
       propertyPath: m_Name
       value: LevelUIManagers
@@ -320,10 +318,6 @@ PrefabInstance:
       propertyPath: uiGameObject
       value: 
       objectReference: {fileID: 3602107534456340489}
-    - target: {fileID: 6378744895922087838, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
-      propertyPath: sceneLoadChannel
-      value: 
-      objectReference: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
     - target: {fileID: 6378744895987656966, guid: b5976681b1fa3e14a8bfee9c78b9810c, type: 3}
       propertyPath: image
       value: 
