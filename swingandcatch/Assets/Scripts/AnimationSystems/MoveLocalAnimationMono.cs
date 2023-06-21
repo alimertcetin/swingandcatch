@@ -20,10 +20,8 @@ namespace TheGame.AnimationSystems
         {
             axis.Normalize();
             var localPosition = transform.localPosition;
-            var moveDistanceHalf = moveDistance * 0.5f;
-            movementStart = localPosition + axis * moveDistanceHalf;
-            movementEnd = localPosition - axis * moveDistanceHalf;
-            transform.localPosition = movementStart;
+            movementStart = localPosition;
+            movementEnd = localPosition + axis * moveDistance;
             var time = Vector3.Distance(movementStart, movementEnd) / moveSpeed;
             timer = new Timer(time);
             easingFunc = EasingFunction.GetEasingFunction(ease);
@@ -43,12 +41,12 @@ namespace TheGame.AnimationSystems
 
 #if UNITY_EDITOR
         bool isCached;
-        Vector3 cachedWorldPos;
+        Vector3 cachedPos;
 
         void OnEnable()
         {
             isCached = true;
-            cachedWorldPos = transform.position;
+            cachedPos = transform.position;
         }
 
         void OnDisable()
@@ -58,11 +56,10 @@ namespace TheGame.AnimationSystems
 
         void OnDrawGizmosSelected()
         {
-            Vector3 position = isCached ? cachedWorldPos : transform.position;
-            var moveDistanceHalf = moveDistance * 0.5f;
-            var axisNormalized = axis.normalized;
-            var movementStart = position + axisNormalized * moveDistanceHalf;
-            var movementEnd = position - axisNormalized * moveDistanceHalf;
+            Vector3 position = (isCached ? cachedPos : transform.position);
+            var axisNormalized = transform.TransformDirection(axis.normalized);
+            var movementStart = position;
+            var movementEnd = position + axisNormalized * moveDistance;
             
             XIVDebug.DrawLine(movementStart, movementEnd);
             XIVDebug.DrawCircle(movementStart, 0.25f, Vector3.forward, Color.green, 5);
