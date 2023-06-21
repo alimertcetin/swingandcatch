@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace TheGame.UISystems
     public class HudHealthPageUI : PageUI
     {
         [SerializeField] Image image;
+        [SerializeField] FloatChannelSO updatePlayerHealthChannel;
         float currentAmount;
         const float IMAGE_FILL_DURATION = 0.5f;
         InvokeForSecondsEvent fillEvent;
@@ -20,6 +22,9 @@ namespace TheGame.UISystems
             base.Awake();
             ChangeDisplayAmount(1f);
         }
+
+        void OnEnable() => updatePlayerHealthChannel.Register(ChangeDisplayAmount);
+        void OnDisable() => updatePlayerHealthChannel.Unregister(ChangeDisplayAmount);
 
         public void ChangeDisplayAmount(float newAmount)
         {

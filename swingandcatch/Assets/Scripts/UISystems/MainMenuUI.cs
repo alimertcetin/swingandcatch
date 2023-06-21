@@ -1,14 +1,15 @@
-﻿using System;
-using TheGame.SaveSystems;
+﻿using TheGame.SaveSystems;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TheGame.UISystems
 {
     public class MainMenuUI : ParentGameUI
     {
+        [SerializeField] SceneLoadChannelSO sceneLoadChannel;
+        
         [Header("UI Elements")]
         [SerializeField] Button btn_Start;
         [SerializeField] Button btn_Continue;
@@ -17,8 +18,9 @@ namespace TheGame.UISystems
 
         void Start()
         {
-            // SaveManager.Instance.savedSceneIndex == 0 means player never played an actual level, 0 is MainMenu
-            var activateContinueButton = SaveManager.Instance.hasSaveData && SaveManager.Instance.savedSceneIndex > 0;
+            // SaveManager.Instance.savedSceneIndex == 0,1,2 means player never played an actual level
+            int savedSceneIndex = SaveManager.Instance.savedSceneIndex;
+            var activateContinueButton = SaveManager.Instance.hasSaveData && (savedSceneIndex - 2) > 0;
             btn_Continue.gameObject.SetActive(activateContinueButton);
         }
 
@@ -40,12 +42,22 @@ namespace TheGame.UISystems
 
         void StartNewGame()
         {
-            SceneManager.LoadScene(1, LoadSceneMode.Single);
+            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
+            {
+                displayLoadingScreen = true,
+                sceneToLoad = 3, // first level scene
+                unloadActiveScene = true,
+            });
         }
 
         void ContinueGame()
         {
-            SceneManager.LoadScene(SaveManager.Instance.savedSceneIndex, LoadSceneMode.Single);
+            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
+            {
+                displayLoadingScreen = true,
+                sceneToLoad = SaveManager.Instance.savedSceneIndex,
+                unloadActiveScene = true,
+            });
         }
 
         void ShowOptionsPage()

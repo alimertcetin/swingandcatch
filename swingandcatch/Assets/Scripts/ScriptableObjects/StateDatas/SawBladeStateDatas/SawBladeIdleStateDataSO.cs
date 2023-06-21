@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using XIV.Core.Utils;
 
 namespace TheGame.ScriptableObjects.StateDatas.SawBladeStateDatas

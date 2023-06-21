@@ -8,27 +8,21 @@ namespace TheGame.UISystems
     public class GameUIManager : MonoBehaviour
     {
         [SerializeField] TransformChannelSO playerDiedChannelSO;
-        [SerializeField] TransformChannelSO playerUpdateHealthChannelSO;
         [SerializeField] TransformChannelSO playerReachedEndChannelSO;
+        [SerializeField] BoolChannelSO displayLoadingScreenChannel;
 
         void OnEnable()
         {
-            playerUpdateHealthChannelSO.Register(OnPlayerRecievedDamage);
             playerDiedChannelSO.Register(OnPlayerDied);
             playerReachedEndChannelSO.Register(OnPlayerReachedEnd);
+            displayLoadingScreenChannel.Register(OnDisplayLoadingScreen);
         }
 
         void OnDisable()
         {
-            playerUpdateHealthChannelSO.Unregister(OnPlayerRecievedDamage);
             playerDiedChannelSO.Unregister(OnPlayerDied);
             playerReachedEndChannelSO.Unregister(OnPlayerReachedEnd);
-        }
-
-        void OnPlayerRecievedDamage(Transform playerTransform)
-        {
-            var currentHealth = playerTransform.GetComponent<PlayerFSM>().health;
-            UISystem.GetUI<HudUI>().healthPageUI.ChangeDisplayAmount(currentHealth / 100f);
+            displayLoadingScreenChannel.Unregister(OnDisplayLoadingScreen);
         }
 
         void OnPlayerDied(Transform playerTransform)
@@ -41,6 +35,12 @@ namespace TheGame.UISystems
         {
             UISystem.Hide<HudUI>();
             UISystem.Show<PlayerWinUI>();
+        }
+
+        void OnDisplayLoadingScreen(bool value)
+        {
+            if (value) UISystem.Show<SceneLoadingUI>();
+            else UISystem.Hide<SceneLoadingUI>();
         }
     }
 }
