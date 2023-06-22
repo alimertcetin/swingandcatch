@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c090dbba776e95840873839066ce3880, type: 3}
   m_Name: LevelListSO
   m_EditorClassIdentifier: 
-  buildIndices: 03000000
+  buildIndices: 0300000004000000
