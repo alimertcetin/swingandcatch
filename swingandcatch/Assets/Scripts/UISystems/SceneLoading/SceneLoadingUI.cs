@@ -3,6 +3,7 @@ using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
+using XIV.Core.TweenSystem;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
 
@@ -13,6 +14,7 @@ namespace TheGame.UISystems.SceneLoading
         [SerializeField] FloatChannelSO sceneLoadingProgressChannel;
         [SerializeField] VoidChannelSO newSceneLoadedChannel;
         [SerializeField] VoidChannelSO activateNewlyLoadedScene;
+        [SerializeField] BoolChannelSO activateLoadingScreenCamera;
 
         [SerializeField] SceneLoadingFooterUI footerUI;
         [SerializeField] LevelLoadingUI levelLoadingUI;
@@ -50,6 +52,7 @@ namespace TheGame.UISystems.SceneLoading
                     throw new ArgumentOutOfRangeException();
             }
 
+            activateLoadingScreenCamera.RaiseEvent(true);
             uiGameObject.SetActive(true);
             currentLoadingDisplay.Show();
             isActive = true;
@@ -64,6 +67,9 @@ namespace TheGame.UISystems.SceneLoading
                 currentLoadingDisplay.Hide();
             }
             currentLoadingDisplay = null;
+            uiGameObject.transform.XIVTween()
+                .OnComplete(() => activateLoadingScreenCamera.RaiseEvent(false))
+                .Start();
         }
 
         public void SetSceneLoadingOptions(SceneLoadOptions sceneLoadOptions)

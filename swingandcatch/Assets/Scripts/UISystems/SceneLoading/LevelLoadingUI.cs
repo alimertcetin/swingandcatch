@@ -8,6 +8,7 @@ namespace TheGame.UISystems.SceneLoading
     public class LevelLoadingUI : LoadingUIBase
     {
         [SerializeField] TMP_Text txt_SceneLoadStatus;
+        [SerializeField] Image parallaxImage;
         [SerializeField] Image progressbarImage;
             
         readonly string[] loadingSuffixes = new string[]
@@ -40,6 +41,8 @@ namespace TheGame.UISystems.SceneLoading
             progressbarImage.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_Range, progressValue);
             
             txt_SceneLoadStatus.text = $"{loadingText} % {(value * 100f).ToString("F0").ToColor(Color.Lerp(Color.red, Color.green, value))}";
+            
+            parallaxImage.material.SetVector(ShaderConstants.ShaderGraphs_ParallaxBackgroundShader.ParallaxOffset_VectorID, Vector3.right * (value * 2.5f));
         }
     }
 }

@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6174976362044632125
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 0
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ParallaxLoadingScreenMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: f05385a94dfc1d241bf28c6a2d2f8131, type: 3}
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Img1:
+        m_Texture: {fileID: 2800000, guid: a973cea5bc8b33a4985256e3558490e9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Img2:
+        m_Texture: {fileID: 2800000, guid: cd33b724a311ee1459ecfb025f3b00d3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texture_1:
+        m_Texture: {fileID: 2800000, guid: 538820ce91983f543a2d94788ccb2d25, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texture_2:
+        m_Texture: {fileID: 2800000, guid: 2d2a9434b8aae46418d201e4e9153bce, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texture_3:
+        m_Texture: {fileID: 2800000, guid: 1a8af337dd0f8fa4ebe223b5219e1654, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _texture_4:
+        m_Texture: {fileID: 2800000, guid: 59031747233ec4a47ba899d0d2666dc6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AlphaClipping: 0
+    - _BUILTIN_QueueControl: 0
+    - _BUILTIN_QueueOffset: 0
+    - _Im2Tiling: -4
+    - _Img1Tiling: 1
+    - _ParallaxOffset: 80.71
+    - _Texture1_ParallaxOffset: 0.5
+    - _Texture1_ParallaxOffsetMultiplier: 1
+    - _Texture2_ParallaxOffset: 0.25
+    - _Texture2_ParallaxOffsetMultiplier: 0.75
+    - _Texture3_ParallaxOffset: 0.1
+    - _Texture3_ParallaxOffsetMultiplier: 0.5
+    - _Texture4_ParallaxOffset: 0
+    - _Texture4_ParallaxOffsetMultiplier: 0.25
+    m_Colors:
+    - _Center: {r: 0, g: 0, b: 0, a: 0}
+    - _Img1Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Img1Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _Img2Offset: {r: 0, g: 0.09, b: 0, a: 0}
+    - _Img2ParallaxMultiplier: {r: 1, g: 1, b: 0, a: 0}
+    - _Img2Tiling: {r: -20, g: -20, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _OffsetSpherize: {r: 0, g: 0, b: 0, a: 0}
+    - _ParallaxOffset: {r: 2.5, g: 0, b: 0, a: 0}
+    - _ParallaxValue: {r: 0, g: 0, b: 0, a: 0}
+    - _Strength: {r: 0, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _texture_1_Offset: {r: 0, g: -0.25, b: 0, a: 0}
+    - _texture_1_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _texture_2_Offset: {r: 0, g: -0.25, b: 0, a: 0}
+    - _texture_2_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _texture_3_Offset: {r: 0, g: -0.25, b: 0, a: 0}
+    - _texture_3_Tiling: {r: 1, g: 1, b: 0, a: 0}
+    - _texture_4_Offset: {r: 0, g: -0.25, b: 0, a: 0}
+    - _texture_4_Tiling: {r: 1, g: 1, b: 0, a: 0}
+  m_BuildTextureStacks: []
