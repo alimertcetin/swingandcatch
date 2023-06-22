@@ -75,10 +75,13 @@ namespace TheGame.SceneManagement
         {
             if (loadingScreenType != LoadingScreenType.None)
             {
+                sceneLoadTimer.Restart(loadingScreenType == LoadingScreenType.MenuLoading ? 1.5f : 3f);
+                EasingFunction.Function easing = loadingScreenType == LoadingScreenType.MenuLoading ? EasingFunction.Linear : EasingFunction.SmoothStop3;
+                
                 while (sceneLoadTimer.IsDone == false)
                 {
                     sceneLoadTimer.Update(Time.deltaTime);
-                    var t = EasingFunction.SmoothStop3(sceneLoadTimer.NormalizedTime);
+                    var t = easing(0f, 1f, sceneLoadTimer.NormalizedTime);
                     sceneLoadingProgressChannel.RaiseEvent(currentLoadingOperation.progress * t);
                     yield return null;
                 }
@@ -94,7 +97,6 @@ namespace TheGame.SceneManagement
             yield return null;
             
             currentLoadingOperation = null;
-            sceneLoadTimer.Restart();
             if (activateImmediately)
             {
                 ActivateNewScene();
