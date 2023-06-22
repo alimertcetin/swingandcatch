@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using XIV.Core;
 
 namespace TheGame.ScriptableObjects
@@ -10,6 +10,21 @@ namespace TheGame.ScriptableObjects
     {
         [Header("Build indices of Level Scenes")]
         public List<int> buildIndices = new();
+
+        /// <summary>
+        /// Returns true if player doesn't reached the end level, false otherwise
+        /// </summary>
+        /// <param name="nextLevel">The build index of next level</param>
+        /// <returns>True if player doesn't reached the end level, false otherwise</returns>
+        public bool TryGetNextLevel(out int nextLevel)
+        {
+            var currentScene = SceneManager.GetActiveScene().buildIndex;
+            var index = buildIndices.IndexOf(currentScene);
+            var nextIndex = (index + 1) % buildIndices.Count;
+            nextLevel = buildIndices[nextIndex];
+            return nextIndex > 0;
+        }
+        
 #if UNITY_EDITOR
         [Button]
         void FillSceneList()
@@ -35,6 +50,5 @@ namespace TheGame.ScriptableObjects
             
         }
 #endif
-        
     }
 }

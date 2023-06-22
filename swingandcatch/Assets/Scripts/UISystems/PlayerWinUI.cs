@@ -5,7 +5,6 @@ using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace TheGame.UISystems
@@ -35,19 +34,15 @@ namespace TheGame.UISystems
         public override void Show()
         {
             btn_Continue.gameObject.SetActive(false);
-            btn_MainMenu.gameObject.SetActive(false);
             
-            nextLevel = SceneManager.GetActiveScene().buildIndex + 1 - GameData.SceneData.LEVEL_START_INDEX;
-            if (nextLevel > 0 && nextLevel <= levelListSO.buildIndices.Count)
+            if (levelListSO.TryGetNextLevel(out nextLevel))
             {
-                nextLevel += GameData.SceneData.LEVEL_START_INDEX;
                 txt_Info.text = "You Win! Continue to next level";
                 btn_Continue.gameObject.SetActive(true);
             }
             else
             {
                 txt_Info.text = "You have Completed all the levels!";
-                btn_MainMenu.gameObject.SetActive(true);
             }
             
             base.Show();
@@ -60,7 +55,9 @@ namespace TheGame.UISystems
 
         void GoToMainMenu()
         {
-            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(GameData.SceneData.LEVEL_START_INDEX - 1));
+            var options = SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU);
+            options.displayLoadingScreen = true;
+            sceneLoadChannel.RaiseEvent(options);
         }
     }
 }
