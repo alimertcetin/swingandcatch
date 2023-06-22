@@ -15,6 +15,9 @@ namespace TheGame.Data
         public static class SceneData
         {
             // 0 = Initialization, 1 = PersistantManager, 2 = MainMenu
+            public const int INITIALIZATION = 0;
+            public const int PERSISTANT_MANAGER = 1;
+            public const int MAIN_MENU = 2;
             public const int LEVEL_START_INDEX = 3;
         }
     }
