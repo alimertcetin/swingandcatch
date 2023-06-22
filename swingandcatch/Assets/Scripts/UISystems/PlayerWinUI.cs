@@ -55,9 +55,7 @@ namespace TheGame.UISystems
 
         void GoToMainMenu()
         {
-            var options = SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU);
-            options.displayLoadingScreen = true;
-            sceneLoadChannel.RaiseEvent(options);
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU));
         }
     }
 }

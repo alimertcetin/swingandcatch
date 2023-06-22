@@ -1,3 +1,4 @@
+using TheGame.Data;
 using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,11 +11,13 @@ namespace TheGame.SceneManagement
         
         void Awake()
         {
-            var asyncOp = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            var asyncOp = SceneManager.LoadSceneAsync(GameData.SceneData.PERSISTANT_MANAGER, LoadSceneMode.Additive);
             asyncOp.allowSceneActivation = true;
             asyncOp.completed += (op) =>
             {
-                sceneLoadChannel.RaiseEvent(new SceneLoadOptions() { displayLoadingScreen = false, sceneToLoad = 2, unloadActiveScene = false, activateImmediately = true });
+                var options = SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU);
+                options.loadingScreenType = LoadingScreenType.None;
+                sceneLoadChannel.RaiseEvent(options);
                 SceneManager.UnloadSceneAsync(0);
             };
         }

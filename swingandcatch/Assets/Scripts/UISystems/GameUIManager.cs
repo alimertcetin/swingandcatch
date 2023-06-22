@@ -1,5 +1,7 @@
-﻿using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.SceneManagement;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
+using TheGame.UISystems.SceneLoading;
 using UnityEngine;
 
 namespace TheGame.UISystems
@@ -8,13 +10,15 @@ namespace TheGame.UISystems
     {
         [SerializeField] TransformChannelSO playerDiedChannelSO;
         [SerializeField] TransformChannelSO playerReachedEndChannelSO;
-        [SerializeField] BoolChannelSO displayLoadingScreenChannel;
+        [SerializeField] SceneLoadChannelSO displayLoadingScreenChannel;
+        [SerializeField] VoidChannelSO stopDisplayingLoadingScreenChannel;
 
         void OnEnable()
         {
             playerDiedChannelSO.Register(OnPlayerDied);
             playerReachedEndChannelSO.Register(OnPlayerReachedEnd);
             displayLoadingScreenChannel.Register(OnDisplayLoadingScreen);
+            stopDisplayingLoadingScreenChannel.Register(OnStopDisplayingLoadingScreen);
         }
 
         void OnDisable()
@@ -22,6 +26,7 @@ namespace TheGame.UISystems
             playerDiedChannelSO.Unregister(OnPlayerDied);
             playerReachedEndChannelSO.Unregister(OnPlayerReachedEnd);
             displayLoadingScreenChannel.Unregister(OnDisplayLoadingScreen);
+            stopDisplayingLoadingScreenChannel.Unregister(OnStopDisplayingLoadingScreen);
         }
 
         void OnPlayerDied(Transform playerTransform)
@@ -36,10 +41,16 @@ namespace TheGame.UISystems
             UISystem.Show<PlayerWinUI>();
         }
 
-        void OnDisplayLoadingScreen(bool value)
+        void OnDisplayLoadingScreen(SceneLoadOptions sceneLoadOptions)
         {
-            if (value) UISystem.Show<SceneLoadingUI>();
-            else UISystem.Hide<SceneLoadingUI>();
+            var sceneLoadingUI = UISystem.GetUI<SceneLoadingUI>();
+            sceneLoadingUI.SetSceneLoadingOptions(sceneLoadOptions);
+            sceneLoadingUI.Show();
+        }
+
+        void OnStopDisplayingLoadingScreen()
+        {
+            UISystem.Hide<SceneLoadingUI>();
         }
     }
 }

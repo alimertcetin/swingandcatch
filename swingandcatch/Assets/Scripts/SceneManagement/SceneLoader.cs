@@ -9,7 +9,8 @@ namespace TheGame.SceneManagement
     public class SceneLoader : MonoBehaviour
     {
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
-        [SerializeField] BoolChannelSO displayLoadingScreenChannel;
+        [SerializeField] SceneLoadChannelSO displayLoadingScreenChannel;
+        [SerializeField] VoidChannelSO stopDisplayingLoadingScreenChannel;
         [SerializeField] FloatChannelSO sceneLoadingProgressChannel;
         [SerializeField] VoidChannelSO newSceneLoadedChannel;
         [SerializeField] VoidChannelSO activateNewlyLoadedScene;
@@ -19,7 +20,7 @@ namespace TheGame.SceneManagement
         
         int sceneToLoad;
         int sceneToUnload;
-        bool isDisplayingLoadingScreen;
+        LoadingScreenType loadingScreenType;
         bool activateImmediately;
 
         void OnEnable()
@@ -41,9 +42,9 @@ namespace TheGame.SceneManagement
                 Debug.LogError("SceneLoading was requested while there is still ongoing loading operation");
             }
 
-            isDisplayingLoadingScreen = sceneLoadOptions.displayLoadingScreen;
+            loadingScreenType = sceneLoadOptions.loadingScreenType;
             activateImmediately = sceneLoadOptions.activateImmediately;
-            displayLoadingScreenChannel.RaiseEvent(isDisplayingLoadingScreen);
+            displayLoadingScreenChannel.RaiseEvent(sceneLoadOptions);
             sceneToLoad = sceneLoadOptions.sceneToLoad;
             
             if (sceneLoadOptions.unloadActiveScene)
@@ -72,7 +73,7 @@ namespace TheGame.SceneManagement
 
         IEnumerator HandleAsyncLoading()
         {
-            if (isDisplayingLoadingScreen)
+            if (loadingScreenType != LoadingScreenType.None)
             {
                 while (sceneLoadTimer.IsDone == false)
                 {
@@ -105,8 +106,7 @@ namespace TheGame.SceneManagement
 
         void ActivateNewScene()
         {
-            LightProbes.Tetrahedralize();
-            displayLoadingScreenChannel.RaiseEvent(false);
+            stopDisplayingLoadingScreenChannel.RaiseEvent();
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneToLoad));
         }
     }

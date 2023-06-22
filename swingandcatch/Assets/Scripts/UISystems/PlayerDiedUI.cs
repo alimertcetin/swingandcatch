@@ -24,13 +24,7 @@ namespace TheGame.UISystems
 
         void ReloadScene()
         {
-            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
-            {
-                activateImmediately = false,
-                displayLoadingScreen = true,
-                sceneToLoad = SceneManager.GetActiveScene().buildIndex,
-                unloadActiveScene = true,
-            });
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(SceneManager.GetActiveScene().buildIndex));
         }
     }
 }

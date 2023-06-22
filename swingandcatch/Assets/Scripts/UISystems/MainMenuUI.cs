@@ -1,4 +1,5 @@
-﻿using TheGame.SaveSystems;
+﻿using TheGame.Data;
+using TheGame.SaveSystems;
 using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
@@ -43,22 +44,12 @@ namespace TheGame.UISystems
 
         void StartNewGame()
         {
-            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
-            {
-                displayLoadingScreen = true,
-                sceneToLoad = 3, // first level scene
-                unloadActiveScene = true,
-            });
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(GameData.SceneData.LEVEL_START_INDEX));
         }
 
         void ContinueGame()
         {
-            sceneLoadChannel.RaiseEvent(new SceneLoadOptions()
-            {
-                displayLoadingScreen = true,
-                sceneToLoad = SaveManager.Instance.savedSceneIndex,
-                unloadActiveScene = true,
-            });
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(SaveManager.Instance.savedSceneIndex));
         }
 
         void ShowOptionsPage()
