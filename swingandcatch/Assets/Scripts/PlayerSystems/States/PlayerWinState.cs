@@ -1,5 +1,6 @@
 ﻿using TheGame.FSM;
 using UnityEngine;
+using XIV.Core.Extensions;
 using XIV.Core.Utils;
 using XIV.Core.TweenSystem;
 
@@ -15,7 +16,7 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateEnter(State comingFrom)
         {
             var pos = stateMachine.transform.position;
-            var movePos = endGatePosition + Vector3.forward * 2.5f;
+            var movePos = endGatePosition + Vector3.right * 2.5f;
             stateMachine.CancelTween();
             var renderer = stateMachine.GetComponentsInChildren<Renderer>()[0];
             stateMachine.XIVTween()
@@ -23,8 +24,8 @@ namespace TheGame.PlayerSystems.States
                 .And()
                 .Move(pos, endGatePosition, 0.5f, EasingFunction.Linear)
                 .Move(endGatePosition, movePos, 0.5f, EasingFunction.Linear)
-                .Wait(1.5f)
-                .Move(movePos, movePos + Vector3.up * 0.5f, 0.2f, EasingFunction.Linear)
+                .Wait(0.5f)
+                .Move(movePos, movePos.SetY(pos.y), 0.2f, EasingFunction.Linear)
                 .OnComplete(() =>
                 {
                     stateMachine.playerReachedEndChannelSO.RaiseEvent(stateMachine.transform);
