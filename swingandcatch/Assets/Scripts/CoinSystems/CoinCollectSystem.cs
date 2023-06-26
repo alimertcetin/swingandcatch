@@ -56,7 +56,7 @@ namespace TheGame.CoinSystems
             
             var curve = BezierMath.CreateCurve(coinScreenPos, coinUIItemRectPosition, Random.value * 3f);
             coinTransform.XIVTween()
-                .WorldToUIMove(curve, Camera.main, Random.Range(5f, 8f), easing) // TODO : Decrease coin collect duration
+                .WorldToUIMove(curve, Camera.main, Random.Range(0.5f, 1f), easing)
                 .OnComplete(OnCoinTweenCompleted)
                 .Start();
             
