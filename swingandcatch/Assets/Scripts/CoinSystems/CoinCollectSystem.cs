@@ -60,6 +60,12 @@ namespace TheGame.CoinSystems
             {
                 ref var coinData = ref coinDatas[i];
                 var coinTransform = coinData.transform;
+                if (coinTransform == null)
+                {
+                    // When object destroyed while there is still a tween going on, ex : On scene changed
+                    OnCoinCollected(i, false);
+                    continue;
+                }
                 var coinCurve = coinData.curve;
                 coinData.timer.Update(deltaTime);
                 var t = easing(0f, 1f, coinData.timer.NormalizedTime);
@@ -70,7 +76,7 @@ namespace TheGame.CoinSystems
 
                 if (t >= 1f)
                 {
-                    OnCoinCollected(i);
+                    OnCoinCollected(i, true);
                 }
                 
                 XIVDebug.DrawBezier(coinCurve, t, 0.25f);
@@ -113,11 +119,11 @@ namespace TheGame.CoinSystems
             }));
         }
 
-        void OnCoinCollected(int index)
+        void OnCoinCollected(int index, bool destroy)
         {
             collectedCoinCount++;
             UISystem.GetUI<HudUI>().coinPageUI.ChangeDisplayAmount(collectedCoinCount);
-            Destroy(coinDatas[index].transform.gameObject);
+            if (destroy) Destroy(coinDatas[index].transform.gameObject);
             coinDatas.RemoveAt(index);
         }
     }
