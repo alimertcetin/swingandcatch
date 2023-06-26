@@ -168,3 +168,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneLoadChannel: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
+  sceneListSO: {fileID: 11400000, guid: 6f876cd4bd8d746488389609f181a33c, type: 2}

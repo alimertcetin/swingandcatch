@@ -1,5 +1,6 @@
-using TheGame.Data;
+using System.Collections;
 using TheGame.ScriptableObjects.Channels;
+using TheGame.ScriptableObjects.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,18 +9,27 @@ namespace TheGame.SceneManagement
     public class SceneInitializer : MonoBehaviour
     {
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
+        [SerializeField] SceneListSO sceneListSO;
         
         void Awake()
         {
-            var asyncOp = SceneManager.LoadSceneAsync(GameData.SceneData.PERSISTANT_MANAGER, LoadSceneMode.Additive);
+            StartCoroutine(LoadPersistantScene());
+        }
+
+        IEnumerator LoadPersistantScene()
+        {
+            var asyncOp = SceneManager.LoadSceneAsync(sceneListSO.persistantManagerSceneIndex, LoadSceneMode.Additive);
             asyncOp.allowSceneActivation = true;
-            asyncOp.completed += (op) =>
+            while (asyncOp.progress < 0.9f)
             {
-                var options = SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU);
-                options.loadingScreenType = LoadingScreenType.None;
-                sceneLoadChannel.RaiseEvent(options);
-                SceneManager.UnloadSceneAsync(0);
-            };
+                yield return null;
+            }
+
+            // SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(sceneListSO.persistantManagerSceneIndex));
+            
+            var options = SceneLoadOptions.MenuLoad(sceneListSO.mainMenuSceneIndex);
+            options.loadingScreenType = LoadingScreenType.None;
+            sceneLoadChannel.RaiseEvent(options);
         }
     }
 }

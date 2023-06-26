@@ -737,7 +737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
-  playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
+  showWinUIChannel: {fileID: 11400000, guid: 6c83f4a2b8b730449b84e84b78a92379, type: 2}
   displayLoadingScreenChannel: {fileID: 11400000, guid: d596b4110046f7f4f874f075368c417e, type: 2}
   stopDisplayingLoadingScreenChannel: {fileID: 11400000, guid: 25d21044671f25344901b60d3c763e6d, type: 2}
 --- !u!1 &714193792
@@ -816,6 +816,54 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 8}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!1 &804327191
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 804327193}
+  - component: {fileID: 804327192}
+  m_Layer: 0
+  m_Name: SaveManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &804327192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804327191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96b8c04e385343c1b4644be3567d8f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveSceneDataChannel: {fileID: 11400000, guid: d2a5c267d422b5a4da9d6dedca37fb10, type: 2}
+  loadSceneDataChannel: {fileID: 11400000, guid: cf3828f99658507459bb5cdc537d5d37, type: 2}
+  onSaveCompletedChannel: {fileID: 11400000, guid: 4706df729fe99484398ea6ddf4f90cfb, type: 2}
+  onLoadCompletedChannel: {fileID: 11400000, guid: 256d735ea0f723040a962a5d789823e4, type: 2}
+--- !u!4 &804327193
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804327191}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &863641492
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,6 +1538,10 @@ MonoBehaviour:
   sceneLoadingProgressChannel: {fileID: 11400000, guid: 30c9f93083bbd6441a0e89464d607b7f, type: 2}
   newSceneLoadedChannel: {fileID: 11400000, guid: 792deb91088101546b371102b1255128, type: 2}
   activateNewlyLoadedScene: {fileID: 11400000, guid: f49e3ad0724bcf54d85380e3c6c1d758, type: 2}
+  saveSceneDataChannel: {fileID: 11400000, guid: d2a5c267d422b5a4da9d6dedca37fb10, type: 2}
+  loadSceneDataChannel: {fileID: 11400000, guid: cf3828f99658507459bb5cdc537d5d37, type: 2}
+  onSaveCompletedChannel: {fileID: 11400000, guid: 4706df729fe99484398ea6ddf4f90cfb, type: 2}
+  onLoadCompletedChannel: {fileID: 11400000, guid: 256d735ea0f723040a962a5d789823e4, type: 2}
 --- !u!4 &1905909533
 Transform:
   m_ObjectHideFlags: 0

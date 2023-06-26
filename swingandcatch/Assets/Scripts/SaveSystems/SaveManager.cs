@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using TheGame.Data;
+﻿using System.Collections;
+using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,75 +7,55 @@ namespace TheGame.SaveSystems
 {
     public class SaveManager : MonoBehaviour
     {
-        public static SaveManager Instance { get; private set; }
-        public bool hasSaveData { get; private set; }
-        public int savedSceneIndex { get; private set; } = -1;
+        [SerializeField] IntChannelSO saveSceneDataChannel;
+        [SerializeField] IntChannelSO loadSceneDataChannel;
+        
+        [SerializeField] VoidChannelSO onSaveCompletedChannel;
+        [SerializeField] VoidChannelSO onLoadCompletedChannel;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        static void Init()
+        bool isSaving;
+        bool isLoading;
+
+        void OnEnable()
         {
-            void CreateInstance()
-            {
-                var go = new GameObject("SaveManager");
-                Instance = go.AddComponent<SaveManager>();
-                DontDestroyOnLoad(go);
-            }
-
-            if (Instance == null)
-            {
-                CreateInstance();
-            }
-            else
-            {
-                Destroy(Instance.gameObject);
-                CreateInstance();
-            }
+            saveSceneDataChannel.Register(SaveSceneData);
+            loadSceneDataChannel.Register(LoadSceneData);
         }
 
-        void Awake()
+        void OnDisable()
         {
-            Load();
+            saveSceneDataChannel.Unregister(SaveSceneData);
+            loadSceneDataChannel.Unregister(LoadSceneData);
         }
 
-        void OnApplicationPause(bool pauseStatus)
+        void SaveSceneData(int sceneIndex)
         {
-            if (pauseStatus) return;
-
-            Save();
+            if (isSaving) return;
+            var sceneName = SceneManager.GetSceneByBuildIndex(sceneIndex).name;
+            StartCoroutine(WaitSave(sceneName));
         }
 
-        void OnApplicationQuit()
+        void LoadSceneData(int sceneIndex)
         {
-            Save();
+            if (isLoading) return;
+            var sceneName = SceneManager.GetSceneByBuildIndex(sceneIndex).name;
+            StartCoroutine(WaitLoad(sceneName));
         }
 
-        void Load()
+        IEnumerator WaitSave(string sceneName)
         {
-            hasSaveData = File.Exists(GameData.Save.SaveFilePath);
-            if (hasSaveData == false) return;
-
-            savedSceneIndex = Convert.ToInt32(File.ReadAllText(GameData.Save.SaveFilePath));
+            isSaving = true;
+            yield return SaveSystem.SaveAsync(sceneName);
+            onSaveCompletedChannel.RaiseEvent();
+            isSaving = false;
         }
 
-        void Save()
+        IEnumerator WaitLoad(string sceneName)
         {
-            int sceneIndex = SceneManager.GetActiveScene().buildIndex;
-            savedSceneIndex = sceneIndex;
-
-            if (File.Exists(GameData.Save.SaveFilePath) == false)
-            {
-                Directory.CreateDirectory(GameData.Save.SaveFolderPath);
-                
-                var bytes = Encoding.UTF8.GetBytes(sceneIndex.ToString());
-                using (FileStream fs = File.Create(GameData.Save.SaveFilePath))
-                {
-                    fs.Write(bytes);
-                }
-
-                return;
-            }
-
-            File.WriteAllText(GameData.Save.SaveFilePath, sceneIndex.ToString());
+            isLoading = true;
+            yield return SaveSystem.LoadAsync(sceneName);
+            onLoadCompletedChannel.RaiseEvent();
+            isLoading = false;
         }
     }
 }

@@ -9,14 +9,14 @@ namespace TheGame.UISystems
     public class GameUIManager : MonoBehaviour
     {
         [SerializeField] TransformChannelSO playerDiedChannelSO;
-        [SerializeField] TransformChannelSO playerReachedEndChannelSO;
+        [SerializeField] VoidChannelSO showWinUIChannel;
         [SerializeField] SceneLoadChannelSO displayLoadingScreenChannel;
         [SerializeField] VoidChannelSO stopDisplayingLoadingScreenChannel;
 
         void OnEnable()
         {
             playerDiedChannelSO.Register(OnPlayerDied);
-            playerReachedEndChannelSO.Register(OnPlayerReachedEnd);
+            showWinUIChannel.Register(ShowWinUI);
             displayLoadingScreenChannel.Register(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Register(OnStopDisplayingLoadingScreen);
         }
@@ -24,7 +24,7 @@ namespace TheGame.UISystems
         void OnDisable()
         {
             playerDiedChannelSO.Unregister(OnPlayerDied);
-            playerReachedEndChannelSO.Unregister(OnPlayerReachedEnd);
+            showWinUIChannel.Unregister(ShowWinUI);
             displayLoadingScreenChannel.Unregister(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Unregister(OnStopDisplayingLoadingScreen);
         }
@@ -35,7 +35,7 @@ namespace TheGame.UISystems
             UISystem.Show<PlayerDiedUI>();
         }
 
-        void OnPlayerReachedEnd(Transform playerTransform)
+        void ShowWinUI()
         {
             UISystem.Hide<HudUI>();
             UISystem.Show<PlayerWinUI>();

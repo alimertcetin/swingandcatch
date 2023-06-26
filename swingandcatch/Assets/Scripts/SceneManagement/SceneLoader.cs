@@ -15,6 +15,12 @@ namespace TheGame.SceneManagement
         [SerializeField] VoidChannelSO newSceneLoadedChannel;
         [SerializeField] VoidChannelSO activateNewlyLoadedScene;
         
+        [SerializeField] IntChannelSO saveSceneDataChannel;
+        [SerializeField] IntChannelSO loadSceneDataChannel;
+        
+        [SerializeField] VoidChannelSO onSaveCompletedChannel;
+        [SerializeField] VoidChannelSO onLoadCompletedChannel;
+        
         AsyncOperation currentLoadingOperation;
         Timer sceneLoadTimer = new Timer(2f);
         
@@ -46,15 +52,24 @@ namespace TheGame.SceneManagement
             activateImmediately = sceneLoadOptions.activateImmediately;
             displayLoadingScreenChannel.RaiseEvent(sceneLoadOptions);
             sceneToLoad = sceneLoadOptions.sceneToLoad;
+            sceneToUnload = SceneManager.GetActiveScene().buildIndex;
             
-            if (sceneLoadOptions.unloadActiveScene)
+            onSaveCompletedChannel.Register(OnSaveCompleted);
+            saveSceneDataChannel.RaiseEvent(sceneToUnload);
+
+            void OnSaveCompleted()
             {
-                sceneToUnload = SceneManager.GetActiveScene().buildIndex;
-                UnloadPreviousAndLoadNew();
-                return;
+                onSaveCompletedChannel.Unregister(OnSaveCompleted);
+            
+                if (sceneLoadOptions.unloadActiveScene)
+                {
+                    UnloadPreviousAndLoadNew();
+                    return;
+                }
+            
+                LoadNewScene();
             }
             
-            LoadNewScene();
         }
 
         void UnloadPreviousAndLoadNew()
@@ -91,19 +106,26 @@ namespace TheGame.SceneManagement
             {
                 yield return null;
             }
-            
             sceneLoadingProgressChannel.RaiseEvent(1f);
             currentLoadingOperation.allowSceneActivation = true;
-            yield return null;
             
-            currentLoadingOperation = null;
-            if (activateImmediately)
-            {
-                ActivateNewScene();
-                yield break;
-            }
+            loadSceneDataChannel.RaiseEvent(sceneToLoad);
+            onLoadCompletedChannel.Register(OnLoadCompleted);
 
-            newSceneLoadedChannel.RaiseEvent();
+            void OnLoadCompleted()
+            {
+                onLoadCompletedChannel.Unregister(OnLoadCompleted);
+                
+                currentLoadingOperation = null;
+                if (activateImmediately)
+                {
+                    ActivateNewScene();
+                    return;
+                }
+
+                newSceneLoadedChannel.RaiseEvent();
+            }
+            
         }
 
         void ActivateNewScene()

@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c090dbba776e95840873839066ce3880, type: 3}
-  m_Name: LevelListSO
+  m_Script: {fileID: 11500000, guid: 9df22fa0adae47598cea005b28198721, type: 3}
+  m_Name: SceneListSO
   m_EditorClassIdentifier: 
-  buildIndices: 0300000004000000
+  persistantManagerSceneIndex: 1
+  mainMenuSceneIndex: 2
+  lastPlayedLevel: 3
+  levelIndices: 0300000004000000

@@ -1,7 +1,7 @@
-﻿using TheGame.Data;
+﻿using System;
 using TheGame.SceneManagement;
-using TheGame.ScriptableObjects;
 using TheGame.ScriptableObjects.Channels;
+using TheGame.ScriptableObjects.SceneManagement;
 using TheGame.UISystems.Core;
 using TMPro;
 using UnityEngine;
@@ -11,13 +11,14 @@ namespace TheGame.UISystems
 {
     public class PlayerWinUI : GameUI
     {
-        [SerializeField] LevelListSO levelListSO;
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
+        [SerializeField] SceneListSO sceneListSO;
+        
         [SerializeField] TMP_Text txt_Info;
         [SerializeField] Button btn_Continue;
         [SerializeField] Button btn_MainMenu;
         
-        int nextLevel;
+        [NonSerialized] public int nextLevel;
 
         void OnEnable()
         {
@@ -35,7 +36,7 @@ namespace TheGame.UISystems
         {
             btn_Continue.gameObject.SetActive(false);
             
-            if (levelListSO.TryGetNextLevel(out nextLevel))
+            if (nextLevel != -1)
             {
                 txt_Info.text = "You Win! Continue to next level";
                 btn_Continue.gameObject.SetActive(true);
@@ -55,7 +56,7 @@ namespace TheGame.UISystems
 
         void GoToMainMenu()
         {
-            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(GameData.SceneData.MAIN_MENU));
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(sceneListSO.mainMenuSceneIndex));
         }
     }
 }

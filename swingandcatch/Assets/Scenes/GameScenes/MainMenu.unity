@@ -581,6 +581,7 @@ MonoBehaviour:
   uiGameObject: {fileID: 1931539629}
   mainPageGO: {fileID: 1922190982}
   sceneLoadChannel: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
+  sceneListSO: {fileID: 11400000, guid: 6f876cd4bd8d746488389609f181a33c, type: 2}
   btn_Start: {fileID: 1653942399}
   btn_Continue: {fileID: 1956946682}
   btn_Options: {fileID: 756589357}

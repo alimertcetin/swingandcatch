@@ -1,7 +1,7 @@
-﻿using TheGame.Data;
-using TheGame.SaveSystems;
+﻿using TheGame.SaveSystems;
 using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
+using TheGame.ScriptableObjects.SceneManagement;
 using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +11,7 @@ namespace TheGame.UISystems
     public class MainMenuUI : ParentGameUI
     {
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
+        [SerializeField] SceneListSO sceneListSO;
         
         [Header("UI Elements")]
         [SerializeField] Button btn_Start;
@@ -20,10 +21,7 @@ namespace TheGame.UISystems
 
         void Start()
         {
-            // SaveManager.Instance.savedSceneIndex == 0,1,2 means player never played an actual level
-            int savedSceneIndex = SaveManager.Instance.savedSceneIndex;
-            var activateContinueButton = SaveManager.Instance.hasSaveData && (savedSceneIndex - 2) > 0;
-            btn_Continue.gameObject.SetActive(activateContinueButton);
+            btn_Continue.gameObject.SetActive(SaveSystem.IsSaveExistsAny());
         }
 
         void OnEnable()
@@ -44,12 +42,13 @@ namespace TheGame.UISystems
 
         void StartNewGame()
         {
-            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(GameData.SceneData.LEVEL_START_INDEX));
+            sceneListSO.TryGetNextLevel(-1, out var nextLevel);
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(nextLevel));
         }
 
         void ContinueGame()
         {
-            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(SaveManager.Instance.savedSceneIndex));
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(sceneListSO.lastPlayedLevel));
         }
 
         void ShowOptionsPage()
