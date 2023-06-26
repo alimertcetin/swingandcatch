@@ -3,9 +3,8 @@ using TheGame.UISystems;
 using TheGame.UISystems.Core;
 using UnityEngine;
 using UnityEngine.Pool;
-using XIV.Core;
-using XIV.Core.Collections;
 using XIV.Core.Extensions;
+using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
 using XIV.Core.XIVMath;
 using XIV.EventSystem;
@@ -14,15 +13,9 @@ using Random = UnityEngine.Random;
 
 namespace TheGame.CoinSystems
 {
-    struct CollectCoinData
-    {
-        public Transform transform;
-        public Vector3[] curve;
-        public Timer timer;
-    }
-    
     public class CoinCollectSystem : MonoBehaviour
     {
+        [SerializeField] IntChannelSO onCoinCollectedAmountChangedChannel;
         [SerializeField] CoinChannelSO coinTriggeredChannelSO;
         [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] EasingFunction.Ease coinCollectEase;
@@ -30,7 +23,6 @@ namespace TheGame.CoinSystems
 
         Camera cam;
         int collectedCoinCount;
-        DynamicArray<CollectCoinData> coinDatas = new DynamicArray<CollectCoinData>();
         ObjectPool<GameObject> coinCollectedParticlePool;
 
         void Awake()
@@ -50,39 +42,6 @@ namespace TheGame.CoinSystems
             coinCollectedParticlePool = new ObjectPool<GameObject>(CreateParticle, null, OnReleasedParticle, null, false);
         }
 
-        void Update()
-        {
-            int count = coinDatas.Count;
-            if (count == 0) return;
-            
-            var deltaTime = Time.deltaTime;
-            for (int i = count - 1; i >= 0; i--)
-            {
-                ref var coinData = ref coinDatas[i];
-                var coinTransform = coinData.transform;
-                if (coinTransform == null)
-                {
-                    // When object destroyed while there is still a tween going on, ex : On scene changed
-                    OnCoinCollected(i, false);
-                    continue;
-                }
-                var coinCurve = coinData.curve;
-                coinData.timer.Update(deltaTime);
-                var t = easing(0f, 1f, coinData.timer.NormalizedTime);
-                var screenSpacePos = BezierMath.GetPoint(coinCurve[0], coinCurve[1], coinCurve[2], coinCurve[3], t);
-                var worldPos = cam.ScreenToWorldPoint(screenSpacePos);
-                
-                coinTransform.position = worldPos;
-
-                if (t >= 1f)
-                {
-                    OnCoinCollected(i, true);
-                }
-                
-                XIVDebug.DrawBezier(coinCurve, t, 0.25f);
-            }
-        }
-
         void OnEnable() => coinTriggeredChannelSO.Register(OnCoinTriggered);
         void OnDisable() => coinTriggeredChannelSO.Unregister(OnCoinTriggered);
 
@@ -92,39 +51,44 @@ namespace TheGame.CoinSystems
             var coinTransform = coin.transform;
             var coinTransformPosition = coinTransform.position;
             var coinScreenPos = cam.WorldToScreenPoint(coinTransformPosition);
-            var coinUIItemRectPosition = UISystem.GetUI<HudUI>().coinPageUI.coinUIItemRectPosition;
-            coinDatas.Add() = new CollectCoinData
-            {
-                transform = coinTransform,
-                curve = BezierMath.CreateCurve(coinScreenPos, coinUIItemRectPosition.SetZ(coinScreenPos.z), Random.value * 3f),
-                timer = new Timer(Random.Range(0.5f, 1f)),
-            };
+            var hud = UISystem.GetUI<HudUI>();
+            var coinUIItemRectPosition = hud != null ? hud.coinUIItemRectPosition.SetZ(coinScreenPos.z) : (Vector3.one * 2f).SetZ(coinScreenPos.z);
             
+            var curve = BezierMath.CreateCurve(coinScreenPos, coinUIItemRectPosition, Random.value * 3f);
+            coinTransform.XIVTween()
+                .WorldToUIMove(curve, Camera.main, Random.Range(5f, 8f), easing) // TODO : Decrease coin collect duration
+                .OnComplete(OnCoinTweenCompleted)
+                .Start();
+            
+            HandleParticle(coinTransformPosition);
+        }
+
+        void OnCoinTweenCompleted(GameObject go)
+        {
+            collectedCoinCount++;
+            onCoinCollectedAmountChangedChannel.RaiseEvent(collectedCoinCount);
+            if (go != null) Destroy(go);
+        }
+        
+        void HandleParticle(Vector3 coinTransformPosition)
+        {
             var particleGo = coinCollectedParticlePool.Get();
             particleGo.transform.position = coinTransformPosition;
             var particleSystems = particleGo.GetComponentsInChildren<ParticleSystem>(true);
             XIVEventSystem.SendEvent(new InvokeUntilEvent().AddCancelCondition(() =>
-            {
-                for (int i = 0; i < particleSystems.Length; i++)
                 {
-                    if (particleSystems[i].isStopped == false)
+                    for (int i = 0; i < particleSystems.Length; i++)
                     {
-                        return false;
+                        if (particleSystems[i].isStopped == false)
+                        {
+                            return false;
+                        }
                     }
-                }
-                return true;
-            }).OnCanceled(() =>
-            {
-                coinCollectedParticlePool.Release(particleGo);
-            }));
-        }
 
-        void OnCoinCollected(int index, bool destroy)
-        {
-            collectedCoinCount++;
-            UISystem.GetUI<HudUI>().coinPageUI.ChangeDisplayAmount(collectedCoinCount);
-            if (destroy) Destroy(coinDatas[index].transform.gameObject);
-            coinDatas.RemoveAt(index);
+                    return true;
+                })
+                .OnCanceled(() => coinCollectedParticlePool.Release(particleGo)));
         }
+        
     }
 }

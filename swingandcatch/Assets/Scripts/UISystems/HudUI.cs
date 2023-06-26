@@ -1,10 +1,13 @@
 ﻿using TheGame.UISystems.Core;
+using UnityEngine;
 
 namespace TheGame.UISystems
 {
     public class HudUI : ParentGameUI
     {
-        public HudCoinPageUI coinPageUI;
-        public HudHealthPageUI healthPageUI;
+        [SerializeField] HudCoinPageUI coinPageUI;
+        [SerializeField] HudHealthPageUI healthPageUI;
+        public Vector3 coinUIItemRectPosition => coinPageUI.coinUIItemRectPosition;
+        
     }
 }

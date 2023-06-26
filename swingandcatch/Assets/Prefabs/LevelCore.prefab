@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74859af5389e4b9499735a5c95ba8124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onCoinCollectedAmountChangedChannel: {fileID: 11400000, guid: d338e8a85d0bcb042aeae92eb8771506, type: 2}
   coinTriggeredChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
   coinCollectedParticlePrefab: {fileID: 3420687967240432720, guid: 010ee0213749f2b4cb29f8d37c2c41d4, type: 3}
   coinCollectEase: 0
