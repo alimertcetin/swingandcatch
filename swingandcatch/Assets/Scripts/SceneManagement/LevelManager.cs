@@ -18,6 +18,7 @@ namespace TheGame.SceneManagement
         void Awake()
         {
             currentLevel = gameObject.scene.buildIndex;
+            sceneListSO.lastPlayedLevel = currentLevel;
         }
 
         void OnEnable()
@@ -36,7 +37,6 @@ namespace TheGame.SceneManagement
             
             if (sceneListSO.TryGetNextLevel(currentLevel, out var nextLevelBuildIndex))
             {
-                sceneListSO.lastPlayedLevel = currentLevel;
                 currentLevel = nextLevelBuildIndex;
                 playerWinUI.nextLevel = currentLevel;
             }
