@@ -1,19 +1,21 @@
 ﻿using TheGame.CameraSystems.States;
 using TheGame.FSM;
+using TheGame.PlayerSystems;
 using UnityEngine;
 
 namespace TheGame.CameraSystems
 {
     public class CameraFSM : StateMachine
     {
-        public Transform target;
         [HideInInspector] public Vector3 offset;
         [HideInInspector] public Vector3 velocity;
-        public StateMachine targetStateMachine { get; private set; }
+        public PlayerFSM targetStateMachine { get; private set; }
+        public Transform target { get; private set; }
 
         protected override void Awake()
         {
-            targetStateMachine = target.GetComponent<StateMachine>();
+            targetStateMachine = FindObjectOfType<PlayerFSM>();
+            target = targetStateMachine.transform;
             offset = transform.position - target.position;
             base.Awake();
         }
