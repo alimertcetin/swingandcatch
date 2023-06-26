@@ -14,16 +14,7 @@ namespace TheGame.Data.Editor
         [MenuItem(SAVE_MENU_PATH + nameof(ClearSaveData))]
         static void ClearSaveData()
         {
-            if (Directory.Exists(SaveSystem.saveFolder) == false) return;
-            
-            var files = Directory.GetFiles(SaveSystem.saveFolder);
-            for (var i = 0; i < files.Length; i++)
-            {
-                string file = files[i];
-                File.Delete(file);
-            }
-
-            Directory.Delete(SaveSystem.saveFolder);
+            SaveSystem.ClearSaveDataAll();
         }
 
         [MenuItem(SAVE_MENU_PATH + nameof(OpenSaveDirectory))]

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace TheGame.SaveSystems
@@ -56,6 +57,39 @@ namespace TheGame.SaveSystems
         {
             if (Directory.Exists(saveFolder) == false) return false;
             return Directory.GetFiles(saveFolder).Length > 0;
+        }
+
+        public static void ClearSaveData(string sceneName)
+        {
+            var saveFile = GetSaveFilePath(sceneName);
+            var saveFileBackup = GetSaveFileBackupPath(sceneName);
+            DeleteIfExists(saveFile);
+            DeleteIfExists(saveFileBackup);
+
+            void DeleteIfExists(string file)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    if (File.Exists(file))
+                    {
+                        File.Delete(file);
+                    }
+                });
+            }
+        }
+
+        public static void ClearSaveDataAll()
+        {
+            if (Directory.Exists(saveFolder) == false) return;
+            
+            Task.Factory.StartNew(() =>
+            {
+                var files = Directory.GetFiles(saveFolder);
+                for (int i = 0; i < files.Length; i++)
+                {
+                    File.Delete(files[i]);
+                }
+            });
         }
 
         public static void AddSavableEntity(string sceneName, SavableEntity entity)
