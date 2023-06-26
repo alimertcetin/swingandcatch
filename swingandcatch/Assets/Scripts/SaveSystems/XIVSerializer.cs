@@ -1,17 +1,22 @@
-﻿using UnityEngine;
+﻿using Newtonsoft.Json;
 
 namespace TheGame.SaveSystems
 {
     public static class XIVSerializer
     {
-        public static string Serialize(object obj)
+        public static string Serialize(object deserializedData)
         {
-            return JsonUtility.ToJson(obj, true);
+            return JsonConvert.SerializeObject(deserializedData, Formatting.Indented);
         }
 
-        public static T Deserialize<T>(string data)
+        public static object Deserialize(string serializedData)
         {
-            return JsonUtility.FromJson<T>(data);
+            return JsonConvert.DeserializeObject(serializedData);
+        }
+
+        public static T Deserialize<T>(string serializedData)
+        {
+            return JsonConvert.DeserializeObject<T>(serializedData);
         }
         
     }
