@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005724714113811
@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005724768676487
@@ -295,7 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005724902329900
@@ -380,7 +380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005724971348707
@@ -465,7 +465,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005725213141185
@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005725727283515
@@ -635,7 +635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005726198796199
@@ -722,7 +722,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &3423005726338776068
@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  moveDistance: 5
+  moveDistance: 2.5
   moveSpeed: 3
   ease: 37
 --- !u!1001 &4089422552350148894
@@ -824,8 +824,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2910329681557784869, guid: 6cdce75c6bac5214db57c7c9e00294cd, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.4546636
+      objectReference: {fileID: 0}
+    - target: {fileID: 2910329681557784869, guid: 6cdce75c6bac5214db57c7c9e00294cd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.0527
       objectReference: {fileID: 0}
     - target: {fileID: 2910329681557784869, guid: 6cdce75c6bac5214db57c7c9e00294cd, type: 3}
       propertyPath: m_LocalPosition.y
