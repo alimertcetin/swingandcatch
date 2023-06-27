@@ -60,7 +60,7 @@ namespace TheGame.HazzardSystems
                 hazzardMono.UnregisterHit(OnHazzardBallHit);
                 var particleGo = Instantiate(hazzardBall.particlePrefab);
                 Destroy(particleGo, 5f);
-                Destroy(t.gameObject);
+                Destroy(hazzardMono.gameObject);
             }
         }
     }
