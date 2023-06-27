@@ -10,8 +10,11 @@ namespace TheGame.HazzardSystems
         public GameObject particlePrefab;
         [HideInInspector] public float speed = 4f;
         [HideInInspector] public Vector3 direction;
+        [HideInInspector] public int obstacleLayerMask;
         
-        public Action onOutsideOfTheView;
+        public event Action onOutsideOfTheView;
+        public event Action onHitObstacle;
+        
         Vector3 previousPosition;
         Camera cam;
 
@@ -27,23 +30,22 @@ namespace TheGame.HazzardSystems
             pos += direction * (speed * Time.deltaTime);
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             var diff = pos - previousPosition;
-            var mask = (1 << PhysicsConstants.DefaultLayer) | (1 << PhysicsConstants.PlayerLayer) | (1 << PhysicsConstants.GroundLayer);
-            int count = Physics2D.OverlapCircleNonAlloc(previousPosition + ((diff) * 0.5f), diff.magnitude, buffer, mask);
+            int count = Physics2D.OverlapCircleNonAlloc(previousPosition + ((diff) * 0.5f), diff.magnitude, buffer, obstacleLayerMask);
+            
+            ArrayPool<Collider2D>.Shared.Return(buffer);
 
             if (count > 0)
             {
-                var go = Instantiate(particlePrefab);
-                go.transform.position = pos;
-                onOutsideOfTheView.Invoke();
+                onHitObstacle?.Invoke();
+                return;
             }
 
-            ArrayPool<Collider2D>.Shared.Return(buffer);
 
             transform.position = pos;
 
             if (OutsideOfView())
             {
-                onOutsideOfTheView.Invoke();
+                onOutsideOfTheView?.Invoke();
                 return;
             }
         }

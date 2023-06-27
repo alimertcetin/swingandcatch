@@ -49,18 +49,51 @@ namespace TheGame.HazzardSystems
             HazzardBall hazzardBall = Instantiate(hazzardBallPrefab);
             hazzardBall.speed = ballSpeed;
             hazzardBall.direction = transform.forward;
-            hazzardBall.onOutsideOfTheView = () => { };
             hazzardBall.transform.position = ballLaunchPos.position;
+            hazzardBall.obstacleLayerMask = 1 << PhysicsConstants.GroundLayer;
 
             var hazzardMono = hazzardBall.GetComponent<HazzardMono>();
-            hazzardMono.RegisterHit(OnHazzardBallHit);
+            RegisterEvents();
+
+            void OnHitObstacle()
+            {
+                UnregisterEvents();
+                
+                var particleGo = Instantiate(hazzardBall.particlePrefab);
+                particleGo.transform.position = hazzardBall.transform.position;
+                Destroy(particleGo, 5f);
+                Destroy(hazzardMono.gameObject);
+            }
+
+            void OnOutsideOfTheView()
+            {
+                UnregisterEvents();
+                
+                Destroy(hazzardMono.gameObject);
+            }
 
             void OnHazzardBallHit(Transform t)
             {
-                hazzardMono.UnregisterHit(OnHazzardBallHit);
+                UnregisterEvents();
+                
                 var particleGo = Instantiate(hazzardBall.particlePrefab);
+                particleGo.transform.position = hazzardBall.transform.position;
                 Destroy(particleGo, 5f);
                 Destroy(hazzardMono.gameObject);
+            }
+
+            void RegisterEvents()
+            {
+                hazzardBall.onHitObstacle += OnHitObstacle;
+                hazzardBall.onOutsideOfTheView += OnOutsideOfTheView;
+                hazzardMono.RegisterHit(OnHazzardBallHit);
+            }
+
+            void UnregisterEvents()
+            {
+                hazzardBall.onHitObstacle -= OnHitObstacle;
+                hazzardBall.onOutsideOfTheView -= OnOutsideOfTheView;
+                hazzardMono.UnregisterHit(OnHazzardBallHit);
             }
         }
     }
