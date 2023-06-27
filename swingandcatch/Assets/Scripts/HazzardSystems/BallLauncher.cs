@@ -38,6 +38,7 @@ namespace TheGame.HazzardSystems
                 hazzardBall.direction = transform.forward;
                 hazzardBall.onOutsideOfTheView = () => ReleaseHazzardBall(hazzardBall);
                 hazzardBall.transform.position = ballLaunchPos.position;
+                hazzardBall.gameObject.SetActive(true);
                 
                 var hazzardMono = hazzardBall.GetComponent<HazzardMono>();
                 hazzardMono.RegisterHit(OnHazzardBallHit);
