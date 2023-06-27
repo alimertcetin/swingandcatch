@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core.Utils;
@@ -14,16 +15,15 @@ namespace TheGame.HazzardSystems
         
         Timer launchTimer;
 
-        ObjectPool<HazzardBall> hazzardBallPool;
-
         void Awake()
         {
             launchTimer = new Timer(launchDuration);
-            hazzardBallPool = new ObjectPool<HazzardBall>(OnCreateHazzardBall, null, OnReleaseHazzardBall);
         }
 
-        HazzardBall OnCreateHazzardBall() => Instantiate(hazzardBallPrefab);
-        void OnReleaseHazzardBall(HazzardBall hazzardBall) => hazzardBall.gameObject.SetActive(false);
+        void Start()
+        {
+            LaunchBall();
+        }
 
         void Update()
         {
@@ -33,29 +33,29 @@ namespace TheGame.HazzardSystems
 
             if (launchTimer.IsDone)
             {
-                HazzardBall hazzardBall = hazzardBallPool.Get();
-                hazzardBall.speed = ballSpeed;
-                hazzardBall.direction = transform.forward;
-                hazzardBall.onOutsideOfTheView = () => ReleaseHazzardBall(hazzardBall);
-                hazzardBall.transform.position = ballLaunchPos.position;
-                hazzardBall.gameObject.SetActive(true);
-                
-                var hazzardMono = hazzardBall.GetComponent<HazzardMono>();
-                hazzardMono.RegisterHit(OnHazzardBallHit);
+                LaunchBall();
 
-                void OnHazzardBallHit(Transform t)
-                {
-                    hazzardMono.UnregisterHit(OnHazzardBallHit);
-                    ReleaseHazzardBall(hazzardBall);
-                }
-                
                 launchTimer.Restart(launchDuration);
             }
         }
 
-        void ReleaseHazzardBall(HazzardBall hazzardBall)
+        void LaunchBall()
         {
-            hazzardBallPool.Release(hazzardBall);
+            HazzardBall hazzardBall = Instantiate(hazzardBallPrefab);
+            hazzardBall.speed = ballSpeed;
+            hazzardBall.direction = transform.forward;
+            hazzardBall.onOutsideOfTheView = () => { };
+            hazzardBall.transform.position = ballLaunchPos.position;
+
+            var hazzardMono = hazzardBall.GetComponent<HazzardMono>();
+            hazzardMono.RegisterHit(OnHazzardBallHit);
+
+            void OnHazzardBallHit(Transform t)
+            {
+                hazzardMono.UnregisterHit(OnHazzardBallHit);
+                var particleGo = Instantiate(hazzardBall.particlePrefab);
+                Destroy(particleGo, 5f);
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ namespace TheGame.HazzardSystems
     [RequireComponent(typeof(HazzardMono))]
     public class HazzardBall : MonoBehaviour
     {
-        [SerializeField] GameObject particlePrefab;
+        public GameObject particlePrefab;
         [HideInInspector] public float speed = 4f;
         [HideInInspector] public Vector3 direction;
         
