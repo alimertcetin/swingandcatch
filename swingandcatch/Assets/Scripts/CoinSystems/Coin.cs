@@ -9,6 +9,7 @@ namespace TheGame.CoinSystems
     public class Coin : MonoBehaviour
     {
         [SerializeField] CoinChannelSO coinCollectedChannelSO;
+        [SerializeField] GameObject coinCollectedParticlePrefab;
         
         const float DISTANCE_THRESHOLD = 1.5f;
         Camera cam;
@@ -48,12 +49,30 @@ namespace TheGame.CoinSystems
         [Button]
         void Collect()
         {
+            if (Application.isPlaying == false)
+            {
+                Debug.LogError("You cant use this in editor mode");
+                return;
+            }
+            DisableAnimations();
+            InstantiateParticle();
+            coinCollectedChannelSO.RaiseEvent(this);
+        }
+
+        void DisableAnimations()
+        {
             var animations = GetComponentsInChildren<AnimationMonoBase>();
             for (int i = 0; i < animations.Length; i++)
             {
                 animations[i].enabled = false;
             }
-            coinCollectedChannelSO.RaiseEvent(this);
+        }
+
+        void InstantiateParticle()
+        {
+            var particleGo = Instantiate(coinCollectedParticlePrefab);
+            particleGo.transform.position = transform.position;
+            Destroy(particleGo, 5f);
         }
     }
 }

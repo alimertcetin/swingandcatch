@@ -2,13 +2,10 @@
 using TheGame.UISystems;
 using TheGame.UISystems.Core;
 using UnityEngine;
-using UnityEngine.Pool;
 using XIV.Core.Extensions;
 using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
 using XIV.Core.XIVMath;
-using XIV.EventSystem;
-using XIV.EventSystem.Events;
 using Random = UnityEngine.Random;
 
 namespace TheGame.CoinSystems
@@ -17,29 +14,16 @@ namespace TheGame.CoinSystems
     {
         [SerializeField] IntChannelSO onCoinCollectedAmountChangedChannel;
         [SerializeField] CoinChannelSO coinTriggeredChannelSO;
-        [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] EasingFunction.Ease coinCollectEase;
         EasingFunction.Function easing;
 
         Camera cam;
         int collectedCoinCount;
-        ObjectPool<GameObject> coinCollectedParticlePool;
 
         void Awake()
         {
             cam = Camera.main;
             easing = EasingFunction.GetEasingFunction(coinCollectEase);
-
-            GameObject CreateParticle()
-            {
-                var go = Instantiate(coinCollectedParticlePrefab);
-                go.SetActive(true);
-                return go;
-            }
-
-            void OnReleasedParticle(GameObject particle) => particle.SetActive(false);
-
-            coinCollectedParticlePool = new ObjectPool<GameObject>(CreateParticle, null, OnReleasedParticle, null, false);
         }
 
         void OnEnable() => coinTriggeredChannelSO.Register(OnCoinTriggered);
@@ -59,8 +43,6 @@ namespace TheGame.CoinSystems
                 .WorldToUIMove(curve, Camera.main, Random.Range(0.5f, 1f), easing)
                 .OnComplete(OnCoinTweenCompleted)
                 .Start();
-            
-            HandleParticle(coinTransformPosition);
         }
 
         void OnCoinTweenCompleted(GameObject go)
@@ -68,26 +50,6 @@ namespace TheGame.CoinSystems
             collectedCoinCount++;
             onCoinCollectedAmountChangedChannel.RaiseEvent(collectedCoinCount);
             if (go != null) Destroy(go);
-        }
-        
-        void HandleParticle(Vector3 coinTransformPosition)
-        {
-            var particleGo = coinCollectedParticlePool.Get();
-            particleGo.transform.position = coinTransformPosition;
-            var particleSystems = particleGo.GetComponentsInChildren<ParticleSystem>(true);
-            XIVEventSystem.SendEvent(new InvokeUntilEvent().AddCancelCondition(() =>
-                {
-                    for (int i = 0; i < particleSystems.Length; i++)
-                    {
-                        if (particleSystems[i].isStopped == false)
-                        {
-                            return false;
-                        }
-                    }
-
-                    return true;
-                })
-                .OnCanceled(() => coinCollectedParticlePool.Release(particleGo)));
         }
         
     }
