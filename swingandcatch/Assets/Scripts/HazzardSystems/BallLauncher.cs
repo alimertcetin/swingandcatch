@@ -10,6 +10,7 @@ namespace TheGame.HazzardSystems
     {
         [SerializeField] Transform ballLaunchPos;
         [SerializeField] float launchDuration;
+        [SerializeField] float launchStartDelay = 0.5f;
         [SerializeField] float ballSpeed;
         [SerializeField] HazzardBall hazzardBallPrefab;
         
@@ -22,11 +23,15 @@ namespace TheGame.HazzardSystems
 
         void Start()
         {
+            if (launchStartDelay > 0f) return;
             LaunchBall();
         }
 
         void Update()
         {
+            if (launchStartDelay > 0f) launchStartDelay -= Time.deltaTime;
+            if (launchStartDelay > 0f) return;
+            
             launchTimer.Update(Time.deltaTime);
             var smoothNormalizedTime = XIVMathf.RemapClamped(EasingFunction.SmoothStop5(launchTimer.NormalizedTime), 0f, 1f, 0.5f, 1f);
             transform.localScale = Vector3.one * smoothNormalizedTime;
