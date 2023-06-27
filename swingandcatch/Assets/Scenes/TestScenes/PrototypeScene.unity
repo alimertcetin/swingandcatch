@@ -1221,7 +1221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7708672441546246761, guid: 6798d82a3e5a1f4439fe5bf275043697, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.0300007
+      value: -15.219999
       objectReference: {fileID: 0}
     - target: {fileID: 7708672441546246761, guid: 6798d82a3e5a1f4439fe5bf275043697, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1229,7 +1229,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7708672441546246761, guid: 6798d82a3e5a1f4439fe5bf275043697, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7708672441546246761, guid: 6798d82a3e5a1f4439fe5bf275043697, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1449,7 +1449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74859af5389e4b9499735a5c95ba8124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onCoinCollectedAmountChangedChannel: {fileID: 0}
+  onCoinCollectedAmountChangedChannel: {fileID: 11400000, guid: d338e8a85d0bcb042aeae92eb8771506, type: 2}
   coinTriggeredChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
   coinCollectEase: 0
 --- !u!4 &1428886277
@@ -2693,11 +2693,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.223
+      value: -3.2229996
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6199999
+      value: 2.87
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_LocalPosition.z
