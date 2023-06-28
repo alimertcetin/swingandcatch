@@ -30,7 +30,7 @@ namespace TheGame.PlayerSystems.States
             yVelocity += Physics.gravity.y * (stateMachine.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
             var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
             {
                 stateMachine.transform.position = pos;
             }

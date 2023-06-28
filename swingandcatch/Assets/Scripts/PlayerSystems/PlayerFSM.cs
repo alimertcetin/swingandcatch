@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers;
 using TheGame.FSM;
+using TheGame.HazzardSystems;
 using TheGame.PlayerSystems.States;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.VerletRope;
@@ -13,16 +15,19 @@ namespace TheGame.PlayerSystems
     {
         [Header("Health and Damage Settings")]
         public float health = 100f;
+
         public float damageImmuneDuration = 5f;
         public float recieveDamageRadius = 1.5f;
 
         [Header("Movement")]
         public PlayerWalkStateDataSO walkStateDataSO;
+
         public PlayerRunStateDataSO runStateDataSO;
         public PlayerAirMovementStateDataSO airMovementStateDataSO;
 
         [Header("Jump Movement")]
         public PlayerJumpStateDataSO jumpStateDataSO;
+
         public PlayerGroundedStateDataSO groundedStateDataSO;
         public PlayerFallStateDataSO fallStateDataSO;
 
@@ -31,6 +36,7 @@ namespace TheGame.PlayerSystems
 
         [Header("Left to Right order")]
         public Transform[] playerFeet;
+
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerReachedEndChannelSO;
         public FloatChannelSO updatePlayerHealthChannel;
@@ -40,11 +46,12 @@ namespace TheGame.PlayerSystems
         public Vector3 movementInput => new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
         public bool isRunPressed => Input.GetKey(KeyCode.LeftShift);
         public bool isJumpPressed => Input.GetKey(KeyCode.Space);
-        
+
         public Vector3 velocity { get; private set; }
         public Vector3 previousPosition { get; private set; }
-        
+
         Collider2D[] colliderBuffer = new Collider2D[2];
+        [HideInInspector] public bool damageImmune;
 
         protected override void Awake()
         {
@@ -73,33 +80,22 @@ namespace TheGame.PlayerSystems
 
         public bool CheckIsTouching(int layerMask)
         {
-            const int DETAIL = 10;
-            const float ERROR = 0.1f;
+            const float BOUND_Y_HALF = 0.2f;
+            
+            var t = transform;
+            var halfExtends = t.localScale * 0.5f;
+            var bottomMiddle = t.position + -t.up * halfExtends.y;
 
-            var transform = this.transform;
-            var down = -transform.up;
-            var currentPosition = transform.position;
-            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
-            var castStartPosition = previousPosition + down * localScaleYHalf;
-
-            for (int i = 1; i <= DETAIL; i++)
-            {
-#if UNITY_EDITOR
-                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + down * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.yellow, Color.green, i / (float)DETAIL));
-#endif
-                if (Physics.Raycast(castStartPosition, down, groundedStateDataSO.groundCheckDistance, layerMask))
-                {
-                    return true;
-                }
-
-                var time = i / (float)DETAIL;
-                castStartPosition = Vector3.Lerp(previousPosition, currentPosition, time) + down * localScaleYHalf;
-            }
-
-            return false;
+            var size = new Vector3(halfExtends.x * 1.5f, BOUND_Y_HALF, halfExtends.z);
+            
+            var buffer = ArrayPool<Collider>.Shared.Rent(2);
+            int hitCount = Physics.OverlapBoxNonAlloc(bottomMiddle, size * 0.5f, buffer, t.rotation, layerMask);
+            XIVDebug.DrawBounds(new Bounds(bottomMiddle, size));
+            ArrayPool<Collider>.Shared.Return(buffer);
+            return hitCount > 0;
         }
 
-        public bool CanMove(Vector3 newPosition, int layerMask)
+        public bool CanMove(Vector3 newPosition, int layerMask, bool setLastPossiblePosition)
         {
             const int DETAIL = 10;
             const float ERROR = 0.1f;
@@ -107,20 +103,28 @@ namespace TheGame.PlayerSystems
             var transform = this.transform;
             var dir = (newPosition - previousPosition).normalized;
             var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
-            var castStartPosition = previousPosition + dir * localScaleYHalf;
+            var position = previousPosition;
+            var positionBefore = position;
+            var castStartPosition = position + dir * localScaleYHalf;
 
-            for (int i = 1; i <= DETAIL; i++)
+            for (int i = 0; i <= DETAIL; i++)
             {
 #if UNITY_EDITOR
                 XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + dir * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.blue, Color.red, i / (float)DETAIL));
 #endif
                 if (Physics.Raycast(castStartPosition, dir, groundedStateDataSO.groundCheckDistance, layerMask))
                 {
+                    if (setLastPossiblePosition)
+                    {
+                        transform.position = positionBefore;
+                    }
                     return false;
                 }
 
                 var time = i / (float)DETAIL;
-                castStartPosition = Vector3.Lerp(previousPosition, newPosition, time) + dir * localScaleYHalf;
+                positionBefore = position;
+                position = Vector3.Lerp(previousPosition, newPosition, time);
+                castStartPosition = position + dir * localScaleYHalf;
             }
 
             return true;

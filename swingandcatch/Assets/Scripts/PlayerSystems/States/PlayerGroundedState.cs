@@ -2,6 +2,7 @@
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using UnityEngine;
+using XIV.Core.Extensions;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
 
@@ -65,36 +66,23 @@ namespace TheGame.PlayerSystems.States
 
         bool SetGroundedPosition()
         {
-            const int DETAIL = 10;
-            const float ERROR = 0.1f;
-            var transform = this.stateMachine.transform;
-            var down = -transform.up;
-            var currentPosition = transform.position;
-            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
-            var previousPosition = stateMachine.previousPosition;
-            var castStartPosition = previousPosition + down * localScaleYHalf;
-            var groundCheckDistance = stateMachine.groundedStateDataSO.groundCheckDistance;
+            var stateMachineTransform = stateMachine.transform;
+            var position = stateMachineTransform.position;
+            var localScale = stateMachineTransform.localScale;
+            
+            var buffer = ArrayPool<Collider>.Shared.Rent(2);
+            int hitCount = Physics.OverlapBoxNonAlloc(position, localScale * 0.5f, buffer, stateMachineTransform.rotation, 1 << PhysicsConstants.GroundLayer);
 
-            var raycastHitBuffer = ArrayPool<RaycastHit>.Shared.Rent(2);
-
-            for (int i = 1; i <= DETAIL; i++)
+            if (hitCount > 0)
             {
-                int count = Physics.RaycastNonAlloc(castStartPosition, down, raycastHitBuffer, groundCheckDistance, 1 << PhysicsConstants.GroundLayer);
-                if (count > 0)
-                {
-                    var hit = raycastHitBuffer[0];
-                    var hitPoint = hit.point;
-                    transform.position = hitPoint + -down * (transform.localScale.y * 0.5f);
-                    ArrayPool<RaycastHit>.Shared.Return(raycastHitBuffer);
-                    return true;
-                }
-
-                var time = i / (float)DETAIL;
-                castStartPosition = Vector3.Lerp(previousPosition, currentPosition, time) + down * localScaleYHalf;
+                var closestCollider = buffer.GetClosest(position, hitCount);
+                var closestPointOnCollider = closestCollider.ClosestPoint(position);
+                var groundedPos = closestPointOnCollider + stateMachineTransform.up * (localScale.y * 0.5f);
+                stateMachineTransform.position = groundedPos;
             }
-
-            ArrayPool<RaycastHit>.Shared.Return(raycastHitBuffer);
-            return false;
+            
+            ArrayPool<Collider>.Shared.Return(buffer);
+            return hitCount > 0;
         }
     }
 }

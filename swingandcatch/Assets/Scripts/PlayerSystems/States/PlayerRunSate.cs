@@ -16,7 +16,7 @@ namespace TheGame.PlayerSystems.States
         {
             var pos = stateMachine.transform.position;
             pos += stateMachine.movementInput.normalized * (stateMachine.runStateDataSO.runSpeed * Time.deltaTime);
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
             {
                 stateMachine.transform.position = pos;
             }

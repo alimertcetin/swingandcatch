@@ -15,7 +15,7 @@ namespace TheGame.PlayerSystems.States
             Transform transform = stateMachine.transform;
             Vector3 pos = transform.position;
             pos += stateMachine.movementInput.normalized * (stateMachine.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer))
+            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
             {
                 transform.position = pos;
             }
