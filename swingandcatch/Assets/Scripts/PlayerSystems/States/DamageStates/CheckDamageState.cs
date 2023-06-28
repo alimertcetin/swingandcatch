@@ -1,6 +1,5 @@
 ﻿using System.Buffers;
 using TheGame.FSM;
-using TheGame.HazzardSystems;
 using UnityEngine;
 
 namespace TheGame.PlayerSystems.States.DamageStates
@@ -21,16 +20,11 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
         protected override void OnStateUpdate()
         {
-            var pos = stateMachine.transform.position;
-            count = Physics2D.OverlapCircleNonAlloc(pos, stateMachine.recieveDamageRadius * 0.5f, buffer, 1 << PhysicsConstants.HazzardLayer);
+            count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, stateMachine.recieveDamageRadius * 0.5f, buffer, 1 << PhysicsConstants.HazzardLayer);
 
             for (int i = 0; i < count; i++)
             {
-                var hazzardMono = buffer[i].transform.GetComponent<HazzardMono>();
-                var damageAmount = hazzardMono.damageAmount;
-                stateMachine.health -= damageAmount;
-                stateMachine.updatePlayerHealthChannel.RaiseEvent(stateMachine.health / 100f);
-                hazzardMono.RaiseEvent(stateMachine.transform);
+                stateMachine.OnHazzardHit(buffer[i]);
             }
         }
 

@@ -146,5 +146,13 @@ namespace TheGame.PlayerSystems
             XIVDebug.DrawLine(lineStart, lineStart + (Vector3.right * healthNormalized), Color.Lerp(Color.red, Color.green, healthNormalized));
         }
 #endif
+        public void OnHazzardHit(Collider2D coll)
+        {
+            var hazzardMono = coll.transform.GetComponent<HazzardMono>();
+            var damageAmount = hazzardMono.damageAmount;
+            health -= damageAmount;
+            updatePlayerHealthChannel.RaiseEvent(health / 100f);
+            hazzardMono.RaiseEvent(transform);
+        }
     }
 }
