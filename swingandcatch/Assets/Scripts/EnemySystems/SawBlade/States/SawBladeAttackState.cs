@@ -19,8 +19,8 @@ namespace TheGame.EnemySystems.SawBlade.States
         
         public SawBladeAttackState(SawBladeFSM stateMachine, SawBladeStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
-            projectilePool = new ObjectPool<GameObject>(() => Object.Instantiate(this.stateMachine.attackStateDataSO.projectilePrefab), 
-                (go) => go.SetActive(true), 
+            projectilePool = new ObjectPool<GameObject>(() => Object.Instantiate(this.stateMachine.attackStateDataSO.projectilePrefab),
+                null,
                 (go) => go.SetActive(false));
         }
         
@@ -39,11 +39,13 @@ namespace TheGame.EnemySystems.SawBlade.States
             if (attackTimer.IsDone)
             {
                 attackTimer.Restart();
-                var projectile = projectilePool.Get().GetComponent<SawBladeProjectile>();
+                var go = projectilePool.Get();
+                var projectile = go.GetComponent<SawBladeProjectile>();
                 var stateMachineTransformPosition = stateMachine.transform.position;
                 projectile.transform.position = stateMachineTransformPosition;
                 projectile.target = target;
                 projectile.direction = (target.position - stateMachineTransformPosition).normalized.SetZ(0f);
+                go.SetActive(true);
                 
                 var hazzarMono = projectile.GetComponent<HazzardMono>();
                 hazzarMono.RegisterHit(OnPlayerHit);

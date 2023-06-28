@@ -16,11 +16,24 @@ namespace TheGame.EnemySystems.SawBlade
         public Action<SawBladeProjectile> onOutsideOfTheView;
 
         Vector3 previousPosition;
+        TrailRenderer trailRenderer;
         Camera cam;
 
         void Awake()
         {
             cam = Camera.main;
+            trailRenderer = GetComponentInChildren<TrailRenderer>();
+        }
+
+        void OnEnable()
+        {
+            trailRenderer.Clear();
+            trailRenderer.enabled = true;
+        }
+
+        void OnDisable()
+        {
+            trailRenderer.enabled = false;
         }
 
         void Update()
