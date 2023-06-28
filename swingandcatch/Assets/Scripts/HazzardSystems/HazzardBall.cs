@@ -12,8 +12,8 @@ namespace TheGame.HazzardSystems
         [HideInInspector] public Vector3 direction;
         [HideInInspector] public int obstacleLayerMask;
         
-        public event Action onOutsideOfTheView;
-        public event Action onHitObstacle;
+        public event Action<HazzardBall> onOutsideOfTheView;
+        public event Action<HazzardBall> onHitObstacle;
         
         Vector3 previousPosition;
         Camera cam;
@@ -36,7 +36,7 @@ namespace TheGame.HazzardSystems
 
             if (count > 0)
             {
-                onHitObstacle?.Invoke();
+                onHitObstacle?.Invoke(this);
                 return;
             }
 
@@ -45,14 +45,14 @@ namespace TheGame.HazzardSystems
 
             if (OutsideOfView())
             {
-                onOutsideOfTheView?.Invoke();
+                onOutsideOfTheView?.Invoke(this);
                 return;
             }
         }
 
         bool OutsideOfView()
         {
-            const float DISTANCE_THRESHOLD = 1.5f;
+            const float DISTANCE_THRESHOLD = 1f;
             var viewportPoint = cam.WorldToViewportPoint(previousPosition);
             bool inside = viewportPoint.x > -DISTANCE_THRESHOLD && viewportPoint.x < 1f + DISTANCE_THRESHOLD && viewportPoint.y > -DISTANCE_THRESHOLD && viewportPoint.y < 1f + DISTANCE_THRESHOLD;
             return !inside;

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.Pool;
 using XIV.Core.Utils;
@@ -13,12 +12,16 @@ namespace TheGame.HazzardSystems
         [SerializeField] float launchStartDelay = 0.5f;
         [SerializeField] float ballSpeed;
         [SerializeField] HazzardBall hazzardBallPrefab;
-        
+
+        ObjectPool<HazzardBall> hazzardBallPool;
+
         Timer launchTimer;
 
         void Awake()
         {
             launchTimer = new Timer(launchDuration);
+
+            hazzardBallPool = new ObjectPool<HazzardBall>(CreateHazzardBall, GetHazzardBall, ReleaseHazzardBall);
         }
 
         void Start()
@@ -46,55 +49,61 @@ namespace TheGame.HazzardSystems
 
         void LaunchBall()
         {
-            HazzardBall hazzardBall = Instantiate(hazzardBallPrefab);
+            HazzardBall hazzardBall = hazzardBallPool.Get();
             hazzardBall.speed = ballSpeed;
             hazzardBall.direction = transform.forward;
             hazzardBall.transform.position = ballLaunchPos.position;
             hazzardBall.obstacleLayerMask = 1 << PhysicsConstants.GroundLayer;
 
             var hazzardMono = hazzardBall.GetComponent<HazzardMono>();
-            RegisterEvents();
+            RegisterEvents(hazzardBall);
 
-            void OnHitObstacle()
-            {
-                UnregisterEvents();
-                
-                var particleGo = Instantiate(hazzardBall.particlePrefab);
-                particleGo.transform.position = hazzardBall.transform.position;
-                Destroy(particleGo, 5f);
-                Destroy(hazzardMono.gameObject);
-            }
-
-            void OnOutsideOfTheView()
-            {
-                UnregisterEvents();
-                
-                Destroy(hazzardMono.gameObject);
-            }
-
-            void OnHazzardBallHit(Transform t)
-            {
-                UnregisterEvents();
-                
-                var particleGo = Instantiate(hazzardBall.particlePrefab);
-                particleGo.transform.position = hazzardBall.transform.position;
-                Destroy(particleGo, 5f);
-                Destroy(hazzardMono.gameObject);
-            }
-
-            void RegisterEvents()
-            {
-                hazzardBall.onHitObstacle += OnHitObstacle;
-                hazzardBall.onOutsideOfTheView += OnOutsideOfTheView;
-                hazzardMono.RegisterHit(OnHazzardBallHit);
-            }
-
-            void UnregisterEvents()
-            {
-                hazzardBall.onHitObstacle -= OnHitObstacle;
-                hazzardBall.onOutsideOfTheView -= OnOutsideOfTheView;
-                hazzardMono.UnregisterHit(OnHazzardBallHit);
-            }
         }
+        
+        void OnHitObstacle(HazzardBall hazzardBall)
+        {
+            UnregisterEvents(hazzardBall);
+                
+            var particleGo = Instantiate(hazzardBall.particlePrefab);
+            particleGo.transform.position = hazzardBall.transform.position;
+            Destroy(particleGo, 5f);
+            hazzardBallPool.Release(hazzardBall);
+        }
+
+        void OnOutsideOfTheView(HazzardBall hazzardBall)
+        {
+            UnregisterEvents(hazzardBall);
+            hazzardBallPool.Release(hazzardBall);
+        }
+
+        void OnHazzardMonoHit(HazzardMono hazzardMono, Transform other)
+        {
+            var hazzardBall = hazzardMono.GetComponent<HazzardBall>();
+            
+            UnregisterEvents(hazzardBall);
+
+            var particleGo = Instantiate(hazzardBall.particlePrefab);
+            particleGo.transform.position = hazzardBall.transform.position;
+            Destroy(particleGo, 5f);
+            hazzardBallPool.Release(hazzardBall);
+        }
+
+        void RegisterEvents(HazzardBall hazzardBall)
+        {
+            hazzardBall.onHitObstacle += OnHitObstacle;
+            hazzardBall.onOutsideOfTheView += OnOutsideOfTheView;
+            hazzardBall.GetComponent<HazzardMono>().RegisterHit(OnHazzardMonoHit);
+        }
+
+        void UnregisterEvents(HazzardBall hazzardBall)
+        {
+            hazzardBall.onHitObstacle -= OnHitObstacle;
+            hazzardBall.onOutsideOfTheView -= OnOutsideOfTheView;
+            hazzardBall.GetComponent<HazzardMono>().UnregisterHit(OnHazzardMonoHit);
+        }
+        
+        HazzardBall CreateHazzardBall() => Instantiate(hazzardBallPrefab);
+        void GetHazzardBall(HazzardBall hazzardBall) => hazzardBall.gameObject.SetActive(true);
+        void ReleaseHazzardBall(HazzardBall hazzardBall) => hazzardBall.gameObject.SetActive(false);
     }
 }

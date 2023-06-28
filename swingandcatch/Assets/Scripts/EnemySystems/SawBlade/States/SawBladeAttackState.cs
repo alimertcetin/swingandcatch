@@ -47,20 +47,7 @@ namespace TheGame.EnemySystems.SawBlade.States
                 
                 var hazzarMono = projectile.GetComponent<HazzardMono>();
                 hazzarMono.RegisterHit(OnPlayerHit);
-
-                projectile.onOutsideOfTheView = () =>
-                {
-                    hazzarMono.UnregisterHit(OnPlayerHit);
-                    projectilePool.Release(projectile.gameObject);
-                };
-                void OnPlayerHit(Transform player)
-                {
-                    // TODO : Create particle pool
-                    hazzarMono.UnregisterHit(OnPlayerHit);
-                    var particleGo = Object.Instantiate(projectile.particlePrefab, projectile.transform.position, Quaternion.identity);
-                    Object.Destroy(particleGo, 7f);
-                    projectilePool.Release(projectile.gameObject);
-                }
+                projectile.onOutsideOfTheView += OnOutsideOfView;
             }
         }
 
@@ -80,6 +67,25 @@ namespace TheGame.EnemySystems.SawBlade.States
                 ChangeRootState(factory.GetState<SawBladeIdleTransitionState>());
                 return;
             }
+        }
+        
+        void OnPlayerHit(HazzardMono hazzardMono, Transform player)
+        {
+            // TODO : Create particle pool
+            hazzardMono.UnregisterHit(OnPlayerHit);
+            var sawBladeProjectile = hazzardMono.GetComponent<SawBladeProjectile>();
+            sawBladeProjectile.onOutsideOfTheView -= OnOutsideOfView;
+            
+            var particleGo = Object.Instantiate(sawBladeProjectile.particlePrefab, sawBladeProjectile.transform.position, Quaternion.identity);
+            Object.Destroy(particleGo, 7f);
+            projectilePool.Release(sawBladeProjectile.gameObject);
+        }
+
+        void OnOutsideOfView(SawBladeProjectile sawBladeProjectile)
+        {
+            sawBladeProjectile.onOutsideOfTheView -= OnOutsideOfView;
+            sawBladeProjectile.GetComponent<HazzardMono>().UnregisterHit(OnPlayerHit);
+            projectilePool.Release(sawBladeProjectile.gameObject);
         }
 
         void HandleMovement()

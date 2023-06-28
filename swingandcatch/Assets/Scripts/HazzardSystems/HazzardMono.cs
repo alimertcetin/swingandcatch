@@ -6,21 +6,21 @@ namespace TheGame.HazzardSystems
     public class HazzardMono : MonoBehaviour
     {
         public float damageAmount;
-        Action<Transform> onTargetHit;
+        Action<HazzardMono, Transform> onTargetHit;
 
-        public void RegisterHit(Action<Transform> action)
+        public void RegisterHit(Action<HazzardMono, Transform> action)
         {
             onTargetHit += action;
         }
 
-        public void UnregisterHit(Action<Transform> action)
+        public void UnregisterHit(Action<HazzardMono, Transform> action)
         {
             onTargetHit -= action;
         }
 
         public void RaiseEvent(Transform target)
         {
-            onTargetHit?.Invoke(target);
+            onTargetHit?.Invoke(this, target);
         }
     }
 }

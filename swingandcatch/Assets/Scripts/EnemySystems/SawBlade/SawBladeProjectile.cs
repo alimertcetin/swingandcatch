@@ -4,20 +4,25 @@ using UnityEngine;
 
 namespace TheGame.EnemySystems.SawBlade
 {
+    [RequireComponent(typeof(HazzardMono))]
     public class SawBladeProjectile : MonoBehaviour
     {
         public GameObject particlePrefab;
         public float speed = 4f;
-        public float hitRadius = 0.3f;
      
         public Transform target { get; set; }
         public Vector3 direction { get; set; }
 
-        public Action onOutsideOfTheView;
+        public Action<SawBladeProjectile> onOutsideOfTheView;
 
         Vector3 previousPosition;
-        HazzardMono hazzardMono;
-        
+        Camera cam;
+
+        void Awake()
+        {
+            cam = Camera.main;
+        }
+
         void Update()
         {
             var pos = transform.position;
@@ -27,15 +32,15 @@ namespace TheGame.EnemySystems.SawBlade
 
             if (OutsideOfView())
             {
-                onOutsideOfTheView.Invoke();
+                onOutsideOfTheView.Invoke(this);
                 return;
             }
         }
 
         bool OutsideOfView()
         {
-            const float DISTANCE_THRESHOLD = 1.5f;
-            var viewportPoint = Camera.main.WorldToViewportPoint(previousPosition);
+            const float DISTANCE_THRESHOLD = 1f;
+            var viewportPoint = cam.WorldToViewportPoint(previousPosition);
             bool inside = viewportPoint.x > -DISTANCE_THRESHOLD && viewportPoint.x < 1f + DISTANCE_THRESHOLD && viewportPoint.y > -DISTANCE_THRESHOLD && viewportPoint.y < 1f + DISTANCE_THRESHOLD;
             return !inside;
         }
