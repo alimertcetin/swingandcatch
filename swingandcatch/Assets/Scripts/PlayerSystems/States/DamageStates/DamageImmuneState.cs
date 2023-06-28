@@ -17,6 +17,8 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
         protected override void OnStateEnter(State comingFrom)
         {
+            stateMachine.damageImmune = true;
+            
             float colorFlashDuration = (stateMachine.damageImmuneDuration / (COLOR_FLASH_COUNT + 1));
             timer = new Timer(stateMachine.damageImmuneDuration);
             stateMachine.CancelTween();
@@ -38,6 +40,11 @@ namespace TheGame.PlayerSystems.States.DamageStates
         protected override void OnStateUpdate()
         {
             timer.Update(Time.deltaTime);
+        }
+
+        protected override void OnStateExit()
+        {
+            stateMachine.damageImmune = false;
         }
 
         protected override void CheckTransitions()
