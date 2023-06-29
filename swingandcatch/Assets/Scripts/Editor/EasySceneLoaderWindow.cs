@@ -138,6 +138,7 @@ namespace LessonIsMath.XIVEditor.Windows
 
                     LoadScene(sceneAsset, additiveLoadToggle);
                 }
+                UnityEngine.Pool.ListPool<SceneAsset>.Release(allScenes);
             }
             else
             {
