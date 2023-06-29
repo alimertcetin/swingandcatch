@@ -20,11 +20,13 @@ namespace LessonIsMath.XIVEditor.Windows
 
         string sceneFolder;
         string testFolder;
+        string searchStr;
 
         string sceneFolderKey => nameof(EasySceneLoaderWindow) + "_SceneFolderPath";
         string testFolderKey => nameof(EasySceneLoaderWindow) + "_TestFolderPath";
 
         GUIStyle labelStyle;
+        bool isSearching;
         
         [MenuItem("TheGame/Utilities/" + nameof(EasySceneLoaderWindow))]
         public static void ShowSceneLoaderWindow()
@@ -102,36 +104,70 @@ namespace LessonIsMath.XIVEditor.Windows
             testFolder = EditorGUILayout.TextField(testFolder);
             EditorGUILayout.EndHorizontal();
             
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Search");
+            searchStr = EditorGUILayout.TextField(searchStr);
+            isSearching = string.IsNullOrWhiteSpace(searchStr) == false;
+            EditorGUILayout.EndHorizontal();
+            
             GUILayout.Space(20f);
             
             scenesScrollPos = EditorGUILayout.BeginScrollView(scenesScrollPos, false, false);
-            
-            GUI.color = labelColor;
-            if (scenes.Count > 0) GUILayout.Label("Game Scenes", labelStyle);
-            GUI.color = tempGUIColor;
-            
-            for (var i = 0; i < scenes.Count; i++)
-            {
-                SceneAsset sceneAsset = scenes[i];
-                GUILayout.Space(10);
-                if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
 
-                LoadScene(sceneAsset, additiveLoadToggle);
+            if (isSearching)
+            {
+                var allScenes = UnityEngine.Pool.ListPool<SceneAsset>.Get();
+                allScenes.AddRange(scenes);
+                allScenes.AddRange(testScenes);
+                int count = allScenes.Count;
+                for (int i = count - 1; i >= 0; i--)
+                {
+                    var sceneAsset = allScenes[i];
+                    if (sceneAsset.name.ToLower().Contains(searchStr.ToLower()) == false)
+                    {
+                        allScenes.RemoveAt(i);
+                        count--;
+                    }
+                }
+                
+                for (var i = 0; i < count; i++)
+                {
+                    SceneAsset sceneAsset = allScenes[i];
+                    GUILayout.Space(10);
+                    if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
+
+                    LoadScene(sceneAsset, additiveLoadToggle);
+                }
             }
-            
-            GUILayout.Space(20f);
-
-            GUI.color = labelColor;
-            if (testScenes.Count > 0) GUILayout.Label("Test Scenes", labelStyle);
-            GUI.color = tempGUIColor;
-
-            for (var i = 0; i < testScenes.Count; i++)
+            else
             {
-                SceneAsset sceneAsset = testScenes[i];
-                GUILayout.Space(10);
-                if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
+                GUI.color = labelColor;
+                if (scenes.Count > 0) GUILayout.Label("Game Scenes", labelStyle);
+                GUI.color = tempGUIColor;
 
-                LoadScene(sceneAsset, additiveLoadToggle);
+                for (var i = 0; i < scenes.Count; i++)
+                {
+                    SceneAsset sceneAsset = scenes[i];
+                    GUILayout.Space(10);
+                    if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
+
+                    LoadScene(sceneAsset, additiveLoadToggle);
+                }
+
+                GUILayout.Space(20f);
+
+                GUI.color = labelColor;
+                if (testScenes.Count > 0) GUILayout.Label("Test Scenes", labelStyle);
+                GUI.color = tempGUIColor;
+
+                for (var i = 0; i < testScenes.Count; i++)
+                {
+                    SceneAsset sceneAsset = testScenes[i];
+                    GUILayout.Space(10);
+                    if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
+
+                    LoadScene(sceneAsset, additiveLoadToggle);
+                }
             }
 
             EditorGUILayout.EndScrollView();
