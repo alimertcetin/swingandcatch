@@ -37,9 +37,9 @@ namespace TheGame.PlayerSystems.States
             
             currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.climbStateDataSO.ropeSwingInitialForce);
             
-            stateMachine.CancelTween();
-            stateMachine.XIVTween()
-                .Scale(stateMachine.transform.localScale, Vector3.one * 1.25f, 0.15f, EasingFunction.EaseInOutBounce, true)
+            stateMachine.playerVisualTransform.CancelTween();
+            stateMachine.playerVisualTransform.XIVTween()
+                .Scale(stateMachine.playerVisualTransform.localScale, Vector3.one * 1.25f, 0.15f, EasingFunction.EaseInOutBounce, true)
                 .Start();
         }
 

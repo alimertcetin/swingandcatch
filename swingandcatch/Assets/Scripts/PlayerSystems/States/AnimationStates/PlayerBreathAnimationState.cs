@@ -32,7 +32,7 @@ namespace TheGame.PlayerSystems.States.AnimationStates
             var startScale = t > 0.5f ? Vector3.one * 0.8f : Vector3.one;
             var targetScale = t > 0.5f ? Vector3.one : Vector3.one * 0.8f;
             var newScale = Vector3.Lerp(startScale, targetScale, t);
-            stateMachine.transform.localScale = newScale.SetY(stateMachine.transform.localScale.y);
+            stateMachine.playerVisualTransform.localScale = newScale.SetY(stateMachine.playerVisualTransform.localScale.y);
             
             if (timePassed > animationDuration)
             {
@@ -42,7 +42,7 @@ namespace TheGame.PlayerSystems.States.AnimationStates
 
         protected override void OnStateExit()
         {
-            stateMachine.transform.localScale = Vector3.one;
+            stateMachine.playerVisualTransform.localScale = Vector3.one;
         }
         
     }

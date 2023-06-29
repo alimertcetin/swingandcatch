@@ -8,6 +8,7 @@ using TheGame.VerletRope;
 using UnityEngine;
 using XIV.Core;
 using XIV.Core.Extensions;
+using XIV.Core.XIVMath;
 
 namespace TheGame.PlayerSystems
 {
@@ -34,8 +35,9 @@ namespace TheGame.PlayerSystems
         [Header("Climb Movement")]
         public PlayerClimbStateDataSO climbStateDataSO;
 
-        [Header("Left to Right order")]
+        [Tooltip("Left to Right order")]
         public Transform[] playerFeet;
+        public Transform playerVisualTransform;
 
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerReachedEndChannelSO;
@@ -52,10 +54,12 @@ namespace TheGame.PlayerSystems
 
         Collider2D[] colliderBuffer = new Collider2D[2];
         [HideInInspector] public bool damageImmune;
+        Collider2D coll2D;
 
         protected override void Awake()
         {
             previousPosition = transform.position;
+            coll2D = GetComponent<Collider2D>();
             base.Awake();
         }
 
@@ -80,54 +84,92 @@ namespace TheGame.PlayerSystems
 
         public bool CheckIsTouching(int layerMask)
         {
-            const float BOUND_Y_HALF = 0.2f;
-            
-            var t = transform;
-            var halfExtends = t.localScale * 0.5f;
-            var bottomMiddle = t.position + -t.up * halfExtends.y;
-
-            var size = new Vector3(halfExtends.x * 1.5f, BOUND_Y_HALF, halfExtends.z);
-            
             var buffer = ArrayPool<Collider>.Shared.Rent(2);
-            int hitCount = Physics.OverlapBoxNonAlloc(bottomMiddle, size * 0.5f, buffer, t.rotation, layerMask);
-            XIVDebug.DrawBounds(new Bounds(bottomMiddle, size));
+            int hitCount = CheckIsTouchingNonAlloc(buffer, layerMask);
             ArrayPool<Collider>.Shared.Return(buffer);
             return hitCount > 0;
         }
 
+        public int CheckIsTouchingNonAlloc(Collider[] buffer, int layerMask)
+        {
+            const float BOUND_Y_HALF = 0.07f;
+            
+            var t = transform;
+            var localScale = t.localScale;
+            var halfExtends = localScale * 0.5f;
+            var bottomMiddle = t.position + -t.up * halfExtends.y;
+
+            var size = halfExtends * 0.75f;
+            size.y = BOUND_Y_HALF;
+            
+            int hitCount = Physics.OverlapBoxNonAlloc(bottomMiddle, size, buffer, t.rotation, layerMask);
+            XIVDebug.DrawBounds(new Bounds(bottomMiddle, size * 2f));
+            return hitCount;
+        }
+
         public bool CanMove(Vector3 newPosition, int layerMask, bool setLastPossiblePosition)
         {
-            const int DETAIL = 10;
-            const float ERROR = 0.1f;
+            const int DETAIL = 20;
 
-            var transform = this.transform;
-            var dir = (newPosition - previousPosition).normalized;
-            var localScaleYHalf = transform.localScale.y * 0.5f - ERROR;
-            var position = previousPosition;
-            var positionBefore = position;
-            var castStartPosition = position + dir * localScaleYHalf;
+            var transformPosition = transform.position;
+            var dir = (newPosition - transformPosition).normalized;
+            var testPointBuffer = ArrayPool<Vector3>.Shared.Rent(DETAIL);
+            GetTestPointsLocal(DETAIL, transformPosition, dir, testPointBuffer);
 
-            for (int i = 0; i <= DETAIL; i++)
+            var maxDistance = groundedStateDataSO.groundCheckDistance;
+            var testPosition = previousPosition;
+            var positionBeforeCollision = testPosition;
+            bool hasCollision = false;
+
+            while (hasCollision == false)
             {
-#if UNITY_EDITOR
-                XIV.Core.XIVDebug.DrawLine(castStartPosition, castStartPosition + dir * groundedStateDataSO.groundCheckDistance, Color.Lerp(Color.blue, Color.red, i / (float)DETAIL));
-#endif
-                if (Physics.Raycast(castStartPosition, dir, groundedStateDataSO.groundCheckDistance, layerMask))
-                {
-                    if (setLastPossiblePosition)
-                    {
-                        transform.position = positionBefore;
-                    }
-                    return false;
-                }
-
-                var time = i / (float)DETAIL;
-                positionBefore = position;
-                position = Vector3.Lerp(previousPosition, newPosition, time);
-                castStartPosition = position + dir * localScaleYHalf;
+                hasCollision = HasCollision(testPosition, testPointBuffer, DETAIL, dir, maxDistance, layerMask);
+                positionBeforeCollision = testPosition;
+                // hasCollision might not be true ever, we actually rely on below line to break the loop
+                if ((newPosition - testPosition).sqrMagnitude - Mathf.Epsilon < Mathf.Epsilon) break;
+                testPosition = Vector3.MoveTowards(testPosition, newPosition, 0.01f);
             }
+            
+            if (hasCollision && setLastPossiblePosition) transform.position = positionBeforeCollision;
 
-            return true;
+            ArrayPool<Vector3>.Shared.Return(testPointBuffer);
+            return hasCollision == false;
+        }
+
+        void GetTestPointsLocal(int detail, Vector3 position, Vector3 dir, Vector3[] buffer)
+        {
+            const float ERROR = 0.01f;
+            var bounds = coll2D.bounds;
+            for (int i = 0; i < detail; i++)
+            {
+                var t = i / (float)(detail - 1);
+                var rotT = XIVMathf.Remap(t, 0f, 1f, -1f, 1f);
+                var rot = Quaternion.AngleAxis(rotT * 20f, Vector3.forward);
+                var pos = position + rot * dir;
+                var posOnCollider = bounds.ClosestPoint(pos);
+                var d = (position - posOnCollider).normalized * ERROR;
+                buffer[i] = posOnCollider - position + d;
+            }
+        }
+
+        bool HasCollision(Vector3 position, Vector3[] localTestPoints, int testPointLength, Vector3 movementDirection, float distance, int layerMask)
+        {
+            const float ERROR = 0.01f;
+            var hitBufer = ArrayPool<RaycastHit>.Shared.Rent(2);
+            int hitCount = 0;
+            for (int i = 0; i < testPointLength && hitCount == 0; i++)
+            {
+                var pStart = localTestPoints[i] + position;
+                var direction = (pStart - position).normalized;
+                var dot = Vector3.Dot(direction, movementDirection);
+                dot *= dot;
+                
+                hitCount = Physics.RaycastNonAlloc(pStart, direction, hitBufer, distance * dot + ERROR, layerMask);
+                var color = hitCount == 0 ? Color.Lerp(Color.green, Color.white, i / (float)(testPointLength - 1)) : Color.red;
+                XIVDebug.DrawLine(pStart, pStart + direction * (distance * dot + ERROR), color);
+            }
+            ArrayPool<RaycastHit>.Shared.Return(hitBufer);
+            return hitCount > 0;
         }
 
         public bool GetNearestRope(out Rope rope)
@@ -139,17 +181,7 @@ namespace TheGame.PlayerSystems
             rope = colliderBuffer.GetClosest(position, count).GetComponent<Rope>();
             return true;
         }
-
-#if UNITY_EDITOR
-        void OnDrawGizmos()
-        {
-            if (Application.isPlaying == false) return;
-            Vector3 lineStart = transform.position + Vector3.right + Vector3.up * 2f;
-
-            var healthNormalized = health / 100f;
-            XIVDebug.DrawLine(lineStart, lineStart + (Vector3.right * healthNormalized), Color.Lerp(Color.red, Color.green, healthNormalized));
-        }
-#endif
+        
         public void OnHazzardHit(Collider2D coll)
         {
             var hazzardMono = coll.transform.GetComponent<HazzardMono>();

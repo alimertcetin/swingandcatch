@@ -12,11 +12,9 @@ namespace TheGame.PlayerSystems.States
         float fallingTime;
         const float MAX_FALL_DURATION = 5f;
         Vector3[] feetInitialLocalPositions;
-        Transform stateMachineTransform;
 
         public PlayerFallingState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
-            stateMachineTransform = stateMachine.transform;
         }
 
         protected override void OnStateEnter(State comingFrom)
@@ -44,7 +42,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateExit()
         {
-            stateMachineTransform.localScale = stateMachineTransform.localScale.SetX(1f);
+            stateMachine.playerVisualTransform.localScale = stateMachine.playerVisualTransform.localScale.SetX(1f);
             int length = stateMachine.playerFeet.Length;
             for (int i = 0; i < length; i++)
             {
@@ -91,15 +89,16 @@ namespace TheGame.PlayerSystems.States
             yVelocity += Physics.gravity.y * (stateMachine.fallStateDataSO.fallGravityScale * fixedDeltaTime + Mathf.Clamp(fallingTime, 0f, 10f) * fixedDeltaTime);
             yVelocity = Mathf.Clamp(yVelocity, -18f, 0f);
 
-            var pos = stateMachineTransform.position;
+            var t = stateMachine.transform;
+            var pos = t.position;
             pos.y += yVelocity * fixedDeltaTime;
-            stateMachineTransform.position = pos;
+            t.position = pos;
         }
 
         void SetTransformScale(float normalizedFallingTime)
         {
             var normalizedXScale = Mathf.Clamp(1f - normalizedFallingTime, 0.5f, 1f);
-            stateMachineTransform.localScale = stateMachineTransform.localScale.SetX(normalizedXScale);
+            stateMachine.playerVisualTransform.localScale = stateMachine.playerVisualTransform.localScale.SetX(normalizedXScale);
         }
 
         void SetFeetPositions(float normalizedFallingTime)

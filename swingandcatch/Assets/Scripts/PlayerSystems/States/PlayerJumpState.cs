@@ -19,9 +19,9 @@ namespace TheGame.PlayerSystems.States
             yVelocity = CalculateJumpVelocity(stateMachine.jumpStateDataSO.jumpHeight);
 
             if (comingFrom is PlayerClimbState) return;
-            stateMachine.CancelTween();
-            stateMachine.XIVTween()
-                .ScaleX(stateMachine.transform.localScale.x, 0.75f, 0.25f, EasingFunction.EaseInOutBounce, true)
+            stateMachine.playerVisualTransform.CancelTween();
+            stateMachine.playerVisualTransform.XIVTween()
+                .ScaleX(stateMachine.playerVisualTransform.localScale.x, 0.75f, 0.25f, EasingFunction.EaseInOutBounce, true)
                 .Start();
         }
 
@@ -43,7 +43,7 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateExit()
         {
             waitGroundedTimer.Restart();
-            stateMachine.CancelTween();
+            stateMachine.playerVisualTransform.CancelTween();
         }
 
         protected override void CheckTransitions()

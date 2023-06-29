@@ -2,6 +2,7 @@
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using UnityEngine;
+using XIV.Core;
 using XIV.Core.Extensions;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
@@ -69,16 +70,35 @@ namespace TheGame.PlayerSystems.States
             var stateMachineTransform = stateMachine.transform;
             var position = stateMachineTransform.position;
             var localScale = stateMachineTransform.localScale;
+            var bottomPosition = position + -stateMachineTransform.up * (localScale.y * 0.5f);
             
             var buffer = ArrayPool<Collider>.Shared.Rent(2);
             int hitCount = Physics.OverlapBoxNonAlloc(position, localScale * 0.5f, buffer, stateMachineTransform.rotation, 1 << PhysicsConstants.GroundLayer);
 
             if (hitCount > 0)
             {
-                var closestCollider = buffer.GetClosest(position, hitCount);
-                var closestPointOnCollider = closestCollider.ClosestPoint(position);
+                Collider closestCollider = default;
+                float distance = float.MaxValue;
+                for (int i = 0; i < hitCount; i++)
+                {
+                    var posOnCol = buffer[i].ClosestPoint(bottomPosition);
+                    var dis = Vector3.Distance(posOnCol, bottomPosition);
+                    if (dis < distance)
+                    {
+                        distance = dis;
+                        closestCollider = buffer[i];
+                    }
+                    XIV.Core.XIVDebug.DrawCircle(posOnCol, 0.1f, Color.red, 1.5f);
+                }
+                
+                var y = closestCollider.transform.position.y + closestCollider.bounds.extents.y;
+                var closestPointOnCollider = new Vector3(position.x, y, position.z);
                 var groundedPos = closestPointOnCollider + stateMachineTransform.up * (localScale.y * 0.5f);
+                
+                XIV.Core.XIVDebug.DrawCircle(groundedPos, 0.1f, Color.green, 1.5f);
+                
                 stateMachineTransform.position = groundedPos;
+
             }
             
             ArrayPool<Collider>.Shared.Return(buffer);
