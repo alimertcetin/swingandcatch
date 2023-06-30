@@ -2,8 +2,6 @@
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using UnityEngine;
-using XIV.Core;
-using XIV.Core.Extensions;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
 
@@ -45,7 +43,7 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
             
-            if (stateMachine.IsGrounded() == false)
+            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer) == false)
             {
                 ChangeRootState(factory.GetState<PlayerFallingState>());
                 return;
@@ -72,12 +70,12 @@ namespace TheGame.PlayerSystems.States
             var localScale = stateMachineTransform.localScale;
             var bottomPosition = position + -stateMachineTransform.up * (localScale.y * 0.5f);
             
-            var buffer = ArrayPool<Collider>.Shared.Rent(2);
-            int hitCount = Physics.OverlapBoxNonAlloc(position, localScale * 0.5f, buffer, stateMachineTransform.rotation, 1 << PhysicsConstants.GroundLayer);
+            var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
+            int hitCount = stateMachine.CheckIsTouchingNonAlloc(buffer, 1 << PhysicsConstants.GroundLayer);
 
             if (hitCount > 0)
             {
-                Collider closestCollider = default;
+                Collider2D closestCollider = default;
                 float distance = float.MaxValue;
                 for (int i = 0; i < hitCount; i++)
                 {
@@ -101,7 +99,7 @@ namespace TheGame.PlayerSystems.States
 
             }
             
-            ArrayPool<Collider>.Shared.Return(buffer);
+            ArrayPool<Collider2D>.Shared.Return(buffer);
             return hitCount > 0;
         }
     }

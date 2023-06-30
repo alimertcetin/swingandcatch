@@ -16,10 +16,12 @@ namespace TheGame.EnemySystems.SawBlade
         
         [NonSerialized] public Vector3 idleStartPosition;
         public Vector3 idleEndPosition => idleStartPosition - idleStateDataSO.idleMovementAxis * idleStateDataSO.idleMovementDistance;
+        public Collider2D collider2D { get; private set; }
 
         protected override void Awake()
         {
             idleStartPosition = transform.position + idleStateDataSO.idleMovementAxis.normalized * (idleStateDataSO.idleMovementDistance * 0.5f);
+            collider2D = GetComponent<Collider2D>();
             base.Awake();
         }
 

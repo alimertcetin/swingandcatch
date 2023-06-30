@@ -16,7 +16,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            yVelocity = CalculateJumpVelocity(stateMachine.jumpStateDataSO.jumpHeight);
+            yVelocity = CalculateJumpVelocity(stateMachine.stateDatas.jumpStateDataSO.jumpHeight);
 
             if (comingFrom is PlayerClimbState) return;
             stateMachine.playerVisualTransform.CancelTween();
@@ -27,14 +27,10 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            yVelocity += Physics.gravity.y * (stateMachine.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
+            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
             var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
-            {
-                stateMachine.transform.position = pos;
-            }
-            else
+            if (stateMachine.Move(pos) == false)
             {
                 yVelocity = 0f;
             }
@@ -54,7 +50,7 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
             
-            if (stateMachine.IsGrounded() && waitGroundedTimer.Update(Time.deltaTime))
+            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer) && waitGroundedTimer.Update(Time.deltaTime))
             {
                 ChangeRootState(factory.GetState<PlayerGroundedState>());
                 return;
@@ -74,7 +70,7 @@ namespace TheGame.PlayerSystems.States
 
         float CalculateJumpVelocity(float jumpHeight)
         {
-            float gravity = Physics.gravity.y * stateMachine.jumpStateDataSO.jumpGravityScale;
+            float gravity = Physics.gravity.y * stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale;
             float initialVelocity = Mathf.Sqrt(2f * jumpHeight * -gravity);
             return initialVelocity;
         }

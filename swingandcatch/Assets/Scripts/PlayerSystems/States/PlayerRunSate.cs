@@ -15,11 +15,8 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateUpdate()
         {
             var pos = stateMachine.transform.position;
-            pos += stateMachine.movementInput.normalized * (stateMachine.runStateDataSO.runSpeed * Time.deltaTime);
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
-            {
-                stateMachine.transform.position = pos;
-            }
+            pos += stateMachine.horizontalMovementInput.normalized * (stateMachine.stateDatas.runStateDataSO.runSpeed * Time.deltaTime);
+            stateMachine.Move(pos);
         }
 
         protected override void InitializeChildStates()
@@ -31,13 +28,13 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.isRunPressed == false && stateMachine.hasMovementInput)
+            if (stateMachine.isRunPressed == false && stateMachine.hasHorizontalMovementInput)
             {
                 ChangeChildState(factory.GetState<PlayerWalkState>());
                 return;
             }
 
-            if (stateMachine.hasMovementInput == false)
+            if (stateMachine.hasHorizontalMovementInput == false)
             {
                 ChangeChildState(factory.GetState<PlayerIdleState>());
                 return;

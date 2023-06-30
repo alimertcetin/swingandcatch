@@ -1,8 +1,6 @@
-﻿using TheGame.ScriptableObjects;
-using TheGame.ScriptableObjects.StateDatas;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace TheGame.PlayerSystems
+namespace TheGame.ScriptableObjects.StateDatas.PlayerStateDatas
 {
     [CreateAssetMenu(menuName = MenuPaths.PLAYER_FSM_STATE_DATA + nameof(PlayerJumpStateDataSO))]
     public class PlayerJumpStateDataSO : StateDataSO

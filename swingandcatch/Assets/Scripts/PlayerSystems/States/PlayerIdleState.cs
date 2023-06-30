@@ -20,7 +20,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.hasMovementInput == false) return;
+            if (stateMachine.hasHorizontalMovementInput == false) return;
             
             if (stateMachine.isRunPressed)
             {

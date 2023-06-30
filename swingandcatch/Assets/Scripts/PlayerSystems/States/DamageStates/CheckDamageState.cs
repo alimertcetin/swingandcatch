@@ -1,53 +1,37 @@
-﻿using System.Buffers;
-using TheGame.FSM;
-using UnityEngine;
+﻿using TheGame.FSM;
+using TheGame.HealthSystems;
 
 namespace TheGame.PlayerSystems.States.DamageStates
 {
-    public class CheckDamageState : State<PlayerFSM, PlayerStateFactory>
+    public class CheckDamageState : State<PlayerFSM, PlayerStateFactory>, IHealthListener
     {
-        int count;
-        Collider2D[] buffer;
+        bool isDead;
         
         public CheckDamageState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
         }
 
-        protected override void OnStateEnter(State comingFrom)
-        {
-            buffer = ArrayPool<Collider2D>.Shared.Rent(8);
-        }
-
-        protected override void OnStateUpdate()
-        {
-            count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, stateMachine.recieveDamageRadius * 0.5f, buffer, 1 << PhysicsConstants.HazzardLayer);
-
-            for (int i = 0; i < count; i++)
-            {
-                stateMachine.OnHazzardHit(buffer[i]);
-            }
-        }
-
-        protected override void OnStateExit()
-        {
-            ArrayPool<Collider2D>.Shared.Return(buffer);
-        }
+        protected override void OnStateEnter(State comingFrom) => stateMachine.health.AddListener(this);
+        protected override void OnStateExit() => stateMachine.health.RemoveListener(this);
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.health <= 0f)
+            if (isDead)
             {
                 // var lastCollider = buffer[count - 1]; // last collider that damages the player
                 ChangeRootState(factory.GetState<PlayerDiedByLavaState>());
                 return;
             }
 
-            if (count > 0)
+            if (stateMachine.damageImmune)
             {
                 ChangeChildState(factory.GetState<DamageImmuneState>());
                 return;
             }
             
         }
+
+        public void OnHealthChanged(ref HealthChange _) => stateMachine.damageImmune = true;
+        public void OnHealthDepleted(ref HealthChange _) => isDead = true;
     }
 }

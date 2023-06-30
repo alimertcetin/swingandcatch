@@ -53,7 +53,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.IsGrounded())
+            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer))
             {
                 ChangeRootState(factory.GetState<PlayerGroundedState>());
                 return;
@@ -86,13 +86,13 @@ namespace TheGame.PlayerSystems.States
         void SetTransformPosition()
         {
             var fixedDeltaTime = Time.fixedDeltaTime;
-            yVelocity += Physics.gravity.y * (stateMachine.fallStateDataSO.fallGravityScale * fixedDeltaTime + Mathf.Clamp(fallingTime, 0f, 10f) * fixedDeltaTime);
+            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.fallStateDataSO.fallGravityScale * fixedDeltaTime + Mathf.Clamp(fallingTime, 0f, 10f) * fixedDeltaTime);
             yVelocity = Mathf.Clamp(yVelocity, -18f, 0f);
 
             var t = stateMachine.transform;
             var pos = t.position;
             pos.y += yVelocity * fixedDeltaTime;
-            t.position = pos;
+            stateMachine.Move(pos);
         }
 
         void SetTransformScale(float normalizedFallingTime)

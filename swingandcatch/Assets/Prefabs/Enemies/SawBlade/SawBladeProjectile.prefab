@@ -9,9 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1056571869755308840}
-  - component: {fileID: 6863578494516669967}
-  - component: {fileID: 8996962585994946268}
-  - component: {fileID: 553199902440237707}
+  - component: {fileID: 8573880357556286976}
   m_Layer: 10
   m_Name: SawBladeProjectile
   m_TagString: Untagged
@@ -35,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6863578494516669967
+--- !u!114 &8573880357556286976
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -44,40 +42,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 843538939233883306}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fd542072bc044cfb152ade043603ea7, type: 3}
+  m_Script: {fileID: 11500000, guid: a8907c2438da4042a38e06f5116d0818, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particlePrefab: {fileID: 3420687967240432720, guid: 010ee0213749f2b4cb29f8d37c2c41d4, type: 3}
-  speed: 5
---- !u!114 &8996962585994946268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 843538939233883306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965c4d06f9f5486385ccb1bdab02ec37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 5
---- !u!58 &553199902440237707
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 843538939233883306}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.19298261
+  projectileParticlePrefab: {fileID: 3420687967240432720, guid: bd4337fcd81c8f94a88a332e8ceeaa64, type: 3}
 --- !u!1 &2208676615050452283
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +86,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2208676615050452283}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

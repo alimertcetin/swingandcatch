@@ -35,7 +35,7 @@ namespace TheGame.PlayerSystems.States
             Vector3 positionOnSegment = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = positionOnSegment;
             
-            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.climbStateDataSO.ropeSwingInitialForce);
+            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.stateDatas.climbStateDataSO.ropeSwingInitialForce);
             
             stateMachine.playerVisualTransform.CancelTween();
             stateMachine.playerVisualTransform.XIVTween()
@@ -63,12 +63,12 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
 
-            currentT -= stateMachine.climbStateDataSO.climbSpeed * Time.deltaTime * movementInput.y;
+            currentT -= stateMachine.stateDatas.climbStateDataSO.climbSpeed * Time.deltaTime * movementInput.y;
             currentT = Mathf.Clamp01(currentT);
             var nextPosition = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = nextPosition;
 
-            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.climbStateDataSO.ropeSwingForce);
+            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.stateDatas.climbStateDataSO.ropeSwingForce);
         }
 
         protected override void OnStateExit()

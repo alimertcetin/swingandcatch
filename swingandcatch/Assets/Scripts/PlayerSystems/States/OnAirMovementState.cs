@@ -12,13 +12,11 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
+            if (stateMachine.hasHorizontalMovementInput == false) return;
             Transform transform = stateMachine.transform;
             Vector3 pos = transform.position;
-            pos += stateMachine.movementInput.normalized * (stateMachine.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
-            if (stateMachine.CanMove(pos, 1 << PhysicsConstants.GroundLayer, true))
-            {
-                transform.position = pos;
-            }
+            pos += stateMachine.horizontalMovementInput.normalized * (stateMachine.stateDatas.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
+            stateMachine.Move(pos);
         }
 
         protected override void InitializeChildStates()

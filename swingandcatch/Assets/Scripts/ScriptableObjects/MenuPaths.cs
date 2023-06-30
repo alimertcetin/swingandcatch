@@ -12,5 +12,7 @@
         public const string SAW_BLADE_FSM_STATE_DATA = SAW_BLADE_FSM + "State Data/";
 
         public const string SCENE_MANAGEMENT_MENU = BASE_MENU + "Scene Management/";
+
+        public const string HEALTH_SYSTEM_MENU = BASE_MENU + "HealthSystem/";
     }
 }

@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6383873117298714057}
-  - component: {fileID: 6383873117298714058}
   - component: {fileID: 6383873117298714059}
   - component: {fileID: 4816358375933143557}
   m_Layer: 10
@@ -35,19 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6383873117298714058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6383873117298714103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 965c4d06f9f5486385ccb1bdab02ec37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 10
 --- !u!58 &6383873117298714059
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -82,6 +68,7 @@ MonoBehaviour:
   idleStateDataSO: {fileID: 11400000, guid: 9f1c08036aa0f9444b3010e53e7efa68, type: 2}
   transitionToIdleStateDataSO: {fileID: 11400000, guid: 9c3c69cdaf15b9e4db30b77d653d76c0, type: 2}
   attackStateDataSO: {fileID: 11400000, guid: 35f74c2bf377ba948b248d39c6e0f090, type: 2}
+  collider2D: {fileID: 0}
 --- !u!1001 &3840673186075390642
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -46,10 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d7abaadd02c7d4da0c51e2401717e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballHitParticle: {fileID: 3420687967240432720, guid: fc817b0f517500043995a742e1e62438, type: 3}
   ballLaunchPos: {fileID: 2705285885721403940}
   launchDuration: 1
+  launchStartDelay: 0.5
   ballSpeed: 1
-  hazzardBallPrefab: {fileID: 7373610518507824259, guid: 4754b2132f7437d468df12858f011a76, type: 3}
+  damageAmount: 5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 896
+  projectilePrefab: {fileID: 7373610518507824259, guid: 4754b2132f7437d468df12858f011a76, type: 3}
 --- !u!1 &2705285885721403941
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheGame.HazzardSystems;
+using UnityEngine;
 
 namespace TheGame.ScriptableObjects.StateDatas.SawBladeStateDatas
 {
@@ -9,6 +10,10 @@ namespace TheGame.ScriptableObjects.StateDatas.SawBladeStateDatas
         public float followDistance = 1.5f;
         public float followSpeed = 2;
         public float attackFieldRadius = 2f;
-        public GameObject projectilePrefab;
+        public float collisionDamage = 2f;
+        public Projectile projectilePrefab;
+        public float projectileLifeTime = 3.5f;
+        public float projectileSpeed = 4f;
+        public float projectileDamageAmount = 5f;
     }
 }

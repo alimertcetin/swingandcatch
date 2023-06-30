@@ -16,4 +16,8 @@ MonoBehaviour:
   followDistance: 3
   followSpeed: 2
   attackFieldRadius: 3
-  projectilePrefab: {fileID: 843538939233883306, guid: 406abb337b9a87c46be65ececf84a163, type: 3}
+  collisionDamage: 2
+  projectilePrefab: {fileID: 8573880357556286976, guid: 406abb337b9a87c46be65ececf84a163, type: 3}
+  projectileLifeTime: 3.5
+  projectileSpeed: 8
+  projectileDamageAmount: 5

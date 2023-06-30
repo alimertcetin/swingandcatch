@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffc2c4d628a04f23a1270f00a2c4453e, type: 3}
+  m_Name: PlayerDefaultStateDataCollection
+  m_EditorClassIdentifier: 
+  walkStateDataSO: {fileID: 11400000, guid: ec5d067ca47e76642b30561f792a3a4c, type: 2}
+  runStateDataSO: {fileID: 11400000, guid: bd824c5c3dd76c04389f451ba5016d58, type: 2}
+  airMovementStateDataSO: {fileID: 11400000, guid: 3c55b9d6810ff404ea623b53519c53ec, type: 2}
+  jumpStateDataSO: {fileID: 11400000, guid: 50a80a2f2ce418a4aab9147d03cfd1bf, type: 2}
+  groundedStateDataSO: {fileID: 11400000, guid: 4fa6ae2f0e2aadc45900e05f607a088c, type: 2}
+  fallStateDataSO: {fileID: 11400000, guid: 0827410db021f2c46a9c78078b5ccd3b, type: 2}
+  climbStateDataSO: {fileID: 11400000, guid: 2b0b222f7c0552748b021f9fab287b00, type: 2}
