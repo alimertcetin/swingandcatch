@@ -80,7 +80,7 @@ namespace TheGame.PlayerSystems
         static void GetCollisionTestPoints(int detail, Vector3 position, Vector3 dir, Bounds bounds, Vector3[] buffer)
         {
             const float ERROR = 0.01f;
-            const float HALF_ANGLE = 20f;
+            const float HALF_ANGLE = 15f;
             for (int i = 0; i < detail; i++)
             {
                 var t = i / (float)(detail - 1);
