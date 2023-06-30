@@ -25,6 +25,9 @@ namespace TheGame.PlayerSystems
         [Tooltip("Left to Right order")]
         public Transform[] playerFeet;
 
+        public Vector3 bottomColliderPosLocal = Vector3.zero;
+        public Vector3 bottomColliderSize = Vector3.one;
+
         // TODO : Move input to somewhere else, consider implementing InputSystem instead of using legacy
         public bool hasHorizontalMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;
         public Vector3 horizontalMovementInput => new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
@@ -87,5 +90,20 @@ namespace TheGame.PlayerSystems
             health.DecreaseCurrentHealth(amount);
             updatePlayerHealthChannel.RaiseEvent(health.normalized);
         }
+
+#if UNITY_EDITOR
+        void OnDrawGizmosSelected()
+        {
+            if (Application.isPlaying) return;
+            var pos = transform.position;
+            var bottomColliderPos = pos + bottomColliderPosLocal;
+            var sizeHalf = bottomColliderSize * 0.5f;
+            var radius = sizeHalf.y * 2f;
+            XIV.Core.XIVDebug.DrawCircle(bottomColliderPos + Vector3.left * (sizeHalf.x - radius * 0.5f), radius);
+            XIV.Core.XIVDebug.DrawCircle(bottomColliderPos + Vector3.right * (sizeHalf.x - radius * 0.5f), radius);
+            XIV.Core.XIVDebug.DrawRectangle(bottomColliderPos, sizeHalf, Quaternion.LookRotation(Vector3.forward));
+            XIV.Core.XIVDebug.DrawCircle(bottomColliderPos + Vector3.down * sizeHalf.y, radius);
+        }
+#endif
     }
 }

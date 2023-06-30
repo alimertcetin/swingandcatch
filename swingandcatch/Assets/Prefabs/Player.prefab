@@ -256,6 +256,8 @@ MonoBehaviour:
   playerFeet:
   - {fileID: 4617712202988879445}
   - {fileID: 4617712201370327529}
+  bottomColliderPosLocal: {x: 0, y: -0.42, z: 0}
+  bottomColliderSize: {x: 0.58, y: 0.17, z: 1}
   damageImmune: 0
 --- !u!1 &4617712201605241933
 GameObject:

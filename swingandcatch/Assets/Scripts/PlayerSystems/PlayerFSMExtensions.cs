@@ -19,31 +19,24 @@ namespace TheGame.PlayerSystems
         
         public static int CheckIsTouchingNonAlloc(this PlayerFSM playerFSM, Collider2D[] buffer, int layerMask)
         {
-            var transform = playerFSM.transform;
             var position = playerFSM.previousPosition;
-            var targetPosition = transform.position;
-            var localScale = transform.localScale;
-            
-            const float BOUND_Y_HALF = 0.07f;
-            
-            var halfExtends = localScale * 0.5f;
-            Vector3 GetBottomMiddle(Vector3 pos) => pos + Vector3.down * halfExtends.y;
-            
-            var sizeHalf = halfExtends * 0.8f;
-            sizeHalf.y = BOUND_Y_HALF;
+            var targetPosition = playerFSM.transform.position;
+            var capsuleSize = playerFSM.bottomColliderSize;
             int hitCount = 0;
 
             do
             {
-                var center = GetBottomMiddle(position);
-                
-                hitCount = Physics2D.OverlapCapsuleNonAlloc(center, sizeHalf * 2f, CapsuleDirection2D.Horizontal, 0f, buffer, layerMask);
-                
-                XIVDebug.DrawRectangle(center, sizeHalf, Quaternion.LookRotation(Vector3.forward));
-                XIVDebug.DrawCircle(center + Vector3.left * sizeHalf.x, sizeHalf.y * 2f);
-                XIVDebug.DrawCircle(center + Vector3.right * sizeHalf.x, sizeHalf.y * 2f);
-                
+                var capsuleCenter = position + playerFSM.bottomColliderPosLocal;
+                hitCount = Physics2D.OverlapCapsuleNonAlloc(capsuleCenter, capsuleSize, CapsuleDirection2D.Horizontal, 0f, buffer, layerMask);
+#if UNITY_EDITOR
+                var halfExtends = capsuleSize * 0.5f;
+                var circumference = capsuleSize.y;
+                XIVDebug.DrawRectangle(capsuleCenter, halfExtends, Quaternion.LookRotation(Vector3.forward));
+                XIVDebug.DrawCircle(capsuleCenter + Vector3.left * (halfExtends.x - circumference * 0.5f), circumference);
+                XIVDebug.DrawCircle(capsuleCenter + Vector3.right * (halfExtends.x - circumference * 0.5f), circumference);
+#endif
                 position = Vector3.MoveTowards(position, targetPosition, 0.01f);
+                
             } while ((targetPosition - position).sqrMagnitude - Mathf.Epsilon > Mathf.Epsilon && hitCount == 0);
 
             return hitCount;
