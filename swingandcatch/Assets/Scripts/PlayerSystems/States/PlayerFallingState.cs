@@ -92,6 +92,9 @@ namespace TheGame.PlayerSystems.States
             var t = stateMachine.transform;
             var pos = t.position;
             pos.y += yVelocity * fixedDeltaTime;
+            
+            if (stateMachine.hasHorizontalMovementInput) stateMachine.SyncPosition();
+            
             stateMachine.Move(pos);
         }
 

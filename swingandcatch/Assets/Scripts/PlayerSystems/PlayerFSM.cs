@@ -59,6 +59,11 @@ namespace TheGame.PlayerSystems
             return new PlayerStateFactory(this).GetState<PlayerGroundedState>();
         }
 
+        public void SyncPosition()
+        {
+            previousPosition = transform.position;
+        }
+
         public bool Move(Vector3 targetPosition)
         {
             var collisionMask = 1 << PhysicsConstants.GroundLayer;

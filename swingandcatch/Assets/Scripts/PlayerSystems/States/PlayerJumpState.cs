@@ -30,10 +30,10 @@ namespace TheGame.PlayerSystems.States
             yVelocity += Physics.gravity.y * (stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
             var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
-            if (stateMachine.Move(pos) == false)
-            {
-                yVelocity = 0f;
-            }
+            
+            if (stateMachine.hasHorizontalMovementInput) stateMachine.SyncPosition();
+
+            if (stateMachine.Move(pos) == false) yVelocity = 0f;
         }
 
         protected override void OnStateExit()
