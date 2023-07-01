@@ -61,10 +61,19 @@ namespace TheGame.EnemySystems.SawBlade.States
 
             if (count > 0)
             {
-                var attackState = factory.GetState<SawBladeAttackState>();
-                attackState.target = buffer[0].transform;
-                attackState.connectedPoint = center;
-                ChangeRootState(attackState);
+                var target = buffer[0].transform;
+                var rayBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
+                int rayHitCount = Physics2D.LinecastNonAlloc(stateMachine.transform.position, target.transform.position, rayBuffer, 1 << PhysicsConstants.GroundLayer);
+                if (rayHitCount == 0)
+                {
+                    var attackState = factory.GetState<SawBladeAttackState>();
+                    attackState.target = target;
+                    attackState.connectedPoint = center;
+                    
+                    ChangeRootState(attackState);
+                }
+                
+                ArrayPool<RaycastHit2D>.Shared.Return(rayBuffer);
                 return;
             }
         }
