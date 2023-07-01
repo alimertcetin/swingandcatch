@@ -1,27 +1,49 @@
 ﻿using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
+using TheGame.Scripts.InputSystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace TheGame.PlayerSystems.States
 {
-    public class OnAirMovementState : State<PlayerFSM, PlayerStateFactory>
+    public class OnAirMovementState : State<PlayerFSM, PlayerStateFactory>, DefaultGameInputs.IPlayerAirMovementActions
     {
+        bool hasInput;
+        float movementInput;
+        
         public OnAirMovementState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
+            InputManager.Inputs.PlayerAirMovement.SetCallbacks(this);
+        }
+
+        protected override void OnStateEnter(State comingFrom)
+        {
+            InputManager.Inputs.PlayerAirMovement.Enable();
         }
 
         protected override void OnStateUpdate()
         {
-            if (stateMachine.hasHorizontalMovementInput == false) return;
+            if (hasInput == false) return;
             Transform transform = stateMachine.transform;
             Vector3 pos = transform.position;
-            pos += stateMachine.horizontalMovementInput.normalized * (stateMachine.stateDatas.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
+            pos += Vector3.right * (movementInput * (stateMachine.stateDatas.airMovementStateDataSO.airMovementSpeed * Time.deltaTime));
             stateMachine.Move(pos);
+        }
+
+        protected override void OnStateExit()
+        {
+            InputManager.Inputs.PlayerAirMovement.Disable();
         }
 
         protected override void InitializeChildStates()
         {
             AddChildState(factory.GetState<CheckDamageState>());
+        }
+
+        public void OnHorizontalMovement(InputAction.CallbackContext context)
+        {
+            hasInput = context.performed;
+            movementInput = context.ReadValue<float>();
         }
     }
 }

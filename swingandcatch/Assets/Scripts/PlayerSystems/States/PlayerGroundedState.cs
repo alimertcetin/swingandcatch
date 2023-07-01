@@ -1,7 +1,9 @@
 ﻿using System.Buffers;
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
+using TheGame.Scripts.InputSystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XIV.Core.Extensions;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
@@ -10,16 +12,27 @@ namespace TheGame.PlayerSystems.States
 {
     public class PlayerGroundedState : State<PlayerFSM, PlayerStateFactory>
     {
+        bool jumpPressed;
+        
         public PlayerGroundedState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
         }
 
         protected override void OnStateEnter(State comingFrom)
         {
+            InputManager.Inputs.PlayerGrounded.Enable();
+            InputManager.Inputs.PlayerGrounded.JumpTransition.performed += OnGroundedJumpTransition;
+            
             if (SetGroundedPosition()) return;
 #if UNITY_EDITOR
             if (FSMDebugSettings.IsStateChangeLogsEnabled) Debug.LogError("Player is not grounded but still made a transition to the GroundedState from " + comingFrom.GetType().Name);
 #endif
+        }
+
+        protected override void OnStateExit()
+        {
+            InputManager.Inputs.PlayerGrounded.JumpTransition.performed -= OnGroundedJumpTransition;
+            InputManager.Inputs.PlayerGrounded.Disable();
         }
 
         protected override void InitializeChildStates()
@@ -30,20 +43,23 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.isJumpPressed)
-            {
-                ChangeRootState(factory.GetState<PlayerJumpState>());
-                return;
-            }
-            
             if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer) == false)
             {
                 ChangeRootState(factory.GetState<PlayerFallingState>());
                 return;
             }
+            
+            if (jumpPressed)
+            {
+                jumpPressed = false;
+                ChangeRootState(factory.GetState<PlayerJumpState>());
+                return;
+            }
+            
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             int count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 0.5f, buffer, 1 << PhysicsConstants.EndGateLayer);
             ArrayPool<Collider2D>.Shared.Return(buffer);
+            
             if (count > 0)
             {
                 var animator = buffer[0].GetComponentInChildren<Animator>();
@@ -55,7 +71,13 @@ namespace TheGame.PlayerSystems.States
                 var winState = factory.GetState<PlayerWinState>();
                 winState.endGatePosition = buffer[0].transform.position;
                 ChangeRootState(winState);
+                return;
             }
+        }
+
+        void OnGroundedJumpTransition(InputAction.CallbackContext context)
+        {
+            jumpPressed = context.performed;
         }
 
         bool SetGroundedPosition()

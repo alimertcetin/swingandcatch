@@ -28,12 +28,6 @@ namespace TheGame.PlayerSystems
         public Vector3 bottomColliderPosLocal = Vector3.zero;
         public Vector3 bottomColliderSize = Vector3.one;
 
-        // TODO : Move input to somewhere else, consider implementing InputSystem instead of using legacy
-        public bool hasHorizontalMovementInput => Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0f;
-        public Vector3 horizontalMovementInput => new Vector3(Input.GetAxisRaw("Horizontal"), 0f, 0f);
-        public bool isRunPressed => Input.GetKey(KeyCode.LeftShift);
-        public bool isJumpPressed => Input.GetKey(KeyCode.Space);
-
         public Vector3 velocity { get; private set; }
         public Vector3 previousPosition { get; private set; }
         public CircleCollider2D circleCollider2D { get; private set; }

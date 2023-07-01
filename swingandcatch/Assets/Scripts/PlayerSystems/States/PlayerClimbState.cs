@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
+using TheGame.Scripts.InputSystems;
 using TheGame.VerletRope;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using XIV.Core;
 using XIV.Core.Utils;
@@ -11,19 +13,26 @@ using XIV.Core.XIVMath;
 
 namespace TheGame.PlayerSystems.States
 {
-    public class PlayerClimbState : State<PlayerFSM, PlayerStateFactory>
+    public class PlayerClimbState : State<PlayerFSM, PlayerStateFactory>, DefaultGameInputs.IPlayerClimbActions
     {
         Rope currentRope;
         float currentT;
         List<Vector3> positionBuffer;
-        Vector3 movementInput;
+        float horizontalMovementInput;
+        float verticalMovementInput;
+        bool hasVerticalInput;
+        bool hasHorizontalInput;
+        bool isJumpPressed;
 
         public PlayerClimbState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
+            InputManager.Inputs.PlayerClimb.SetCallbacks(this);
         }
 
         protected override void OnStateEnter(State comingFrom)
         {
+            InputManager.Inputs.PlayerClimb.Enable();
+            
             stateMachine.GetNearestRope(out currentRope);
             positionBuffer = ListPool<Vector3>.Get();
             
@@ -43,36 +52,38 @@ namespace TheGame.PlayerSystems.States
                 .Start();
         }
 
-        protected override void OnStateUpdate()
-        {
-            movementInput = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), 0f);
-        }
-
         protected override void OnStateFixedUpdate()
         {
-            var hasMovementInput = movementInput.sqrMagnitude > Mathf.Epsilon;
             positionBuffer.Clear();
             currentRope.GetPositionsNonAlloc(positionBuffer);
 
-            if (hasMovementInput == false)
+            Vector3 pos;
+            if (hasVerticalInput == false)
             {
                 var currentPosition = SplineMath.GetPoint(positionBuffer, currentT);
                 stateMachine.transform.position = currentPosition;
-                
-                XIVDebug.DrawCircle(currentPosition, 0.25f, Color.yellow, 5f);
-                return;
+                pos = currentPosition;
+            }
+            else
+            {
+                currentT -= stateMachine.stateDatas.climbStateDataSO.climbSpeed * Time.deltaTime * verticalMovementInput;
+                currentT = Mathf.Clamp01(currentT);
+                var nextPosition = SplineMath.GetPoint(positionBuffer, currentT);
+                stateMachine.transform.position = nextPosition;
+                pos = nextPosition;
             }
 
-            currentT -= stateMachine.stateDatas.climbStateDataSO.climbSpeed * Time.deltaTime * movementInput.y;
-            currentT = Mathf.Clamp01(currentT);
-            var nextPosition = SplineMath.GetPoint(positionBuffer, currentT);
-            stateMachine.transform.position = nextPosition;
 
-            if (Mathf.Abs(movementInput.x) > 0f) currentRope.AddForce(nextPosition, movementInput.normalized * stateMachine.stateDatas.climbStateDataSO.ropeSwingForce);
+            if (hasHorizontalInput)
+            {
+                currentRope.AddForce(pos, Vector3.right * (horizontalMovementInput * stateMachine.stateDatas.climbStateDataSO.ropeSwingForce));
+            }
         }
 
         protected override void OnStateExit()
         {
+            InputManager.Inputs.PlayerClimb.Disable();
+            
             ListPool<Vector3>.Release(positionBuffer);
             stateMachine.CancelTween();
         }
@@ -84,11 +95,28 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.isJumpPressed)
+            if (isJumpPressed)
             {
                 ChangeRootState(factory.GetState<PlayerJumpState>());
                 return;
             }
+        }
+        
+        void DefaultGameInputs.IPlayerClimbActions.OnVerticalMovement(InputAction.CallbackContext context)
+        {
+            hasVerticalInput = context.performed;
+            verticalMovementInput = context.ReadValue<float>();
+        }
+
+        void DefaultGameInputs.IPlayerClimbActions.OnHorizontalMovement(InputAction.CallbackContext context)
+        {
+            hasHorizontalInput = context.performed;
+            horizontalMovementInput = context.ReadValue<float>();
+        }
+
+        void DefaultGameInputs.IPlayerClimbActions.OnJumpTransition(InputAction.CallbackContext context)
+        {
+            isJumpPressed = context.performed;
         }
     }
 }

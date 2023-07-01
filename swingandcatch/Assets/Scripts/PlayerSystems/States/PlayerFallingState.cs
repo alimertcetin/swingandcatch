@@ -1,6 +1,8 @@
 ﻿using System.Buffers;
 using TheGame.FSM;
+using TheGame.Scripts.InputSystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XIV.Core.Extensions;
 
 namespace TheGame.PlayerSystems.States
@@ -12,6 +14,7 @@ namespace TheGame.PlayerSystems.States
         float fallingTime;
         const float MAX_FALL_DURATION = 5f;
         Vector3[] feetInitialLocalPositions;
+        bool hasAirMovementInput;
 
         public PlayerFallingState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -19,6 +22,8 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
+            RegisterInputActions();
+            
             yVelocity = stateMachine.velocity.y;
             fallingTime = 0f;
             
@@ -42,6 +47,8 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateExit()
         {
+            UnregisterInputActions();
+            
             stateMachine.playerVisualTransform.localScale = stateMachine.playerVisualTransform.localScale.SetX(1f);
             int length = stateMachine.playerFeet.Length;
             for (int i = 0; i < length; i++)
@@ -93,7 +100,7 @@ namespace TheGame.PlayerSystems.States
             var pos = t.position;
             pos.y += yVelocity * fixedDeltaTime;
             
-            if (stateMachine.hasHorizontalMovementInput) stateMachine.SyncPosition();
+            if (hasAirMovementInput) stateMachine.SyncPosition();
             
             stateMachine.Move(pos);
         }
@@ -115,5 +122,21 @@ namespace TheGame.PlayerSystems.States
                 stateMachine.playerFeet[i].localPosition = footPos;
             }
         }
+
+        void RegisterInputActions()
+        {
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.performed += OnMovementPerformed;
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.canceled += OnMovementCanceled;
+        }
+        
+        void UnregisterInputActions()
+        {
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.performed -= OnMovementPerformed;
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.canceled -= OnMovementCanceled;
+        }
+
+        void OnMovementPerformed(InputAction.CallbackContext context) => hasAirMovementInput = true;
+        
+        void OnMovementCanceled(InputAction.CallbackContext context) => hasAirMovementInput = false;
     }
 }

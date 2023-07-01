@@ -1,5 +1,7 @@
 ﻿using TheGame.FSM;
+using TheGame.Scripts.InputSystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using XIV.Core.Utils;
 using XIV.Core.TweenSystem;
 
@@ -9,6 +11,7 @@ namespace TheGame.PlayerSystems.States
     {
         Timer waitGroundedTimer = new Timer(0.25f);
         float yVelocity;
+        bool hasAirMovementInput;
         
         public PlayerJumpState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -16,6 +19,8 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
+            RegisterInputActions();
+            
             yVelocity = CalculateJumpVelocity(stateMachine.stateDatas.jumpStateDataSO.jumpHeight);
 
             if (comingFrom is PlayerClimbState) return;
@@ -31,13 +36,15 @@ namespace TheGame.PlayerSystems.States
             var pos = stateMachine.transform.position;
             pos.y += yVelocity * Time.fixedDeltaTime;
             
-            if (stateMachine.hasHorizontalMovementInput) stateMachine.SyncPosition();
+            if (hasAirMovementInput) stateMachine.SyncPosition();
 
             if (stateMachine.Move(pos) == false) yVelocity = 0f;
         }
 
         protected override void OnStateExit()
         {
+            UnregisterInputActions();
+            
             waitGroundedTimer.Restart();
             stateMachine.playerVisualTransform.CancelTween();
         }
@@ -74,6 +81,22 @@ namespace TheGame.PlayerSystems.States
             float initialVelocity = Mathf.Sqrt(2f * jumpHeight * -gravity);
             return initialVelocity;
         }
-        
+
+        void RegisterInputActions()
+        {
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.started += OnMovementPress;
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.canceled += OnMovementPress;
+        }
+
+        void UnregisterInputActions()
+        {
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.started -= OnMovementPress;
+            InputManager.Inputs.PlayerAirMovement.HorizontalMovement.canceled -= OnMovementPress;
+        }
+
+        void OnMovementPress(InputAction.CallbackContext context)
+        {
+            hasAirMovementInput = false;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using TheGame.FSM;
 using TheGame.PlayerSystems.States.AnimationStates;
+using TheGame.Scripts.InputSystems;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -10,7 +11,7 @@ namespace TheGame.PlayerSystems.States
         public PlayerIdleState(PlayerFSM stateMachine, PlayerStateFactory factory) : base(stateMachine, factory)
         {
         }
-
+        
         protected override void InitializeChildStates()
         {
             var breathAnimationState = factory.GetState<PlayerBreathAnimationState>();
@@ -20,15 +21,12 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.hasHorizontalMovementInput == false) return;
-            
-            if (stateMachine.isRunPressed)
+            if (InputManager.Inputs.PlayerGrounded.HorizontalMovement.IsPressed())
             {
-                ChangeChildState(factory.GetState<PlayerRunSate>());
+                ChangeChildState(factory.GetState<PlayerWalkState>());
                 return;
             }
-
-            ChangeChildState(factory.GetState<PlayerWalkState>());
         }
+
     }
 }
