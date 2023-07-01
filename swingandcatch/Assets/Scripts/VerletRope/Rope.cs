@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -86,6 +87,9 @@ namespace TheGame.VerletRope
                 p.position = newPosition;
                 p.force = newVel + gravity + dragForce;
             }
+
+            int mask = 1 << PhysicsConstants.GroundLayer;
+            var buffer = ArrayPool<RaycastHit2D>.Shared.Rent(4);
             
             for (int i = 0; i < correctionSteps; i++)
             {
@@ -103,6 +107,46 @@ namespace TheGame.VerletRope
                     p0.position += correction;
                     p1.position -= correction;
                 }
+                
+                SolveCollisions(buffer, mask);
+            }
+            ArrayPool<RaycastHit2D>.Shared.Return(buffer);
+        }
+        
+        void SolveCollisions(RaycastHit2D[] buffer, int layerMask)
+        {
+            const float COLLISION_FORCE = 0.05f;
+            
+            for (int i = 0; i < segments; i++)
+            {
+                ref var ropePoint = ref ropePoints[i];
+                int hitCount = Physics2D.LinecastNonAlloc(ropePoint.previousPosition, ropePoint.position, buffer, layerMask);
+
+                if (hitCount == 0) continue;
+
+                RaycastHit2D hit = default;
+                float distance = float.MaxValue;
+                var pos2D = (Vector2)ropePoint.position;
+                for (int j = 0; j < hitCount; j++)
+                {
+                    var diff = pos2D - buffer[j].point;
+                    var tempDistance = diff.sqrMagnitude;
+                    if (tempDistance < distance)
+                    {
+                        hit = buffer[j];
+                        distance = tempDistance;
+                    }
+                }
+                
+                for (var j = 0; j < hitCount; j++)
+                {
+                    // Get the collision normal based on the contact point
+                    Vector3 collisionNormal = hit.normal;
+
+                    // Apply a response to the rope point based on the collision normal
+                    ropePoint.position += collisionNormal * COLLISION_FORCE;
+                }
+                
             }
         }
 
