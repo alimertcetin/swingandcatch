@@ -49,11 +49,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segments: 40
   segmentLength: 0.25
-  correctionSteps: 30
+  correctionSteps: 15
   gravity: {x: 0, y: -9.81, z: 0}
   drag: 0.1
   creationDirection: {x: 0, y: -1, z: 0}
   isAwake: 0
+  showSegments: 0
 --- !u!114 &8520701004045290126
 MonoBehaviour:
   m_ObjectHideFlags: 0
