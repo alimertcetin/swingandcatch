@@ -459,6 +459,7 @@ MonoBehaviour:
   playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
   playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
   updatePlayerHealthChannel: {fileID: 11400000, guid: 7aa4c4f0fd6c59d4291add4a7af69e0f, type: 2}
+  cameraShakeChannel: {fileID: 11400000, guid: fee34a6e5e874d1409416911bbd627fb, type: 2}
   playerVisualTransform: {fileID: 212991544833979011}
   playerFeet:
   - {fileID: 4617712202988879445}

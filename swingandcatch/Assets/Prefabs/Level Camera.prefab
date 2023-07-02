@@ -102,6 +102,9 @@ MonoBehaviour:
   showCurrentState: 0
   textOffsetX: -0.5
   textOffsetY: 0.5
+  shakeDuration: 0.3
+  cameraShakeChannel: {fileID: 11400000, guid: fee34a6e5e874d1409416911bbd627fb, type: 2}
+  shakeTransitionFlag: 0
   offset: {x: 0, y: 0, z: 0}
   velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &5620853633285419079

@@ -21,6 +21,7 @@ namespace TheGame.PlayerSystems
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerReachedEndChannelSO;
         public FloatChannelSO updatePlayerHealthChannel;
+        public FloatChannelSO cameraShakeChannel;
 
         public Transform playerVisualTransform;
         [Tooltip("Left to Right order")]
@@ -84,6 +85,7 @@ namespace TheGame.PlayerSystems
         {
             if (damageImmune) return;
             health.DecreaseCurrentHealth(amount);
+            cameraShakeChannel.RaiseEvent(10f);
             updatePlayerHealthChannel.RaiseEvent(health.normalized);
         }
 

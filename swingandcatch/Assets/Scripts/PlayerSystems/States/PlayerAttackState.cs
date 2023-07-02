@@ -37,6 +37,7 @@ namespace TheGame.PlayerSystems.States
             if (attackPressed && SwingSword(GetSwingDirection(coll)))
             {
                 damageable.ReceiveDamage(stateMachine.stateDatas.attackStateDataSO.damage);
+                stateMachine.cameraShakeChannel.RaiseEvent(5f);
             }
         }
 

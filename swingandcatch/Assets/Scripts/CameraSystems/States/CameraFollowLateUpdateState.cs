@@ -24,6 +24,12 @@ namespace TheGame.CameraSystems.States
                 ChangeRootState(factory.GetState<CameraFollowFixedUpdateState>());
                 return;
             }
+
+            if (stateMachine.shakeTransitionFlag)
+            {
+                ChangeRootState(factory.GetState<CameraShakeAndFollowLateUpdateState>());
+                return;
+            }
         }
     }
 }

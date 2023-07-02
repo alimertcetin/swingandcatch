@@ -9,6 +9,7 @@ namespace TheGame.CameraSystems
         {
             AddState(new CameraFollowFixedUpdateState(stateMachine, this));
             AddState(new CameraFollowLateUpdateState(stateMachine, this));
+            AddState(new CameraShakeAndFollowLateUpdateState(stateMachine, this));
         }
     }
 }
