@@ -113,6 +113,7 @@ namespace TheGame.PlayerSystems.States
             XIVEventSystem.SendEvent(new InvokeAfterEvent(1.5f).OnCompleted(() => { animator.Play(AnimationConstants.EndGate.Clips.EndGate_Close); }));
             var winState = factory.GetState<PlayerWinState>();
             winState.endGatePosition = buffer[0].transform.position;
+            ChangeRootState(winState);
             return true;
         }
 
