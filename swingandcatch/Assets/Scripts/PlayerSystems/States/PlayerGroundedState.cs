@@ -95,7 +95,7 @@ namespace TheGame.PlayerSystems.States
                 
                 var bottomMiddleLocalPosition = bottomColliderPosLocal + Vector3.down * (colliderCircleRadius);
                 var bottomMiddleWorldPosition = stateMachineTransformPosition + bottomMiddleLocalPosition;
-                var closestCollider = GetClosest(bottomMiddleWorldPosition, buffer, hitCount, out var positionOnCollider);
+                var closestCollider = buffer.GetClosestCollider(bottomMiddleWorldPosition, hitCount, out var positionOnCollider);
 
                 var targetY = closestCollider.transform.position.y + closestCollider.bounds.extents.y;
                 var xDistanceToColliderPos = positionOnCollider.x - bottomMiddleWorldPosition.x;
@@ -116,25 +116,6 @@ namespace TheGame.PlayerSystems.States
             ArrayPool<Collider2D>.Shared.Return(buffer);
             return hitCount > 0;
         }
-
-        public static Collider2D GetClosest(Vector3 bottomPosition, Collider2D[] buffer, int hitCount, out Vector3 positionOnCollider)
-        {
-            Collider2D closestCollider = default;
-            positionOnCollider = default;
-            float distance = float.MaxValue;
-            for (int i = 0; i < hitCount; i++)
-            {
-                positionOnCollider = buffer[i].ClosestPoint(bottomPosition);
-                var dis = Vector3.Distance(positionOnCollider, bottomPosition);
-                if (dis < distance)
-                {
-                    distance = dis;
-                    closestCollider = buffer[i];
-                }
-                XIV.Core.XIVDebug.DrawCircle(positionOnCollider, 0.1f, Color.red, 1.5f);
-            }
-
-            return closestCollider;
-        }
+        
     }
 }
