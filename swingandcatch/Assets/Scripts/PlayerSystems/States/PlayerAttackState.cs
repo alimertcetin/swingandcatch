@@ -23,16 +23,70 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            if (attackPressed == false) return;
+            if (TrySelectTarget(out var coll, out var damageable) == false)
+            {
+                if (attackPressed)
+                {
+                    SwingSword(GetSwingDirection(coll));
+                }
+                return;
+            }
+            
+            stateMachine.selectableSelectChannel.RaiseEvent(coll.transform);
+            
+            if (attackPressed && SwingSword(GetSwingDirection(coll)))
+            {
+                damageable.ReceiveDamage(stateMachine.stateDatas.attackStateDataSO.damage);
+            }
+        }
+
+        protected override void OnStateExit() => InputManager.Inputs.PlayerAttack.Disable();
+
+        public void OnAttack(InputAction.CallbackContext context)
+        {
+            attackPressed = context.performed;
+        }
+
+        bool TrySelectTarget(out Collider2D coll, out IDamageable damageable)
+        {
+            coll = default;
+            damageable = default;
+            
             var stateData = stateMachine.stateDatas.attackStateDataSO;
             var radius = stateData.attackRadius;
-            var sword = stateMachine.playerSword;
             
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             var pos = stateMachine.transform.position;
             int hitCount = Physics2D.OverlapCircleNonAlloc(pos, radius, buffer, 1 << PhysicsConstants.EnemyLayer);
+            if (hitCount == 0)
+            {
+                return false;
+            }
 
-            void SwingAndReturn()
+            coll = buffer.GetClosestCollider(pos, hitCount);
+            var dir = ((Vector3)coll.ClosestPoint(pos) - pos).normalized;
+            var raycastHitBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
+            // There is an obstacle between player and the target - Skip
+            if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * radius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
+            {
+                ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
+                return false;
+            }
+
+            // Target is not an IDamageable or It cant receive damage - Skip
+            if (coll.TryGetComponent(out damageable) == false || damageable.CanReceiveDamage() == false)
+            {
+                ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
+                return false;
+            }
+            
+            ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
+            return true;
+        }
+        
+        Vector3 GetSwingDirection(Collider2D coll)
+        {
+            if (coll == default)
             {
                 var velocity = stateMachine.velocity;
                 var swingDir = velocity.normalized;
@@ -43,57 +97,24 @@ namespace TheGame.PlayerSystems.States
                 }
 
                 swingDir.z = 0f;
-                
-                SwingSword(sword, swingDir);
-                ArrayPool<Collider2D>.Shared.Return(buffer);
+                return swingDir;
             }
-
-            if (hitCount == 0)
-            {
-                SwingAndReturn();
-                return;
-            }
-
-            var coll = buffer.GetClosest(pos, hitCount);
+            
+            var pos = stateMachine.transform.position;
             var dir = ((Vector3)coll.ClosestPoint(pos) - pos).normalized;
-            var raycastHitBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
-            if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * radius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
-            {
-                SwingAndReturn();
-                ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
-                return;
-            }
-
-            if (coll.TryGetComponent(out IDamageable damageable) == false || damageable.CanReceiveDamage() == false)
-            {
-                SwingAndReturn();
-                return;
-            }
-
-            if (SwingSword(sword, dir))
-            {
-                damageable.ReceiveDamage(stateData.damage);
-            }
-
-            ArrayPool<Collider2D>.Shared.Return(buffer);
+            return dir;
         }
 
-        protected override void OnStateExit() => InputManager.Inputs.PlayerAttack.Disable();
-
-        public void OnAttack(InputAction.CallbackContext context)
+        bool SwingSword(Vector3 direction)
         {
-            attackPressed = context.performed;
-        }
-
-        static bool SwingSword(Transform sword, Vector3 direction)
-        {
+            var sword = stateMachine.playerSword;
             if (sword.HasTween()) return false;
 
             var initialRotation = sword.transform.rotation;
             var lookRotation = Quaternion.LookRotation(direction);
             
-            var rotationStart = lookRotation * Quaternion.AngleAxis(-30f, Vector3.right);
-            var rotationEnd = rotationStart * Quaternion.AngleAxis(30f, Vector3.right);
+            var rotationStart = lookRotation * Quaternion.AngleAxis(45f, Vector3.left);
+            var rotationEnd = rotationStart * Quaternion.AngleAxis(90f, Vector3.right);
             
             sword.transform.rotation = rotationStart;
 
@@ -109,5 +130,6 @@ namespace TheGame.PlayerSystems.States
 
             return true;
         }
+
     }
 }

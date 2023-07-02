@@ -17,6 +17,7 @@ namespace TheGame.PlayerSystems
         public float damageImmuneDuration = 5f;
         
         [Header("Channels")]
+        public TransformChannelSO selectableSelectChannel;
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerReachedEndChannelSO;
         public FloatChannelSO updatePlayerHealthChannel;
