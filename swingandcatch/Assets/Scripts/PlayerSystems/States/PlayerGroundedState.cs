@@ -39,6 +39,7 @@ namespace TheGame.PlayerSystems.States
         {
             AddChildState(factory.GetState<PlayerIdleState>());
             AddChildState(factory.GetState<CheckDamageState>());
+            AddChildState(factory.GetState<PlayerAttackState>());
         }
 
         protected override void CheckTransitions()

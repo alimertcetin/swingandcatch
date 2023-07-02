@@ -23,6 +23,7 @@ namespace TheGame.PlayerSystems
             AddState(new CheckDamageState(stateMachine, this));
             AddState(new DamageImmuneState(stateMachine, this));
             AddState(new PlayerWinState(stateMachine, this));
+            AddState(new PlayerAttackState(stateMachine, this));
         }
     }
 }

@@ -12,5 +12,6 @@ namespace TheGame.ScriptableObjects.StateDatas.PlayerStateDatas
         public PlayerGroundedStateDataSO groundedStateDataSO;
         public PlayerFallStateDataSO fallStateDataSO;
         public PlayerClimbStateDataSO climbStateDataSO;
+        public PlayerAttackStateDataSO attackStateDataSO;
     }
 }

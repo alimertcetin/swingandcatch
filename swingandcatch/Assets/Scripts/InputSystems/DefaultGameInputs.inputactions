@@ -1,5 +1,5 @@
 {
-    "name": "DefaultInputs",
+    "name": "DefaultGameInputs",
     "maps": [
         {
             "name": "PlayerClimb",
@@ -177,15 +177,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "VerticalMovement",
-                    "type": "Value",
-                    "id": "2ead281d-f08b-4f7b-881b-1d82f7199d3b",
-                    "expectedControlType": "Axis",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Run",
                     "type": "Button",
                     "id": "a7f0e20e-6da3-4764-aa73-d205f01772f3",
@@ -259,39 +250,34 @@
                     "action": "HorizontalMovement",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
+                }
+            ]
+        },
+        {
+            "name": "PlayerAttack",
+            "id": "f6d699e4-01e1-4a77-a348-685bc262f2c1",
+            "actions": [
                 {
-                    "name": "WS",
-                    "id": "86a6bb50-dbff-41a3-86f0-b53e7501c189",
-                    "path": "1DAxis",
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "c9671e7f-4e52-4669-bb27-3cc9e5fbadef",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2f8dbe01-0032-4f95-a200-e472042ffdfc",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "VerticalMovement",
-                    "isComposite": true,
+                    "action": "Attack",
+                    "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "negative",
-                    "id": "5260b9a2-a146-4a38-8646-8f047d886532",
-                    "path": "<Keyboard>/s",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "VerticalMovement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "positive",
-                    "id": "e0ca0af1-2a90-46c1-ba8f-ae3fc2364fdb",
-                    "path": "<Keyboard>/w",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "VerticalMovement",
-                    "isComposite": false,
-                    "isPartOfComposite": true
                 }
             ]
         }

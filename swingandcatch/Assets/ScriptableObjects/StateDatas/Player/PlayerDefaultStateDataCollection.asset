@@ -19,3 +19,4 @@ MonoBehaviour:
   groundedStateDataSO: {fileID: 11400000, guid: 4fa6ae2f0e2aadc45900e05f607a088c, type: 2}
   fallStateDataSO: {fileID: 11400000, guid: 0827410db021f2c46a9c78078b5ccd3b, type: 2}
   climbStateDataSO: {fileID: 11400000, guid: 2b0b222f7c0552748b021f9fab287b00, type: 2}
+  attackStateDataSO: {fileID: 11400000, guid: ab9eada9943ba0347bae39b72826ca10, type: 2}

@@ -201,15 +201,6 @@ namespace TheGame.Scripts.InputSystems
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""VerticalMovement"",
-                    ""type"": ""Value"",
-                    ""id"": ""2ead281d-f08b-4f7b-881b-1d82f7199d3b"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Run"",
                     ""type"": ""Button"",
                     ""id"": ""a7f0e20e-6da3-4764-aa73-d205f01772f3"",
@@ -283,39 +274,34 @@ namespace TheGame.Scripts.InputSystems
                     ""action"": ""HorizontalMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
+                }
+            ]
+        },
+        {
+            ""name"": ""PlayerAttack"",
+            ""id"": ""f6d699e4-01e1-4a77-a348-685bc262f2c1"",
+            ""actions"": [
                 {
-                    ""name"": ""WS"",
-                    ""id"": ""86a6bb50-dbff-41a3-86f0-b53e7501c189"",
-                    ""path"": ""1DAxis"",
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""c9671e7f-4e52-4669-bb27-3cc9e5fbadef"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""2f8dbe01-0032-4f95-a200-e472042ffdfc"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""VerticalMovement"",
-                    ""isComposite"": true,
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""5260b9a2-a146-4a38-8646-8f047d886532"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""VerticalMovement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""e0ca0af1-2a90-46c1-ba8f-ae3fc2364fdb"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""VerticalMovement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -333,9 +319,11 @@ namespace TheGame.Scripts.InputSystems
             // PlayerGrounded
             m_PlayerGrounded = asset.FindActionMap("PlayerGrounded", throwIfNotFound: true);
             m_PlayerGrounded_HorizontalMovement = m_PlayerGrounded.FindAction("HorizontalMovement", throwIfNotFound: true);
-            m_PlayerGrounded_VerticalMovement = m_PlayerGrounded.FindAction("VerticalMovement", throwIfNotFound: true);
             m_PlayerGrounded_Run = m_PlayerGrounded.FindAction("Run", throwIfNotFound: true);
             m_PlayerGrounded_JumpTransition = m_PlayerGrounded.FindAction("JumpTransition", throwIfNotFound: true);
+            // PlayerAttack
+            m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
+            m_PlayerAttack_Attack = m_PlayerAttack.FindAction("Attack", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -478,7 +466,6 @@ namespace TheGame.Scripts.InputSystems
         private readonly InputActionMap m_PlayerGrounded;
         private IPlayerGroundedActions m_PlayerGroundedActionsCallbackInterface;
         private readonly InputAction m_PlayerGrounded_HorizontalMovement;
-        private readonly InputAction m_PlayerGrounded_VerticalMovement;
         private readonly InputAction m_PlayerGrounded_Run;
         private readonly InputAction m_PlayerGrounded_JumpTransition;
         public struct PlayerGroundedActions
@@ -486,7 +473,6 @@ namespace TheGame.Scripts.InputSystems
             private @DefaultGameInputs m_Wrapper;
             public PlayerGroundedActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
             public InputAction @HorizontalMovement => m_Wrapper.m_PlayerGrounded_HorizontalMovement;
-            public InputAction @VerticalMovement => m_Wrapper.m_PlayerGrounded_VerticalMovement;
             public InputAction @Run => m_Wrapper.m_PlayerGrounded_Run;
             public InputAction @JumpTransition => m_Wrapper.m_PlayerGrounded_JumpTransition;
             public InputActionMap Get() { return m_Wrapper.m_PlayerGrounded; }
@@ -501,9 +487,6 @@ namespace TheGame.Scripts.InputSystems
                     @HorizontalMovement.started -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnHorizontalMovement;
                     @HorizontalMovement.performed -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnHorizontalMovement;
                     @HorizontalMovement.canceled -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnHorizontalMovement;
-                    @VerticalMovement.started -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnVerticalMovement;
-                    @VerticalMovement.performed -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnVerticalMovement;
-                    @VerticalMovement.canceled -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnVerticalMovement;
                     @Run.started -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnRun;
                     @Run.performed -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnRun;
                     @Run.canceled -= m_Wrapper.m_PlayerGroundedActionsCallbackInterface.OnRun;
@@ -517,9 +500,6 @@ namespace TheGame.Scripts.InputSystems
                     @HorizontalMovement.started += instance.OnHorizontalMovement;
                     @HorizontalMovement.performed += instance.OnHorizontalMovement;
                     @HorizontalMovement.canceled += instance.OnHorizontalMovement;
-                    @VerticalMovement.started += instance.OnVerticalMovement;
-                    @VerticalMovement.performed += instance.OnVerticalMovement;
-                    @VerticalMovement.canceled += instance.OnVerticalMovement;
                     @Run.started += instance.OnRun;
                     @Run.performed += instance.OnRun;
                     @Run.canceled += instance.OnRun;
@@ -530,6 +510,39 @@ namespace TheGame.Scripts.InputSystems
             }
         }
         public PlayerGroundedActions @PlayerGrounded => new PlayerGroundedActions(this);
+
+        // PlayerAttack
+        private readonly InputActionMap m_PlayerAttack;
+        private IPlayerAttackActions m_PlayerAttackActionsCallbackInterface;
+        private readonly InputAction m_PlayerAttack_Attack;
+        public struct PlayerAttackActions
+        {
+            private @DefaultGameInputs m_Wrapper;
+            public PlayerAttackActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Attack => m_Wrapper.m_PlayerAttack_Attack;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerAttack; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerAttackActions set) { return set.Get(); }
+            public void SetCallbacks(IPlayerAttackActions instance)
+            {
+                if (m_Wrapper.m_PlayerAttackActionsCallbackInterface != null)
+                {
+                    @Attack.started -= m_Wrapper.m_PlayerAttackActionsCallbackInterface.OnAttack;
+                    @Attack.performed -= m_Wrapper.m_PlayerAttackActionsCallbackInterface.OnAttack;
+                    @Attack.canceled -= m_Wrapper.m_PlayerAttackActionsCallbackInterface.OnAttack;
+                }
+                m_Wrapper.m_PlayerAttackActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Attack.started += instance.OnAttack;
+                    @Attack.performed += instance.OnAttack;
+                    @Attack.canceled += instance.OnAttack;
+                }
+            }
+        }
+        public PlayerAttackActions @PlayerAttack => new PlayerAttackActions(this);
         public interface IPlayerClimbActions
         {
             void OnVerticalMovement(InputAction.CallbackContext context);
@@ -543,9 +556,12 @@ namespace TheGame.Scripts.InputSystems
         public interface IPlayerGroundedActions
         {
             void OnHorizontalMovement(InputAction.CallbackContext context);
-            void OnVerticalMovement(InputAction.CallbackContext context);
             void OnRun(InputAction.CallbackContext context);
             void OnJumpTransition(InputAction.CallbackContext context);
+        }
+        public interface IPlayerAttackActions
+        {
+            void OnAttack(InputAction.CallbackContext context);
         }
     }
 }

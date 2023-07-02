@@ -24,6 +24,7 @@ namespace TheGame.PlayerSystems
         public Transform playerVisualTransform;
         [Tooltip("Left to Right order")]
         public Transform[] playerFeet;
+        public Transform playerSword;
 
         public Vector3 bottomColliderPosLocal = Vector3.zero;
         public Vector3 bottomColliderSize = Vector3.one;
@@ -88,6 +89,11 @@ namespace TheGame.PlayerSystems
 #if UNITY_EDITOR
         void OnDrawGizmosSelected()
         {
+            if (stateDatas.attackStateDataSO)
+            {
+                XIV.Core.XIVDebug.DrawCircle(transform.position, stateDatas.attackStateDataSO.attackRadius * 2f, Color.red);
+            }
+            
             if (Application.isPlaying) return;
             var pos = transform.position;
             var bottomColliderPos = pos + bottomColliderPosLocal;

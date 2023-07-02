@@ -38,6 +38,7 @@ namespace TheGame.PlayerSystems.States
         protected override void InitializeChildStates()
         {
             AddChildState(factory.GetState<CheckDamageState>());
+            AddChildState(factory.GetState<PlayerAttackState>());
         }
 
         public void OnHorizontalMovement(InputAction.CallbackContext context)
