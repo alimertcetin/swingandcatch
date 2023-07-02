@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d397d78e7a445e69da0d583b0711037, type: 3}
   m_Name: Player_Attack_Default
   m_EditorClassIdentifier: 
-  attackRadius: 1.9
+  attackRadius: 1.5
   damage: 5
