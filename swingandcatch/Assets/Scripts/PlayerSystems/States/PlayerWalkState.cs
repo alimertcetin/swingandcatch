@@ -9,8 +9,7 @@ namespace TheGame.PlayerSystems.States
     public class PlayerWalkState : State<PlayerFSM, PlayerStateFactory>
     {
         const float FEET_ANIMATION_DURATION = 0.15f;
-        bool movementPressed;
-        float horizonalMovementInput;
+        PlayerGroundedState groundedState;
         
         public PlayerWalkState(PlayerFSM stateMachine, PlayerStateFactory factory) : base(stateMachine, factory)
         {
@@ -18,21 +17,14 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
-            RegisterInputActions();
-            horizonalMovementInput = InputManager.Inputs.PlayerGrounded.HorizontalMovement.ReadValue<float>();
-            movementPressed = true;
+            groundedState = factory.GetState<PlayerGroundedState>();
         }
 
         protected override void OnStateUpdate()
         {
             var pos = stateMachine.transform.position;
-            pos += Vector3.right * (horizonalMovementInput * (stateMachine.stateDatas.walkStateDataSO.walkSpeed * Time.deltaTime));
+            pos += Vector3.right * (groundedState.horizontalMovementInput * (stateMachine.stateDatas.walkStateDataSO.walkSpeed * Time.deltaTime));
             stateMachine.Move(pos);
-        }
-
-        protected override void OnStateExit()
-        {
-            UnregisterInputActions();
         }
 
         protected override void InitializeChildStates()
@@ -44,40 +36,17 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (InputManager.Inputs.PlayerGrounded.Run.IsPressed())
-            {
-                ChangeChildState(factory.GetState<PlayerRunSate>());
-                return;
-            }
-            
-            if (movementPressed == false)
+            if (groundedState.horizontalMovementPressed == false)
             {
                 ChangeChildState(factory.GetState<PlayerIdleState>());
                 return;
             }
-        }
-
-        void RegisterInputActions()
-        {
-            InputManager.Inputs.PlayerGrounded.HorizontalMovement.performed += OnGroundedMovementPerformed;
-            InputManager.Inputs.PlayerGrounded.HorizontalMovement.canceled += OnGroundedMovementCanceled;
-        }
-
-        void UnregisterInputActions()
-        {
-            InputManager.Inputs.PlayerGrounded.HorizontalMovement.performed -= OnGroundedMovementPerformed;
-            InputManager.Inputs.PlayerGrounded.HorizontalMovement.canceled += OnGroundedMovementCanceled;
-        }
-
-        void OnGroundedMovementPerformed(InputAction.CallbackContext context)
-        {
-            movementPressed = true;
-            horizonalMovementInput = context.ReadValue<float>();
-        }
-
-        void OnGroundedMovementCanceled(InputAction.CallbackContext context)
-        {
-            movementPressed = false;
+            
+            if (groundedState.runPressed)
+            {
+                ChangeChildState(factory.GetState<PlayerRunSate>());
+                return;
+            }
         }
     }
 }

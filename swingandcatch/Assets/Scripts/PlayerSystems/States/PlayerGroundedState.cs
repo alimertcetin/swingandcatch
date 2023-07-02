@@ -10,18 +10,22 @@ using XIV.EventSystem.Events;
 
 namespace TheGame.PlayerSystems.States
 {
-    public class PlayerGroundedState : State<PlayerFSM, PlayerStateFactory>
+    public class PlayerGroundedState : State<PlayerFSM, PlayerStateFactory>, DefaultGameInputs.IPlayerGroundedActions
     {
-        bool jumpPressed;
+        public bool runPressed { get; private set; }
+        public bool jumpPressed { get; private set; }
+        public bool horizontalMovementPressed { get; private set; }
+        public float horizontalMovementInput { get; private set; }
+        State currentChildState;
         
         public PlayerGroundedState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
+            InputManager.Inputs.PlayerGrounded.SetCallbacks(this);
         }
 
         protected override void OnStateEnter(State comingFrom)
         {
             InputManager.Inputs.PlayerGrounded.Enable();
-            InputManager.Inputs.PlayerGrounded.JumpTransition.performed += OnGroundedJumpTransition;
             
             if (SetGroundedPosition()) return;
 #if UNITY_EDITOR
@@ -31,13 +35,13 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateExit()
         {
-            InputManager.Inputs.PlayerGrounded.JumpTransition.performed -= OnGroundedJumpTransition;
             InputManager.Inputs.PlayerGrounded.Disable();
         }
 
         protected override void InitializeChildStates()
         {
-            AddChildState(factory.GetState<PlayerIdleState>());
+            currentChildState = factory.GetState<PlayerIdleState>();
+            AddChildState(currentChildState);
             AddChildState(factory.GetState<CheckDamageState>());
             AddChildState(factory.GetState<PlayerAttackState>());
         }
@@ -52,33 +56,14 @@ namespace TheGame.PlayerSystems.States
             
             if (jumpPressed)
             {
-                jumpPressed = false;
                 ChangeRootState(factory.GetState<PlayerJumpState>());
                 return;
             }
-            
-            var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
-            int count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 0.5f, buffer, 1 << PhysicsConstants.EndGateLayer);
-            ArrayPool<Collider2D>.Shared.Return(buffer);
-            
-            if (count > 0)
+
+            if (CheckWinStateTransition())
             {
-                var animator = buffer[0].GetComponentInChildren<Animator>();
-                animator.Play(AnimationConstants.EndGate.Clips.EndGate_Open);
-                XIVEventSystem.SendEvent(new InvokeAfterEvent(1.5f).OnCompleted(() =>
-                {
-                    animator.Play(AnimationConstants.EndGate.Clips.EndGate_Close);
-                }));
-                var winState = factory.GetState<PlayerWinState>();
-                winState.endGatePosition = buffer[0].transform.position;
-                ChangeRootState(winState);
                 return;
             }
-        }
-
-        void OnGroundedJumpTransition(InputAction.CallbackContext context)
-        {
-            jumpPressed = context.performed;
         }
 
         bool SetGroundedPosition()
@@ -116,6 +101,40 @@ namespace TheGame.PlayerSystems.States
             ArrayPool<Collider2D>.Shared.Return(buffer);
             return hitCount > 0;
         }
-        
+
+        bool CheckWinStateTransition()
+        {
+            var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
+            int count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 0.5f, buffer, 1 << PhysicsConstants.EndGateLayer);
+            ArrayPool<Collider2D>.Shared.Return(buffer);
+
+            if (count == 0) return false;
+            
+            var animator = buffer[0].GetComponentInChildren<Animator>();
+            animator.Play(AnimationConstants.EndGate.Clips.EndGate_Open);
+            XIVEventSystem.SendEvent(new InvokeAfterEvent(1.5f).OnCompleted(() => { animator.Play(AnimationConstants.EndGate.Clips.EndGate_Close); }));
+            var winState = factory.GetState<PlayerWinState>();
+            winState.endGatePosition = buffer[0].transform.position;
+            return true;
+        }
+
+        void DefaultGameInputs.IPlayerGroundedActions.OnHorizontalMovement(InputAction.CallbackContext context)
+        {
+            if (context.performed) horizontalMovementPressed = true;
+            else if (context.canceled) horizontalMovementPressed = false;
+            horizontalMovementInput = context.ReadValue<float>();
+        }
+
+        void DefaultGameInputs.IPlayerGroundedActions.OnRun(InputAction.CallbackContext context)
+        {
+            if (context.performed) runPressed = true;
+            else if (context.canceled) runPressed = false;
+        }
+
+        void DefaultGameInputs.IPlayerGroundedActions.OnJumpTransition(InputAction.CallbackContext context)
+        {
+            if (context.performed) jumpPressed = true;
+            else if (context.canceled) jumpPressed = false;
+        }
     }
 }
