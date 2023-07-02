@@ -32,6 +32,7 @@ namespace TheGame.EnemySystems.SawBlade
             collider2D = GetComponent<Collider2D>();
             health = healthSO.GetHealth();
             heathbar.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, health.normalized);
+            heathbar.gameObject.SetActive(false);
             base.Awake();
         }
 
@@ -72,6 +73,7 @@ namespace TheGame.EnemySystems.SawBlade
         void ISelectable.OnSelect()
         {
             selectionIndicator.SetActive(true);
+            heathbar.gameObject.SetActive(true);
             if (selectionIndicator.transform.HasTween()) return;
             selectionIndicator.transform.XIVTween()
                 .Scale(Vector3.one * 1.5f, Vector3.one, 0.5f, EasingFunction.SmoothStop3, true, 2)
@@ -80,6 +82,7 @@ namespace TheGame.EnemySystems.SawBlade
 
         void ISelectable.OnDeselect()
         {
+            heathbar.gameObject.SetActive(false);
             selectionIndicator.SetActive(false);
             selectionIndicator.transform.CancelTween();
         }
