@@ -28,6 +28,12 @@ public static class PhysicsConstants
 	public static readonly int HazzardLayer = LayerMask.NameToLayer("Hazzard");
 	public const string EndGate = "EndGate";
 	public static readonly int EndGateLayer = LayerMask.NameToLayer("EndGate");
+	public const string Persistant = "Persistant";
+	public static readonly int PersistantLayer = LayerMask.NameToLayer("Persistant");
+	public const string PostProcess = "PostProcess";
+	public static readonly int PostProcessLayer = LayerMask.NameToLayer("PostProcess");
+	public const string Enemy = "Enemy";
+	public static readonly int EnemyLayer = LayerMask.NameToLayer("Enemy");
 	
 } // class PhysicsConstants
  

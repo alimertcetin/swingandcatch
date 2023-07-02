@@ -63,6 +63,8 @@ public static class ShaderConstants
 	public static class ShaderGraphs_ParallaxBackgroundShader 
 	{
 		// Members
+		public const string MainTex_Texture = "_MainTex";
+		public static readonly int MainTex_TextureID = Shader.PropertyToID("_MainTex");
 		public const string texture_4_Texture = "_texture_4";
 		public static readonly int texture_4_TextureID = Shader.PropertyToID("_texture_4");
 		public const string texture_3_Texture = "_texture_3";
