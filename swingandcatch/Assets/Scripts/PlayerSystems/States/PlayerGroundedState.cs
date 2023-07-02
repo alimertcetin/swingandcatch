@@ -16,7 +16,6 @@ namespace TheGame.PlayerSystems.States
         public bool jumpPressed { get; private set; }
         public bool horizontalMovementPressed { get; private set; }
         public float horizontalMovementInput { get; private set; }
-        State currentChildState;
         
         public PlayerGroundedState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -40,8 +39,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void InitializeChildStates()
         {
-            currentChildState = factory.GetState<PlayerIdleState>();
-            AddChildState(currentChildState);
+            AddChildState(factory.GetState<PlayerIdleState>());
             AddChildState(factory.GetState<CheckDamageState>());
             AddChildState(factory.GetState<PlayerAttackState>());
         }
