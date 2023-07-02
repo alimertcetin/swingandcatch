@@ -10,6 +10,7 @@ namespace TheGame.HealthSystems
         
         DynamicArray<IHealthListener> listeners;
         public float normalized => currentHealth / maxHealth;
+        public bool isDepleted { get; private set; }
 
         public Health(float maxHealth, float currentHealth)
         {
@@ -26,7 +27,8 @@ namespace TheGame.HealthSystems
         public void DecreaseCurrentHealth(float amount)
         {
             ChangeValue(ref currentHealth, -amount);
-            if (currentHealth - Mathf.Epsilon < Mathf.Epsilon) InformListenersOnHealthDepleted();
+            isDepleted = currentHealth - Mathf.Epsilon < Mathf.Epsilon;
+            if (isDepleted) InformListenersOnHealthDepleted();
         }
 
         public void IncreaseMaxHealth(float amount) => ChangeValue(ref maxHealth, amount);
