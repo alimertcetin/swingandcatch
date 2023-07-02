@@ -11,7 +11,6 @@ namespace TheGame.FSM
         public StateFactory(StateMachine stateMachine)
         {
             this.stateMachine = stateMachine;
-            AddState(new EmptyState(stateMachine));
         }
 
         public T GetState<T>() where T : State
