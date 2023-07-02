@@ -51,11 +51,11 @@ namespace TheGame.EnemySystems.SawBlade.States
 
             if (hitCount > 0)
             {
-                stateMachine.transform.CancelTween();
+                if (stateMachine.transform.HasTween()) return;
                 stateMachine.transform.XIVTween()
                     .Scale(Vector3.one, Vector3.one * 0.75f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
                     .And()
-                    .RotateZ(0, 180f, 0.2f, EasingFunction.SmoothStart4)
+                    .RotateZ(0, 360f, 0.5f, EasingFunction.SmoothStop4)
                     .Start();
                 var renderer = stateMachine.GetComponentInChildren<Renderer>();
                 renderer.CancelTween();
