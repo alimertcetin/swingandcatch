@@ -4,6 +4,7 @@ using TheGame.FSM;
 using TheGame.HealthSystems;
 using TheGame.ScriptableObjects.HealthSystems;
 using TheGame.ScriptableObjects.StateDatas.SawBladeStateDatas;
+using TheGame.SelectionSystems;
 using UnityEngine;
 using XIV.Core;
 using XIV.Core.TweenSystem;
@@ -11,10 +12,11 @@ using XIV.Core.Utils;
 
 namespace TheGame.EnemySystems.SawBlade
 {
-    public class SawBladeFSM : StateMachine, IDamageable
+    public class SawBladeFSM : StateMachine, IDamageable, ISelectable
     {
         [SerializeField] HealthSO healthSO;
         [SerializeField] MeshRenderer heathbar;
+        [SerializeField] GameObject selectionIndicator;
         public SawBladeIdleStateDataSO idleStateDataSO;
         public SawBladeTransitionToIdleStateDataSO transitionToIdleStateDataSO;
         public SawBladeAttackStateDataSO attackStateDataSO;
@@ -42,6 +44,11 @@ namespace TheGame.EnemySystems.SawBlade
 
         void IDamageable.ReceiveDamage(float amount)
         {
+            transform.CancelTween();
+            transform.XIVTween()
+                .ScaleX(1f, 0.65f, 0.25f, EasingFunction.EaseOutBounce, true)
+                .Start();
+            
             health.DecreaseCurrentHealth(amount);
             heathbar.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, health.normalized);
             if (health.isDepleted)
@@ -52,6 +59,29 @@ namespace TheGame.EnemySystems.SawBlade
                     .OnComplete(() => Destroy(this.gameObject))
                     .Start();
             }
+        }
+
+        SelectionSettings ISelectable.GetSelectionSettings()
+        {
+            return new SelectionSettings
+            {
+                duration = 1.5f,
+            };
+        }
+
+        void ISelectable.OnSelect()
+        {
+            selectionIndicator.SetActive(true);
+            if (selectionIndicator.transform.HasTween()) return;
+            selectionIndicator.transform.XIVTween()
+                .Scale(Vector3.one * 1.5f, Vector3.one, 0.5f, EasingFunction.SmoothStop3, true, 2)
+                .Start();
+        }
+
+        void ISelectable.OnDeselect()
+        {
+            selectionIndicator.SetActive(false);
+            selectionIndicator.transform.CancelTween();
         }
 
 #if UNITY_EDITOR
