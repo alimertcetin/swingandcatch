@@ -16,8 +16,12 @@ namespace TheGame.UISystems.Core
             uiGameObject.transform.CancelTween();
             uiGameObject.transform.XIVTween()
                 .Scale(Vector3.zero, Vector3.one, 0.5f, EasingFunction.EaseInOutExpo)
+                .OnComplete(() =>
+                {
+                    isActive = true;
+                    OnUIActivated();
+                })
                 .Start();
-            isActive = true;
         }
 
         public virtual void Hide()
@@ -27,11 +31,22 @@ namespace TheGame.UISystems.Core
                 .Scale(Vector3.one, Vector3.zero, 0.5f, EasingFunction.EaseInOutExpo)
                 .OnComplete(() =>
                 {
+                    isActive = false;
                     uiGameObject.SetActive(false);
+                    OnUIDeactivated();
                 })
                 .Start();
-            isActive = false;
         }
+
+        /// <summary>
+        /// Gets called when Show tween ends
+        /// </summary>
+        protected virtual void OnUIActivated() { }
+        
+        /// <summary>
+        /// Gets called when Hide tween ends
+        /// </summary>
+        protected virtual void OnUIDeactivated() { }
 
         protected virtual void OnDestroy() => UISystem.RemoveUI(this);
     }
