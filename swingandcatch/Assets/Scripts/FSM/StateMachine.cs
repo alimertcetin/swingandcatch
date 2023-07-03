@@ -5,7 +5,7 @@ namespace TheGame.FSM
 {
     public abstract class StateMachine : MonoBehaviour
     {
-        State currentState;
+        protected State currentState { get; private set; }
 
         protected virtual void Awake() => InitializeStateMachine(GetInitialState());
         protected virtual void Start() => currentState.EnterState(currentState);
