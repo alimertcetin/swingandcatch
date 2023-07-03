@@ -15,11 +15,20 @@ namespace TheGame.SelectionSystems
         }
         
         [SerializeField] TransformChannelSO selectableSelectChannel;
+        [SerializeField] TransformChannelSO selectableDeselectChannel;
         DynamicArray<SelectionData> selectionDatas = new DynamicArray<SelectionData>();
 
-        void OnEnable() => selectableSelectChannel.Register(HandleSelection);
+        void OnEnable()
+        {
+            selectableSelectChannel.Register(HandleSelection);
+            selectableDeselectChannel.Register(HandleDeselection);
+        }
 
-        void OnDisable() => selectableSelectChannel.Unregister(HandleSelection);
+        void OnDisable()
+        {
+            selectableSelectChannel.Unregister(HandleSelection);
+            selectableDeselectChannel.Unregister(HandleDeselection);
+        }
 
         void Update()
         {
@@ -52,6 +61,18 @@ namespace TheGame.SelectionSystems
                 selectable = selectable,
                 selectableTransform = selectableTransform,
             };
+        }
+
+        void HandleDeselection(Transform selectableTransform)
+        {
+            if (selectableTransform.TryGetComponent(out ISelectable selectable) == false) return;
+            int index = selectionDatas.Exists((selectionData) => selectionData.selectable == selectable);
+            if (index != -1)
+            {
+                selectable.OnDeselect();
+                selectionDatas.RemoveAt(index);
+                return;
+            }
         }
     }
 }

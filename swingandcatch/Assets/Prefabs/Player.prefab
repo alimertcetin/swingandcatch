@@ -456,6 +456,7 @@ MonoBehaviour:
   healthSO: {fileID: 11400000, guid: 91d1e8bcd5b069441bb2027a169f7075, type: 2}
   damageImmuneDuration: 0.75
   selectableSelectChannel: {fileID: 11400000, guid: 6883bfb1fd6c0d1449ec027c2dc7bb87, type: 2}
+  selectableDeselectChannel: {fileID: 11400000, guid: 16e3fe7eb955a8047823c0cb87a95055, type: 2}
   playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
   playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
   updatePlayerHealthChannel: {fileID: 11400000, guid: 7aa4c4f0fd6c59d4291add4a7af69e0f, type: 2}

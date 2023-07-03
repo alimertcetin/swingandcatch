@@ -1505,6 +1505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectableSelectChannel: {fileID: 11400000, guid: 6883bfb1fd6c0d1449ec027c2dc7bb87, type: 2}
+  selectableDeselectChannel: {fileID: 11400000, guid: 16e3fe7eb955a8047823c0cb87a95055, type: 2}
 --- !u!1 &5144813229092251235
 GameObject:
   m_ObjectHideFlags: 0

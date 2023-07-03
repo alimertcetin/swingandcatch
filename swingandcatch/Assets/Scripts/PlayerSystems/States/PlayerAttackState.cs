@@ -13,6 +13,8 @@ namespace TheGame.PlayerSystems.States
     public class PlayerAttackState : State<PlayerFSM, PlayerStateFactory>, DefaultGameInputs.IPlayerAttackActions
     {
         bool attackPressed;
+        bool hasTarget;
+        Collider2D currentTarget;
         
         public PlayerAttackState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -23,17 +25,27 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            if (TrySelectTarget(out var coll, out var damageable) == false)
+            if (TrySelectTarget(out var coll, out var damageable, out var distance) == false)
             {
-                if (attackPressed)
-                {
-                    SwingSword(GetSwingDirection(coll));
-                }
+                if (attackPressed) SwingSword(GetSwingDirection(coll));
+                DeselectTargetIfExists();
                 return;
             }
             
-            stateMachine.selectableSelectChannel.RaiseEvent(coll.transform);
-            
+            var radius = stateMachine.stateDatas.attackStateDataSO.attackRadius;
+            if (distance > radius)
+            {
+                if (attackPressed) SwingSword(GetSwingDirection(coll));
+                DeselectTargetIfExists();
+                return;
+            }
+
+            if (coll != currentTarget)
+            {
+                DeselectTargetIfExists();
+            }
+            SetNewTarget(coll);
+
             if (attackPressed && SwingSword(GetSwingDirection(coll)))
             {
                 damageable.ReceiveDamage(stateMachine.stateDatas.attackStateDataSO.damage);
@@ -48,25 +60,28 @@ namespace TheGame.PlayerSystems.States
             attackPressed = context.performed;
         }
 
-        bool TrySelectTarget(out Collider2D coll, out IDamageable damageable)
+        bool TrySelectTarget(out Collider2D coll, out IDamageable damageable, out float distance)
         {
             coll = default;
             damageable = default;
+            distance = default;
             
             var stateData = stateMachine.stateDatas.attackStateDataSO;
             var radius = stateData.attackRadius;
             
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
-            var pos = stateMachine.transform.position;
-            int hitCount = Physics2D.OverlapCircleNonAlloc(pos, radius, buffer, 1 << PhysicsConstants.EnemyLayer);
+            var pos = (Vector2)stateMachine.transform.position;
+            int hitCount = Physics2D.OverlapCircleNonAlloc(pos, radius * 2f, buffer, 1 << PhysicsConstants.EnemyLayer);
             if (hitCount == 0)
             {
                 ArrayPool<Collider2D>.Shared.Return(buffer);
                 return false;
             }
 
-            coll = buffer.GetClosestCollider(pos, hitCount);
-            var dir = ((Vector3)coll.ClosestPoint(pos) - pos).normalized;
+            coll = buffer.GetClosestCollider(pos, hitCount, out var positionOnCollider);
+            distance = Vector2.Distance(positionOnCollider, pos);
+            
+            var dir = (positionOnCollider - pos).normalized;
             var raycastHitBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
             // There is an obstacle between player and the target - Skip
             if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * radius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
@@ -134,6 +149,20 @@ namespace TheGame.PlayerSystems.States
                 .Start();
 
             return true;
+        }
+
+        void DeselectTargetIfExists()
+        {
+            if (hasTarget) stateMachine.selectableDeselectChannel.RaiseEvent(currentTarget.transform);
+            hasTarget = false;
+            currentTarget = default;
+        }
+
+        void SetNewTarget(Collider2D target)
+        {
+            hasTarget = target;
+            currentTarget = target;
+            stateMachine.selectableSelectChannel.RaiseEvent(currentTarget.transform);
         }
 
     }

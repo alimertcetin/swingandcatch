@@ -19,6 +19,7 @@ namespace TheGame.PlayerSystems
         
         [Header("Channels")]
         public TransformChannelSO selectableSelectChannel;
+        public TransformChannelSO selectableDeselectChannel;
         public TransformChannelSO playerDiedChannelSO;
         public TransformChannelSO playerReachedEndChannelSO;
         public FloatChannelSO updatePlayerHealthChannel;
