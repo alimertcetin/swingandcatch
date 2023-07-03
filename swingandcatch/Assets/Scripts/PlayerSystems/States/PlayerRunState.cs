@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace TheGame.PlayerSystems.States
 {
-    public class PlayerRunSate : State<PlayerFSM, PlayerStateFactory>
+    public class PlayerRunState : State<PlayerFSM, PlayerStateFactory>
     {
         const float FEET_ANIMATION_DURATION = 0.1f;
         PlayerGroundedState groundedState;
         
-        public PlayerRunSate(PlayerFSM stateMachine, PlayerStateFactory factory) : base(stateMachine, factory)
+        public PlayerRunState(PlayerFSM stateMachine, PlayerStateFactory factory) : base(stateMachine, factory)
         {
         }
 

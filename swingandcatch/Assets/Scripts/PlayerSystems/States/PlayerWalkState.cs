@@ -44,7 +44,7 @@ namespace TheGame.PlayerSystems.States
             
             if (groundedState.runPressed)
             {
-                ChangeChildState(factory.GetState<PlayerRunSate>());
+                ChangeChildState(factory.GetState<PlayerRunState>());
                 return;
             }
         }
