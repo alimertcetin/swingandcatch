@@ -449,7 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740dbe2ff84d4a42aba881267f4210c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showCurrentState: 1
+  showCurrentState: 0
   textOffsetX: 0.014
   textOffsetY: -0.007
   stateDatas: {fileID: 11400000, guid: 0afc821b3ed4184428b738ba0f79d5ad, type: 2}
