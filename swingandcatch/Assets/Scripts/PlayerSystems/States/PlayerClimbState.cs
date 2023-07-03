@@ -91,6 +91,7 @@ namespace TheGame.PlayerSystems.States
         protected override void InitializeChildStates()
         {
             AddChildState(factory.GetState<CheckDamageState>());
+            AddChildState(factory.GetState<PlayerAttackState>());
         }
 
         protected override void CheckTransitions()
