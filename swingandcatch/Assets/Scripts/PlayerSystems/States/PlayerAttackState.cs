@@ -25,29 +25,41 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
+            void PlayAttackAnimationIfPossible(Collider2D coll)
+            {
+                if (CanPlayAttackAnimation())
+                {
+                    PlayAttackAnimation(GetSwingDirection(coll));
+                }
+            }
+            
             if (TrySelectTarget(out var coll, out var damageable, out var distance) == false)
             {
-                if (attackPressed) SwingSword(GetSwingDirection(coll));
+                PlayAttackAnimationIfPossible(coll);
                 DeselectTargetIfExists();
                 return;
             }
             
-            var radius = stateMachine.stateDatas.attackStateDataSO.attackRadius;
-            if (distance > radius)
+            if (distance > stateMachine.stateDatas.attackStateDataSO.targetSelectionRadius)
             {
-                if (attackPressed) SwingSword(GetSwingDirection(coll));
-                DeselectTargetIfExists();
+                PlayAttackAnimationIfPossible(coll);
                 return;
             }
 
-            if (coll != currentTarget)
-            {
-                DeselectTargetIfExists();
-            }
+            // Handle selection
+            if (coll != currentTarget) DeselectTargetIfExists();
             SetNewTarget(coll);
 
-            if (attackPressed && SwingSword(GetSwingDirection(coll)))
+            // Can't attack right now
+            if (distance > stateMachine.stateDatas.attackStateDataSO.attackRadius)
             {
+                PlayAttackAnimationIfPossible(coll);
+                return;
+            }
+
+            if (CanPlayAttackAnimation())
+            {
+                PlayAttackAnimation(GetSwingDirection(coll));
                 damageable.ReceiveDamage(stateMachine.stateDatas.attackStateDataSO.damage);
                 stateMachine.cameraShakeChannel.RaiseEvent(5f);
             }
@@ -67,11 +79,10 @@ namespace TheGame.PlayerSystems.States
             distance = default;
             
             var stateData = stateMachine.stateDatas.attackStateDataSO;
-            var radius = stateData.attackRadius;
             
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             var pos = (Vector2)stateMachine.transform.position;
-            int hitCount = Physics2D.OverlapCircleNonAlloc(pos, radius * 2f, buffer, 1 << PhysicsConstants.EnemyLayer);
+            int hitCount = Physics2D.OverlapCircleNonAlloc(pos, stateData.targetSelectionRadius, buffer, 1 << PhysicsConstants.EnemyLayer);
             if (hitCount == 0)
             {
                 ArrayPool<Collider2D>.Shared.Return(buffer);
@@ -84,7 +95,7 @@ namespace TheGame.PlayerSystems.States
             var dir = (positionOnCollider - pos).normalized;
             var raycastHitBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
             // There is an obstacle between player and the target - Skip
-            if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * radius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
+            if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * stateData.attackRadius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
             {
                 ArrayPool<Collider2D>.Shared.Return(buffer);
                 ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
@@ -125,13 +136,11 @@ namespace TheGame.PlayerSystems.States
             return dir;
         }
 
-        bool SwingSword(Vector3 direction)
+        void PlayAttackAnimation(Vector3 swingDirection)
         {
             var sword = stateMachine.playerSword;
-            if (sword.HasTween()) return false;
-
             var initialRotation = sword.transform.rotation;
-            var lookRotation = Quaternion.LookRotation(direction);
+            var lookRotation = Quaternion.LookRotation(swingDirection);
             
             var rotationStart = lookRotation * Quaternion.AngleAxis(45f, Vector3.left);
             var rotationEnd = rotationStart * Quaternion.AngleAxis(90f, Vector3.right);
@@ -147,8 +156,11 @@ namespace TheGame.PlayerSystems.States
                     sword.rotation = initialRotation;
                 })
                 .Start();
+        }
 
-            return true;
+        bool CanPlayAttackAnimation()
+        {
+            return attackPressed && stateMachine.playerSword.HasTween() == false;
         }
 
         void DeselectTargetIfExists()
