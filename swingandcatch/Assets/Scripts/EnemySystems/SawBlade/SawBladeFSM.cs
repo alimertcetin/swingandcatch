@@ -52,6 +52,9 @@ namespace TheGame.EnemySystems.SawBlade
 
         void IDamageable.ReceiveDamage(float amount)
         {
+            // Otherwise we can call ReceiveDamage multiple times and that can cause Destroy call multiple times and throws exception
+            if (health.isDepleted) return;
+            
             transform.CancelTween();
             transform.XIVTween()
                 .ScaleX(1f, 0.65f, 0.25f, EasingFunction.EaseOutBounce, true)
