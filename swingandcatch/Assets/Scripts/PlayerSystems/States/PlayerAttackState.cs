@@ -1,10 +1,9 @@
-﻿using System.Buffers;
-using TheGame.FSM;
+﻿using TheGame.FSM;
 using TheGame.HealthSystems;
+using TheGame.PlayerSystems.States.Helpers;
 using TheGame.Scripts.InputSystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using XIV.Core.Extensions;
 using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
 
@@ -13,56 +12,36 @@ namespace TheGame.PlayerSystems.States
     public class PlayerAttackState : State<PlayerFSM, PlayerStateFactory>, DefaultGameInputs.IPlayerAttackActions
     {
         bool attackPressed;
-        bool hasTarget;
-        Collider2D currentTarget;
+        AttackTargetSelectionHandler attackTargetSelectionHandler;
         
         public PlayerAttackState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
             InputManager.Inputs.PlayerAttack.SetCallbacks(this);
+            attackTargetSelectionHandler = new AttackTargetSelectionHandler(stateMachine);
         }
 
         protected override void OnStateEnter(State comingFrom) => InputManager.Inputs.PlayerAttack.Enable();
 
         protected override void OnStateUpdate()
         {
-            void PlayAttackAnimationIfPossible(Collider2D coll)
+            attackTargetSelectionHandler.HandleSelection();
+            if (attackPressed == false || stateMachine.playerSword.HasTween()) return;
+            
+            var selectedCollider = attackTargetSelectionHandler.currentSelection;
+            PlayAttackAnimation(GetSwingDirection(selectedCollider));
+                    
+            if (selectedCollider != default)
             {
-                if (CanPlayAttackAnimation())
+                var stateMachineTransformPosition = stateMachine.transform.position;
+                var closestPointOnCollider = (Vector3)selectedCollider.ClosestPoint(stateMachineTransformPosition);
+                var distance = Vector3.Distance(stateMachineTransformPosition, closestPointOnCollider);
+                var stateData = stateMachine.stateDatas.attackStateDataSO;
+                if (distance < stateData.attackRadius)
                 {
-                    PlayAttackAnimation(GetSwingDirection(coll));
+                    selectedCollider.GetComponent<IDamageable>().ReceiveDamage(stateData.damage);
                 }
             }
-            
-            if (TrySelectTarget(out var coll, out var damageable, out var distance) == false)
-            {
-                PlayAttackAnimationIfPossible(coll);
-                DeselectTargetIfExists();
-                return;
-            }
-            
-            if (distance > stateMachine.stateDatas.attackStateDataSO.targetSelectionRadius)
-            {
-                PlayAttackAnimationIfPossible(coll);
-                return;
-            }
 
-            // Handle selection
-            if (coll != currentTarget) DeselectTargetIfExists();
-            SetNewTarget(coll);
-
-            // Can't attack right now
-            if (distance > stateMachine.stateDatas.attackStateDataSO.attackRadius)
-            {
-                PlayAttackAnimationIfPossible(coll);
-                return;
-            }
-
-            if (CanPlayAttackAnimation())
-            {
-                PlayAttackAnimation(GetSwingDirection(coll));
-                damageable.ReceiveDamage(stateMachine.stateDatas.attackStateDataSO.damage);
-                stateMachine.cameraShakeChannel.RaiseEvent(5f);
-            }
         }
 
         protected override void OnStateExit() => InputManager.Inputs.PlayerAttack.Disable();
@@ -71,69 +50,23 @@ namespace TheGame.PlayerSystems.States
         {
             attackPressed = context.performed;
         }
-
-        bool TrySelectTarget(out Collider2D coll, out IDamageable damageable, out float distance)
-        {
-            coll = default;
-            damageable = default;
-            distance = default;
-            
-            var stateData = stateMachine.stateDatas.attackStateDataSO;
-            
-            var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
-            var pos = (Vector2)stateMachine.transform.position;
-            int hitCount = Physics2D.OverlapCircleNonAlloc(pos, stateData.targetSelectionRadius, buffer, 1 << PhysicsConstants.EnemyLayer);
-            if (hitCount == 0)
-            {
-                ArrayPool<Collider2D>.Shared.Return(buffer);
-                return false;
-            }
-
-            coll = buffer.GetClosestCollider(pos, hitCount, out var positionOnCollider);
-            distance = Vector2.Distance(positionOnCollider, pos);
-            
-            var dir = (positionOnCollider - pos).normalized;
-            var raycastHitBuffer = ArrayPool<RaycastHit2D>.Shared.Rent(2);
-            // There is an obstacle between player and the target - Skip
-            if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * stateData.attackRadius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
-            {
-                ArrayPool<Collider2D>.Shared.Return(buffer);
-                ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
-                return false;
-            }
-
-            // Target is not an IDamageable or It cant receive damage - Skip
-            if (coll.TryGetComponent(out damageable) == false || damageable.CanReceiveDamage() == false)
-            {
-                ArrayPool<Collider2D>.Shared.Return(buffer);
-                ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
-                return false;
-            }
-            
-            ArrayPool<Collider2D>.Shared.Return(buffer);
-            ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
-            return true;
-        }
         
         Vector3 GetSwingDirection(Collider2D coll)
         {
-            if (coll == default)
+            Vector3 startPoint;
+            Vector3 targetPoint;
+            if (coll != default)
             {
-                var velocity = stateMachine.velocity;
-                var swingDir = velocity.normalized;
-                if (velocity.sqrMagnitude - Mathf.Epsilon < Mathf.Epsilon)
-                {
-                    var angle = Random.value * 90f * (Random.value > 0.5f ? 1f : -1f);
-                    swingDir = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.up;
-                }
-
-                swingDir.z = 0f;
-                return swingDir;
+                startPoint = stateMachine.transform.position;
+                targetPoint = coll.ClosestPoint(startPoint);
             }
-            
-            var pos = stateMachine.transform.position;
-            var dir = ((Vector3)coll.ClosestPoint(pos) - pos).normalized;
-            return dir;
+            else
+            {
+                startPoint = stateMachine.transform.position;
+                targetPoint = AttackTargetSelectionHandler.GetMouseWorldPosition();
+            }
+
+            return (targetPoint - startPoint).normalized;
         }
 
         void PlayAttackAnimation(Vector3 swingDirection)
@@ -157,25 +90,6 @@ namespace TheGame.PlayerSystems.States
                 })
                 .Start();
         }
-
-        bool CanPlayAttackAnimation()
-        {
-            return attackPressed && stateMachine.playerSword.HasTween() == false;
-        }
-
-        void DeselectTargetIfExists()
-        {
-            if (hasTarget) stateMachine.selectableDeselectChannel.RaiseEvent(currentTarget.transform);
-            hasTarget = false;
-            currentTarget = default;
-        }
-
-        void SetNewTarget(Collider2D target)
-        {
-            hasTarget = target;
-            currentTarget = target;
-            stateMachine.selectableSelectChannel.RaiseEvent(currentTarget.transform);
-        }
-
+        
     }
 }
