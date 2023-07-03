@@ -740,6 +740,7 @@ MonoBehaviour:
   showWinUIChannel: {fileID: 11400000, guid: 6c83f4a2b8b730449b84e84b78a92379, type: 2}
   displayLoadingScreenChannel: {fileID: 11400000, guid: d596b4110046f7f4f874f075368c417e, type: 2}
   stopDisplayingLoadingScreenChannel: {fileID: 11400000, guid: 25d21044671f25344901b60d3c763e6d, type: 2}
+  showPauseUIChannel: {fileID: 11400000, guid: b2d6ac82ec499c148a6c2ae0e26a58d4, type: 2}
 --- !u!1 &714193792
 GameObject:
   m_ObjectHideFlags: 0
