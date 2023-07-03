@@ -295,7 +295,7 @@ namespace TheGame.Scripts.InputSystems
                 {
                     ""name"": """",
                     ""id"": ""2f8dbe01-0032-4f95-a200-e472042ffdfc"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
