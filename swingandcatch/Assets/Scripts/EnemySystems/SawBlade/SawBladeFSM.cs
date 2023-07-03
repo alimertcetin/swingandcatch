@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGame.CoinSystems;
 using TheGame.EnemySystems.SawBlade.States;
 using TheGame.FSM;
 using TheGame.HealthSystems;
@@ -9,6 +10,7 @@ using UnityEngine;
 using XIV.Core;
 using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
+using Random = UnityEngine.Random;
 
 namespace TheGame.EnemySystems.SawBlade
 {
@@ -17,9 +19,14 @@ namespace TheGame.EnemySystems.SawBlade
         [SerializeField] HealthSO healthSO;
         [SerializeField] MeshRenderer heathbar;
         [SerializeField] GameObject selectionIndicator;
+        
         public SawBladeIdleStateDataSO idleStateDataSO;
         public SawBladeTransitionToIdleStateDataSO transitionToIdleStateDataSO;
         public SawBladeAttackStateDataSO attackStateDataSO;
+        
+        [SerializeField] bool enableDrops = true;
+        [Header("Drops")]
+        [SerializeField] Coin coinWithRigidbodyPrefab;
         
         [NonSerialized] public Vector3 idleStartPosition;
         public Vector3 idleEndPosition => idleStartPosition - idleStateDataSO.idleMovementAxis * idleStateDataSO.idleMovementDistance;
@@ -59,6 +66,25 @@ namespace TheGame.EnemySystems.SawBlade
                     .Scale(transform.localScale, Vector3.one * 0.5f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
                     .OnComplete(() => Destroy(this.gameObject))
                     .Start();
+                
+                if (enableDrops)
+                {
+                    SpawnDrops();
+                }
+            }
+
+        }
+
+        void SpawnDrops()
+        {
+            var coinAmount = Mathf.RoundToInt(Random.value * 5f);
+            var pos = transform.position;
+            pos.z = 0f;
+            for (int i = 0; i < coinAmount; i++)
+            {
+                var coin = Instantiate(coinWithRigidbodyPrefab, pos, Quaternion.identity);
+                var force = Random.insideUnitCircle * (Random.value * 10f);
+                coin.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
             }
         }
 
