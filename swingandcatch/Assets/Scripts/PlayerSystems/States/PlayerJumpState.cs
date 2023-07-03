@@ -32,9 +32,11 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale * Time.fixedDeltaTime);
+            var dt = Time.fixedDeltaTime * Time.timeScale;
+            
+            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale * dt);
             var pos = stateMachine.transform.position;
-            pos.y += yVelocity * Time.fixedDeltaTime;
+            pos.y += yVelocity * dt;
             
             if (hasAirMovementInput) stateMachine.SyncPosition();
 

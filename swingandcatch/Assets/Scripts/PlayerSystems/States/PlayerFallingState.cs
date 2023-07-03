@@ -92,13 +92,13 @@ namespace TheGame.PlayerSystems.States
 
         void SetTransformPosition()
         {
-            var fixedDeltaTime = Time.fixedDeltaTime;
-            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.fallStateDataSO.fallGravityScale * fixedDeltaTime + Mathf.Clamp(fallingTime, 0f, 10f) * fixedDeltaTime);
+            var dt = Time.fixedDeltaTime * Time.timeScale;
+            yVelocity += Physics.gravity.y * (stateMachine.stateDatas.fallStateDataSO.fallGravityScale * dt + Mathf.Clamp(fallingTime, 0f, 10f) * dt);
             yVelocity = Mathf.Clamp(yVelocity, -18f, 0f);
 
             var t = stateMachine.transform;
             var pos = t.position;
-            pos.y += yVelocity * fixedDeltaTime;
+            pos.y += yVelocity * dt;
             
             if (hasAirMovementInput) stateMachine.SyncPosition();
             

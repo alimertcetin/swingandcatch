@@ -74,14 +74,14 @@ namespace TheGame.VerletRope
 
         void Simulate()
         {
-            float deltaTime = Time.fixedDeltaTime;
+            float dt = Time.fixedDeltaTime * Time.timeScale;
             for (int i = 0; i < segments; i++)
             {
                 ref RopePoint p = ref ropePoints[i];
 
                 Vector3 velocity = p.velocity;
                 Vector3 dragForce = -drag * velocity;
-                Vector3 newPosition = p.position + velocity + p.force * (deltaTime * deltaTime);
+                Vector3 newPosition = p.position + velocity + p.force * (dt * dt);
                 Vector3 newVel = newPosition - p.position;
                 p.previousPosition = p.position;
                 p.position = newPosition;
