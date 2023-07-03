@@ -61,6 +61,7 @@ namespace TheGame.PlayerSystems.States
             int hitCount = Physics2D.OverlapCircleNonAlloc(pos, radius, buffer, 1 << PhysicsConstants.EnemyLayer);
             if (hitCount == 0)
             {
+                ArrayPool<Collider2D>.Shared.Return(buffer);
                 return false;
             }
 
@@ -70,6 +71,7 @@ namespace TheGame.PlayerSystems.States
             // There is an obstacle between player and the target - Skip
             if (Physics2D.LinecastNonAlloc(pos, pos + dir.normalized * radius, raycastHitBuffer, 1 << PhysicsConstants.GroundLayer) > 0)
             {
+                ArrayPool<Collider2D>.Shared.Return(buffer);
                 ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
                 return false;
             }
@@ -77,10 +79,12 @@ namespace TheGame.PlayerSystems.States
             // Target is not an IDamageable or It cant receive damage - Skip
             if (coll.TryGetComponent(out damageable) == false || damageable.CanReceiveDamage() == false)
             {
+                ArrayPool<Collider2D>.Shared.Return(buffer);
                 ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
                 return false;
             }
             
+            ArrayPool<Collider2D>.Shared.Return(buffer);
             ArrayPool<RaycastHit2D>.Shared.Return(raycastHitBuffer);
             return true;
         }
