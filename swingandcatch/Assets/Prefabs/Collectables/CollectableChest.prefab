@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1442892205608653132}
   - component: {fileID: 8782436656631750112}
   - component: {fileID: 4121444578851624921}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: CollectableChest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,9 +69,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1442892205608653132}
     m_Modifications:
+    - target: {fileID: 1187364981333086, guid: a503d6f3d2ee47148a09639f019b31c5, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1248676613872148, guid: a503d6f3d2ee47148a09639f019b31c5, type: 3}
       propertyPath: m_Name
       value: AL-ChestCompleteD_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1248676613872148, guid: a503d6f3d2ee47148a09639f019b31c5, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1923912560526770, guid: a503d6f3d2ee47148a09639f019b31c5, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4965568863557946, guid: a503d6f3d2ee47148a09639f019b31c5, type: 3}
       propertyPath: m_RootOrder

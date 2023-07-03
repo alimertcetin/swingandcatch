@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7708672441546246760}
   - component: {fileID: 9214835585071310745}
   - component: {fileID: 4623509538000989014}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: CollectableCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +86,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7708672441546246761}
     m_Modifications:
+    - target: {fileID: 254016717423809452, guid: 09adb497c96147c45b653d5868f826f4, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 6172429644523481090, guid: 09adb497c96147c45b653d5868f826f4, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -133,6 +137,10 @@ PrefabInstance:
     - target: {fileID: 6218333886649420588, guid: 09adb497c96147c45b653d5868f826f4, type: 3}
       propertyPath: m_Name
       value: DolarCoinModel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6218333886649420588, guid: 09adb497c96147c45b653d5868f826f4, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 8635225291215321482, guid: 09adb497c96147c45b653d5868f826f4, type: 3}
       propertyPath: m_CastShadows
