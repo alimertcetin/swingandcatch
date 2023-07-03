@@ -116,6 +116,7 @@ namespace TheGame.EnemySystems.SawBlade
                 .Scale(Vector3.one, Vector3.zero, 0.5f, EasingFunction.EaseOutExpo)
                 .OnComplete(() =>
                 {
+                    // TODO : Throws exception when destroyed
                     heathbar.gameObject.SetActive(false);
                     selectionIndicator.SetActive(false);
                 })
