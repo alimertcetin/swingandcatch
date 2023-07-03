@@ -1,4 +1,5 @@
-﻿using TheGame.FSM;
+﻿using System;
+using TheGame.FSM;
 using TheGame.HealthSystems;
 using TheGame.PlayerSystems.States;
 using TheGame.ScriptableObjects.Channels;
@@ -22,6 +23,7 @@ namespace TheGame.PlayerSystems
         public TransformChannelSO playerReachedEndChannelSO;
         public FloatChannelSO updatePlayerHealthChannel;
         public FloatChannelSO cameraShakeChannel;
+        [SerializeField] BoolChannelSO gamePausedChannel;
 
         public Transform playerVisualTransform;
         [Tooltip("Left to Right order")]
@@ -37,12 +39,17 @@ namespace TheGame.PlayerSystems
 
         [HideInInspector] public bool damageImmune;
         public Health health;
+        
+        // TODO : Remove this states from here
+        State stateBeforeEmpty;
+        EmptyState emptyState;
 
         protected override void Awake()
         {
             previousPosition = transform.position;
             circleCollider2D = GetComponent<CircleCollider2D>();
             health = healthSO.GetHealth();
+            emptyState = new EmptyState(this);
             base.Awake();
         }
 
@@ -52,6 +59,31 @@ namespace TheGame.PlayerSystems
             velocity = position - previousPosition;
             previousPosition = position;
             base.Update();
+        }
+
+        void OnEnable()
+        {
+            gamePausedChannel.Register(OnGamePaused);
+        }
+
+        void OnDisable()
+        {
+            gamePausedChannel.Unregister(OnGamePaused);
+        }
+
+        void OnGamePaused(bool value)
+        {
+            if (value)
+            {
+                stateBeforeEmpty = currentState;
+                stateBeforeEmpty.ExitState();
+                SetCurrentState(emptyState);
+            }
+            else
+            {
+                SetCurrentState(stateBeforeEmpty);
+                stateBeforeEmpty.EnterState(emptyState);
+            }
         }
 
         protected override State GetInitialState()

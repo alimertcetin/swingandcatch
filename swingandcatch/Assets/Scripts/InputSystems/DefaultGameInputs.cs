@@ -304,6 +304,62 @@ namespace TheGame.Scripts.InputSystems
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""InGame"",
+            ""id"": ""271a690a-bbd2-4a0e-82f5-809da44f8d72"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""e657150e-25bb-426f-9dd0-391387e92e5d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""0a832b4d-26d9-44e8-83cd-a9094c425a97"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""PauseUI"",
+            ""id"": ""b0767589-3676-4640-ae34-4d0eff7ce1c7"",
+            ""actions"": [
+                {
+                    ""name"": ""Resume"",
+                    ""type"": ""Button"",
+                    ""id"": ""b4a5b356-c9ec-4ce4-aa10-7d455d09ab97"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""5f11cd27-2a86-4224-b040-7265b4415d7c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Resume"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -324,6 +380,12 @@ namespace TheGame.Scripts.InputSystems
             // PlayerAttack
             m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
             m_PlayerAttack_Attack = m_PlayerAttack.FindAction("Attack", throwIfNotFound: true);
+            // InGame
+            m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
+            m_InGame_Pause = m_InGame.FindAction("Pause", throwIfNotFound: true);
+            // PauseUI
+            m_PauseUI = asset.FindActionMap("PauseUI", throwIfNotFound: true);
+            m_PauseUI_Resume = m_PauseUI.FindAction("Resume", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -543,6 +605,72 @@ namespace TheGame.Scripts.InputSystems
             }
         }
         public PlayerAttackActions @PlayerAttack => new PlayerAttackActions(this);
+
+        // InGame
+        private readonly InputActionMap m_InGame;
+        private IInGameActions m_InGameActionsCallbackInterface;
+        private readonly InputAction m_InGame_Pause;
+        public struct InGameActions
+        {
+            private @DefaultGameInputs m_Wrapper;
+            public InGameActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Pause => m_Wrapper.m_InGame_Pause;
+            public InputActionMap Get() { return m_Wrapper.m_InGame; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(InGameActions set) { return set.Get(); }
+            public void SetCallbacks(IInGameActions instance)
+            {
+                if (m_Wrapper.m_InGameActionsCallbackInterface != null)
+                {
+                    @Pause.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
+                    @Pause.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
+                    @Pause.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
+                }
+                m_Wrapper.m_InGameActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Pause.started += instance.OnPause;
+                    @Pause.performed += instance.OnPause;
+                    @Pause.canceled += instance.OnPause;
+                }
+            }
+        }
+        public InGameActions @InGame => new InGameActions(this);
+
+        // PauseUI
+        private readonly InputActionMap m_PauseUI;
+        private IPauseUIActions m_PauseUIActionsCallbackInterface;
+        private readonly InputAction m_PauseUI_Resume;
+        public struct PauseUIActions
+        {
+            private @DefaultGameInputs m_Wrapper;
+            public PauseUIActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Resume => m_Wrapper.m_PauseUI_Resume;
+            public InputActionMap Get() { return m_Wrapper.m_PauseUI; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PauseUIActions set) { return set.Get(); }
+            public void SetCallbacks(IPauseUIActions instance)
+            {
+                if (m_Wrapper.m_PauseUIActionsCallbackInterface != null)
+                {
+                    @Resume.started -= m_Wrapper.m_PauseUIActionsCallbackInterface.OnResume;
+                    @Resume.performed -= m_Wrapper.m_PauseUIActionsCallbackInterface.OnResume;
+                    @Resume.canceled -= m_Wrapper.m_PauseUIActionsCallbackInterface.OnResume;
+                }
+                m_Wrapper.m_PauseUIActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Resume.started += instance.OnResume;
+                    @Resume.performed += instance.OnResume;
+                    @Resume.canceled += instance.OnResume;
+                }
+            }
+        }
+        public PauseUIActions @PauseUI => new PauseUIActions(this);
         public interface IPlayerClimbActions
         {
             void OnVerticalMovement(InputAction.CallbackContext context);
@@ -562,6 +690,14 @@ namespace TheGame.Scripts.InputSystems
         public interface IPlayerAttackActions
         {
             void OnAttack(InputAction.CallbackContext context);
+        }
+        public interface IInGameActions
+        {
+            void OnPause(InputAction.CallbackContext context);
+        }
+        public interface IPauseUIActions
+        {
+            void OnResume(InputAction.CallbackContext context);
         }
     }
 }

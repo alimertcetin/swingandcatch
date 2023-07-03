@@ -9,7 +9,11 @@
         {
             var inputs = Inputs;
             inputs.PlayerClimb.Disable();
+            inputs.PlayerAirMovement.Disable();
             inputs.PlayerGrounded.Disable();
+            inputs.PlayerAttack.Disable();
+            inputs.InGame.Disable();
+            inputs.PauseUI.Disable();
         }
     }
 }

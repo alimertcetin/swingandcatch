@@ -280,6 +280,62 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "InGame",
+            "id": "271a690a-bbd2-4a0e-82f5-809da44f8d72",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "e657150e-25bb-426f-9dd0-391387e92e5d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "0a832b4d-26d9-44e8-83cd-a9094c425a97",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "PauseUI",
+            "id": "b0767589-3676-4640-ae34-4d0eff7ce1c7",
+            "actions": [
+                {
+                    "name": "Resume",
+                    "type": "Button",
+                    "id": "b4a5b356-c9ec-4ce4-aa10-7d455d09ab97",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5f11cd27-2a86-4224-b040-7265b4415d7c",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Resume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

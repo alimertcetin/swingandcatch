@@ -1,5 +1,4 @@
-﻿using System;
-using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using TMPro;
 using UnityEngine;
