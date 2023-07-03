@@ -98,9 +98,9 @@ namespace TheGame.EnemySystems.SawBlade
 
         void ISelectable.OnSelect()
         {
+            selectionIndicator.transform.CancelTween();
             selectionIndicator.SetActive(true);
             heathbar.gameObject.SetActive(true);
-            selectionIndicator.transform.CancelTween();
             selectionIndicator.transform.XIVTween()
                 .Scale(Vector3.one, Vector3.one * 1.5f, 0.5f, EasingFunction.SmoothStop3, true, 2)
                 .Start();
