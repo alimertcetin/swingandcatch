@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGame.AudioManagement;
 using TheGame.SaveSystems;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.ScriptableObjects.SceneManagement;
@@ -13,6 +14,10 @@ namespace TheGame.SceneManagement
         [SerializeField] TransformChannelSO playerReachedEndChannelSO;
         [SerializeField] VoidChannelSO showWinUIChannel;
         [SerializeField] SceneListSO sceneListSO;
+        [SerializeField] VoidChannelSO sceneActivatedChannel;
+        [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
+        [SerializeField] AudioClip levelMusic;
+        
         int currentLevel;
 
         void Awake()
@@ -24,11 +29,18 @@ namespace TheGame.SceneManagement
         void OnEnable()
         {
             playerReachedEndChannelSO.Register(OnLevelCompleted);
+            sceneActivatedChannel.Register(OnSceneActivated);
         }
 
         void OnDisable()
         {
             playerReachedEndChannelSO.Unregister(OnLevelCompleted);
+            sceneActivatedChannel.Unregister(OnSceneActivated);
+        }
+
+        void OnSceneActivated()
+        {
+            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(levelMusic));
         }
 
         void OnLevelCompleted(Transform playerTransform)

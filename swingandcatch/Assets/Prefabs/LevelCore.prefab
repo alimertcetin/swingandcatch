@@ -1649,6 +1649,9 @@ MonoBehaviour:
   playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
   showWinUIChannel: {fileID: 11400000, guid: 6c83f4a2b8b730449b84e84b78a92379, type: 2}
   sceneListSO: {fileID: 11400000, guid: 6f876cd4bd8d746488389609f181a33c, type: 2}
+  sceneActivatedChannel: {fileID: 11400000, guid: f9c0875b0dfc54640a2b9d721462488e, type: 2}
+  audioPlayOptionsChannel: {fileID: 11400000, guid: df684052333532344b7fe4164b6ce5a6, type: 2}
+  levelMusic: {fileID: 8300000, guid: 4a77c7373e1114345826f57f4d3366c7, type: 3}
 --- !u!1001 &5144813229798967879
 PrefabInstance:
   m_ObjectHideFlags: 0
