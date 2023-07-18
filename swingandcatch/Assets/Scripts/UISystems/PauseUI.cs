@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TheGame.SceneManagement;
+﻿using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.ScriptableObjects.SceneManagement;
 using TheGame.Scripts.InputSystems;
@@ -47,9 +46,6 @@ namespace TheGame.UISystems
             InputManager.Inputs.InGame.Enable();
             InputManager.Inputs.PauseUI.Disable();
             InputManager.Inputs.PauseUI.Resume.performed -= OnPauseUIResumePerformed;
-            // https://docs.unity3d.com/ScriptReference/Time-timeScale.html WTF?!
-            Time.timeScale = previousTimeScale;
-            gamePausedChannel.RaiseEvent(false);
             base.Hide();
         }
 
@@ -58,6 +54,13 @@ namespace TheGame.UISystems
             gamePausedChannel.RaiseEvent(true);
             previousTimeScale = Time.timeScale;
             Time.timeScale = 0;
+        }
+
+        protected override void OnUIDeactivated()
+        {
+            // https://docs.unity3d.com/ScriptReference/Time-timeScale.html WTF?!
+            Time.timeScale = previousTimeScale;
+            gamePausedChannel.RaiseEvent(false);
         }
 
         void OnPauseUIResumePerformed(InputAction.CallbackContext obj)
@@ -72,6 +75,7 @@ namespace TheGame.UISystems
 
         void GoToMainMenu()
         {
+            OnUIDeactivated();
             sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(sceneListSO.mainMenuSceneIndex));
         }
     }
