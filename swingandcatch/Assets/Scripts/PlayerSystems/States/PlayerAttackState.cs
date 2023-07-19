@@ -38,7 +38,8 @@ namespace TheGame.PlayerSystems.States
                 var stateData = stateMachine.stateDatas.attackStateDataSO;
                 if (distance < stateData.attackRadius)
                 {
-                    selectedCollider.GetComponent<IDamageable>().ReceiveDamage(stateData.damage);
+                    var damageable = selectedCollider.GetComponent<IDamageable>();
+                    if (damageable.CanReceiveDamage()) damageable.ReceiveDamage(stateData.damage);
                 }
             }
 
