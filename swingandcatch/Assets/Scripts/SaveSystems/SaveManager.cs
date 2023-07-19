@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,11 @@ namespace TheGame.SaveSystems
         bool isSaving;
         bool isLoading;
 
+        void Start()
+        {
+            LoadAllOpenScenesImmediate();
+        }
+
         void OnEnable()
         {
             saveSceneDataChannel.Register(SaveSceneData);
@@ -26,6 +32,37 @@ namespace TheGame.SaveSystems
         {
             saveSceneDataChannel.Unregister(SaveSceneData);
             loadSceneDataChannel.Unregister(LoadSceneData);
+        }
+
+        void OnApplicationQuit()
+        {
+            SaveAllOpenScenesImmediate();
+        }
+
+        static void SaveAllOpenScenesImmediate()
+        {
+            int count = SceneManager.sceneCount;
+            for (int i = 0; i < count; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+#if UNITY_EDITOR
+                Debug.Log("scene.name = " + scene.name);
+#endif
+                SaveSystem.Save(scene.name);
+            }
+        }
+
+        static void LoadAllOpenScenesImmediate()
+        {
+            int count = SceneManager.sceneCount;
+            for (int i = 0; i < count; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+#if UNITY_EDITOR
+                Debug.Log("scene.name = " + scene.name);
+#endif
+                SaveSystem.Load(scene.name);
+            }
         }
 
         void SaveSceneData(int sceneIndex)
