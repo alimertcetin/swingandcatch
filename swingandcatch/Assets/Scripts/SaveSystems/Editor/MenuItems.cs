@@ -40,9 +40,9 @@ namespace TheGame.Data.Editor
                     EditorUtility.DisplayProgressBar(nameof(ValidateSavablesInTheScene), $"{j} / {rootGameobjectsLength}", j / (float)rootGameobjectsLength);
                     GameObject rootGameObject = rootGameObjects[j];
                     var childsWithSavable = rootGameObject.GetComponentsInChildren<ISavable>(true);
-                    if (rootGameObject.TryGetComponent(out SavableEntity savableEntity) == false && childsWithSavable.Length > 0)
+                    if (rootGameObject.TryGetComponent<SavableEntity>(out _) == false && childsWithSavable.Length > 0)
                     {
-                        error += $"{rootGameObject} doesn't have {nameof(SavableEntity)} but its children implements {nameof(ISavable) + Environment.NewLine}";
+                        error += $"{rootGameObject.name} doesn't have {nameof(SavableEntity)} but it or its children implements {nameof(ISavable) + Environment.NewLine}";
                     }
                     
                 }
