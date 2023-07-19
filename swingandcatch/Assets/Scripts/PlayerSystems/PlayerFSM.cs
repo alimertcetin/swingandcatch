@@ -127,14 +127,14 @@ namespace TheGame.PlayerSystems
         {
             if (stateDatas.attackStateDataSO)
             {
-                XIV.Core.XIVDebug.DrawCircle(transform.position, stateDatas.attackStateDataSO.attackRadius * 2f, Color.red);
+                XIV.Core.XIVDebug.DrawCircle(transform.position, stateDatas.attackStateDataSO.attackRadius, Color.red);
             }
             
             if (Application.isPlaying) return;
             var pos = transform.position;
             var bottomColliderPos = pos + bottomColliderPosLocal;
             var sizeHalf = bottomColliderSize * 0.5f;
-            var radius = sizeHalf.y * 2f;
+            var radius = sizeHalf.y;
             XIV.Core.XIVDebug.DrawCircle(bottomColliderPos + Vector3.left * (sizeHalf.x - radius * 0.5f), radius);
             XIV.Core.XIVDebug.DrawCircle(bottomColliderPos + Vector3.right * (sizeHalf.x - radius * 0.5f), radius);
             XIV.Core.XIVDebug.DrawRectangle(bottomColliderPos, sizeHalf, Quaternion.LookRotation(Vector3.forward));

@@ -150,7 +150,7 @@ namespace TheGame.EnemySystems.SawBlade
                 XIVDebug.DrawCircle(movementEnd, 0.25f, Vector3.forward, Color.red, 5);
             }
 
-            if (attackStateDataSO) XIVDebug.DrawCircle(position, attackStateDataSO.attackFieldRadius * 2f);
+            if (attackStateDataSO) XIVDebug.DrawCircle(position, attackStateDataSO.attackFieldRadius);
         }
 #endif
     }

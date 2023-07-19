@@ -30,10 +30,10 @@ namespace TheGame.PlayerSystems
                 hitCount = Physics2D.OverlapCapsuleNonAlloc(capsuleCenter, capsuleSize, CapsuleDirection2D.Horizontal, 0f, buffer, layerMask);
 #if UNITY_EDITOR
                 var halfExtends = capsuleSize * 0.5f;
-                var circumference = capsuleSize.y;
+                var radius = capsuleSize.y * 0.5f;
                 XIVDebug.DrawRectangle(capsuleCenter, halfExtends, Quaternion.LookRotation(Vector3.forward));
-                XIVDebug.DrawCircle(capsuleCenter + Vector3.left * (halfExtends.x - circumference * 0.5f), circumference);
-                XIVDebug.DrawCircle(capsuleCenter + Vector3.right * (halfExtends.x - circumference * 0.5f), circumference);
+                XIVDebug.DrawCircle(capsuleCenter + Vector3.left * (halfExtends.x - radius), radius);
+                XIVDebug.DrawCircle(capsuleCenter + Vector3.right * (halfExtends.x - radius), radius);
 #endif
                 position = Vector3.MoveTowards(position, targetPosition, 0.01f);
                 
