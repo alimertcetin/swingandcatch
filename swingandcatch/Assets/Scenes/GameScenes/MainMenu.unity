@@ -5372,7 +5372,8 @@ MonoBehaviour:
   uiGameObject: {fileID: 801932456}
   contentParent: {fileID: 91923190}
   auidoSettingPanelPrefab: {fileID: 362208846538429764, guid: 3ddce2931e101984cbae3492e0154346, type: 3}
-  audioMixerOptionsChannel: {fileID: 11400000, guid: 5aafb7e8e2c4deb47a348c1f161e2ed3, type: 2}
+  onAudioMixerParametersLoaded: {fileID: 11400000, guid: 993e2555f69c4b749a74490be214dc73, type: 2}
+  onAudioMixerParameterChangedChannel: {fileID: 11400000, guid: 562670c08b642c94cb939fe273718317, type: 2}
 --- !u!1 &2136906282
 GameObject:
   m_ObjectHideFlags: 0

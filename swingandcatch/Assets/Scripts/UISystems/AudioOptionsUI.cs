@@ -1,4 +1,5 @@
-﻿using TheGame.AudioManagement;
+﻿using System.Collections.Generic;
+using TheGame.AudioManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
@@ -9,30 +10,35 @@ namespace TheGame.UISystems
     {
         [SerializeField] RectTransform contentParent;
         [SerializeField] AudioSettingsPanel auidoSettingPanelPrefab;
-        [SerializeField] AudioMixerOptionsChannelSO audioMixerOptionsChannel;
+        [SerializeField] AudioMixerParameterCollectionChannelSO onAudioMixerParametersLoaded;
 
-        protected override void Awake()
+        AudioMixerParameterCollection parameterCollection;
+        readonly List<AudioSettingsPanel> audioSettingsPanels = new();
+
+        void OnEnable()
         {
-            base.Awake();
-            CreateUIItems();
+            onAudioMixerParametersLoaded.Register(OnParameterCollectionLoaded);
         }
 
-        void CreateUIItems()
+        void OnDisable()
         {
-            var paramaters = AudioMixerConstants.DefaultMixer.Parameters.All;
-            int length = paramaters.Length;
-            for (int i = 0; i < length; i++)
+            onAudioMixerParametersLoaded.Unregister(OnParameterCollectionLoaded);
+        }
+
+        void OnParameterCollectionLoaded(AudioMixerParameterCollection parameterCollection)
+        {
+            this.parameterCollection = parameterCollection;
+            InitializeUIItems();
+        }
+
+        void InitializeUIItems()
+        {
+            foreach (AudioMixerParameter parameter in parameterCollection.GetParameters())
             {
                 var panel = Instantiate(auidoSettingPanelPrefab, contentParent, false);
-                var mixerParameter = paramaters[i];
-                panel.Initialize(mixerParameter, OnSliderValueChanged);
+                panel.Initialize(parameterCollection, parameter);
+                audioSettingsPanels.Add(panel);
             }
-        }
-
-        void OnSliderValueChanged(string mixerParameter, float value)
-        {
-            value = Mathf.Log(Mathf.Max(value, 0.01f)) * 20f;
-            audioMixerOptionsChannel.RaiseEvent(new AudioMixerOptions(mixerParameter, value));
         }
     }
 }

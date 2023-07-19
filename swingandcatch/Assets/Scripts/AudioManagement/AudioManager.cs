@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGame.SaveSystems;
 using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.Pool;
 using XIV.Core.Utils;
 
 namespace TheGame.AudioManagement
 {
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : MonoBehaviour, ISavable
     {
-        [SerializeField] AudioMixerOptionsChannelSO audioMixerOptionsChannel;
+        [SerializeField] AudioMixerParameterCollectionChannelSO onAudioMixerParametersLoadedChannel;
+        [SerializeField] VoidChannelSO onSceneLoaded;
         [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
         [SerializeField] AudioMixer audioMixer;
 
@@ -20,7 +23,34 @@ namespace TheGame.AudioManagement
         readonly List<AudioSource> musicSources = new List<AudioSource>(DEFAULT_MUSIC_SOURCE_COUNT);
         readonly List<AudioSource> effectSources = new List<AudioSource>(DEFAULT_EFFECT_SOURCE_COUNT);
 
+        AudioMixerParameterCollection parameterCollection;
+
         void Awake()
+        {
+            parameterCollection = new AudioMixerParameterCollection(audioMixer);
+            CreateAudioSources();
+        }
+
+        void Start() => onAudioMixerParametersLoadedChannel.RaiseEvent(parameterCollection);
+
+        void OnEnable()
+        {
+            audioPlayOptionsChannel.Register(OnPlayAudio);
+            onSceneLoaded.Register(OnSceneLoaded);
+        }
+
+        void OnDisable()
+        {
+            audioPlayOptionsChannel.Unregister(OnPlayAudio);
+            onSceneLoaded.Unregister(OnSceneLoaded);
+        }
+
+        void OnSceneLoaded()
+        {
+            onAudioMixerParametersLoadedChannel.RaiseEvent(parameterCollection);
+        }
+
+        void CreateAudioSources()
         {
             var musicGroup = audioMixer.FindMatchingGroups(AudioMixerConstants.DefaultMixer.MixerGroups.Musics)[0];
             var effectsGroup = audioMixer.FindMatchingGroups(AudioMixerConstants.DefaultMixer.MixerGroups.Effects)[0];
@@ -29,14 +59,14 @@ namespace TheGame.AudioManagement
             var effectSourceParent = new GameObject("--- Effect Sources ---").transform;
             musicSourceParent.SetParent(this.transform);
             effectSourceParent.SetParent(this.transform);
-            
+
             for (int i = 0; i < DEFAULT_MUSIC_SOURCE_COUNT; i++)
             {
                 var source = new GameObject("Music-Source_" + i).AddComponent<AudioSource>();
                 InitializeSource(source, musicSourceParent, musicGroup);
                 musicSources.Add(source);
             }
-            
+
             for (int i = 0; i < DEFAULT_EFFECT_SOURCE_COUNT; i++)
             {
                 var source = new GameObject("Effect-Source_" + i).AddComponent<AudioSource>();
@@ -53,64 +83,52 @@ namespace TheGame.AudioManagement
             source.volume = 1f;
         }
 
-        void OnEnable()
-        {
-            audioMixerOptionsChannel.Register(OnChangeMixerOptions);
-            audioPlayOptionsChannel.Register(OnPlayAudio);
-        }
-
-        void OnDisable()
-        {
-            audioMixerOptionsChannel.Unregister(OnChangeMixerOptions);
-            audioPlayOptionsChannel.Unregister(OnPlayAudio);
-        }
-
-        void OnChangeMixerOptions(AudioMixerOptions audioMixerOptions)
-        {
-            audioMixer.SetFloat(audioMixerOptions.parameter, audioMixerOptions.value);
-        }
-
         void OnPlayAudio(AudioPlayOptions audioPlayOptions)
         {
             switch (audioPlayOptions.audioType)
             {
                 case AudioType.None: return;
                 case AudioType.Music:
-
-                    AudioSource targetSource;
-                    AudioSource currentSource;
-                    if (musicSources[0].isPlaying == false)
-                    {
-                        targetSource = musicSources[0];
-                        currentSource = musicSources[1];
-                    }
-                    else
-                    {
-                        targetSource = musicSources[1];
-                        currentSource = musicSources[0];
-                    }
-
-                    targetSource.Stop();
-                    targetSource.clip = audioPlayOptions.clip;
-                    targetSource.loop = audioPlayOptions.isLooped;
-                    targetSource.Play();
-                    StartCoroutine(FadeInOut(targetSource, currentSource, 1f, audioPlayOptions.easingFunc));
-                    
-
+                    PlayMusic(audioPlayOptions);
                     break;
                 case AudioType.Effect:
-                    
-                    if (TryGetAvailableSource(effectSources, out var source))
-                    {
-                        source.PlayOneShot(audioPlayOptions.clip);
-                    }
-                    else
-                    {
-                        CreateNewSource(effectSources).PlayOneShot(audioPlayOptions.clip);
-                    }
-                    
+                    PlayEffect(audioPlayOptions);
                     break;
                 default: throw new NotImplementedException(audioPlayOptions.audioType + " is not implemented.");
+            }
+        }
+
+        void PlayMusic(AudioPlayOptions audioPlayOptions)
+        {
+            AudioSource targetSource;
+            AudioSource currentSource;
+            if (musicSources[0].isPlaying == false)
+            {
+                targetSource = musicSources[0];
+                currentSource = musicSources[1];
+            }
+            else
+            {
+                targetSource = musicSources[1];
+                currentSource = musicSources[0];
+            }
+
+            targetSource.Stop();
+            targetSource.clip = audioPlayOptions.clip;
+            targetSource.loop = audioPlayOptions.isLooped;
+            targetSource.Play();
+            StartCoroutine(FadeInOut(targetSource, currentSource, 1f, audioPlayOptions.easingFunc));
+        }
+
+        void PlayEffect(AudioPlayOptions audioPlayOptions)
+        {
+            if (TryGetAvailableSource(effectSources, out var source))
+            {
+                source.PlayOneShot(audioPlayOptions.clip);
+            }
+            else
+            {
+                CreateNewSource(effectSources).PlayOneShot(audioPlayOptions.clip);
             }
         }
 
@@ -157,6 +175,55 @@ namespace TheGame.AudioManagement
             InitializeSource(newSource, source.transform.parent, source.outputAudioMixerGroup);
             sources.Add(newSource);
             return newSource;
+        }
+
+        [System.Serializable]
+        struct SaveData
+        {
+            public string[] keys;
+            public float[] values; // 0-1 values
+        }
+
+        object ISavable.GetSaveData()
+        {
+            List<AudioMixerParameter> parameterList = ListPool<AudioMixerParameter>.Get();
+
+            foreach (AudioMixerParameter parameter in parameterCollection.GetParameters())
+            {
+                parameterList.Add(parameter);
+            }
+
+            int count = parameterList.Count;
+            var keys = new string[count];
+            var values = new float[count];
+
+            for (int i = 0; i < count; i++)
+            {
+                keys[i] = parameterList[i].parameterName;
+                values[i] = parameterList[i].value01;
+            }
+            
+            ListPool<AudioMixerParameter>.Release(parameterList);
+            
+            return new SaveData
+            {
+                keys = keys,
+                values = values,
+            };
+        }
+
+        void ISavable.LoadSaveData(object data)
+        {
+            var saveData = (SaveData)data;
+            var keys = saveData.keys;
+            var values = saveData.values;
+            var length = keys.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                parameterCollection.UpdateParameter(keys[i], values[i]);
+            }
+
         }
     }
 }

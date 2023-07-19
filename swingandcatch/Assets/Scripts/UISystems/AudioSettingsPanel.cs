@@ -1,5 +1,5 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using TheGame.AudioManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,24 +10,28 @@ namespace TheGame.UISystems
     {
         [SerializeField] TMP_Text txt_AudioSettingName;
         [SerializeField] Slider slider;
+        
+        AudioMixerParameterCollection parameterCollection;
+        AudioMixerParameter parameter;
 
-        Action<string, float> onSliderValueChanged;
-        string auidoMixerParameter;
-
-        public void Initialize(string auidoMixerParameter, Action<string, float> onSliderValueChanged)
+        public void Initialize(AudioMixerParameterCollection parameterCollection, AudioMixerParameter audioMixerParameter)
         {
-            this.auidoMixerParameter = auidoMixerParameter;
-            this.txt_AudioSettingName.text = GetDisplayString(auidoMixerParameter);
-            this.onSliderValueChanged = onSliderValueChanged;
-            
-            slider.onValueChanged.AddListener(OnSliderValueChanged);
+            this.parameter = audioMixerParameter;
+            this.txt_AudioSettingName.text = GetDisplayString(audioMixerParameter.parameterName);
+            this.parameterCollection = parameterCollection;
+            slider.SetValueWithoutNotify(parameter.value01);
         }
 
+        void OnEnable() => slider.onValueChanged.AddListener(OnSliderValueChanged);
+
+        void OnDisable() => slider.onValueChanged.RemoveListener(OnSliderValueChanged);
+        
         void OnSliderValueChanged(float value)
         {
-            onSliderValueChanged.Invoke(auidoMixerParameter, value);
+            parameter.UpdateValue01(value);
+            parameterCollection.UpdateParameter(parameter.parameterNameHash, parameter.value01);
         }
-
+        
         static string GetDisplayString(string audioSettingName)
         {
             var splitArr = Regex.Split(audioSettingName, @"(?<!^)(?=[A-Z])");
