@@ -55,25 +55,19 @@ namespace TheGame.SaveSystems
 
         public static bool IsSaveExistsAny()
         {
-            if (Directory.Exists(saveFolder) == false) return false;
-            return Directory.GetFiles(saveFolder).Length > 0;
+            return Directory.Exists(saveFolder) && Directory.GetFiles(saveFolder).Length > 0;
         }
 
         public static void ClearSaveData(string sceneName)
         {
-            var saveFile = GetSaveFilePath(sceneName);
-            var saveFileBackup = GetSaveFileBackupPath(sceneName);
-            DeleteIfExists(saveFile);
-            DeleteIfExists(saveFileBackup);
+            DeleteIfExists(GetSaveFilePath(sceneName));
+            DeleteIfExists(GetSaveFileBackupPath(sceneName));
 
             void DeleteIfExists(string file)
             {
                 Task.Factory.StartNew(() =>
                 {
-                    if (File.Exists(file))
-                    {
-                        File.Delete(file);
-                    }
+                    if (File.Exists(file)) File.Delete(file);
                 });
             }
         }
@@ -110,13 +104,10 @@ namespace TheGame.SaveSystems
 
         public static void RemoveSavableEntity(string sceneName, SavableEntity entity)
         {
-            if (string.IsNullOrWhiteSpace(sceneName)) return;
-            if (entity == null) return;
+            if (string.IsNullOrWhiteSpace(sceneName) || entity == null) return;
 
             var list = savableEntityLookup[sceneName];
-            int index = list.IndexOf(entity);
-            if (index < 0) return;
-            list.RemoveAt(index);
+            list.Remove(entity);
 
             if (list.Count == 0) savableEntityLookup.Remove(sceneName);
         }
@@ -129,14 +120,8 @@ namespace TheGame.SaveSystems
             return true;
         }
 
-        static string GetSaveFilePath(string sceneName)
-        {
-            return Path.Combine(saveFolder, sceneName) + ".sav";
-        }
-
-        static string GetSaveFileBackupPath(string sceneName)
-        {
-            return Path.Combine(saveFolder, sceneName) + ".bak";
-        }
+        static string GetSaveFilePath(string sceneName) => Path.Combine(saveFolder, sceneName) + ".sav";
+        static string GetSaveFileBackupPath(string sceneName) => Path.Combine(saveFolder, sceneName) + ".bak";
+        
     }
 }

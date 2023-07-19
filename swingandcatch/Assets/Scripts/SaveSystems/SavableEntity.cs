@@ -53,13 +53,11 @@ namespace TheGame.SaveSystems
 
 #if UNITY_EDITOR
         
-        void Reset()
-        {
-            GenerateGuid();
-        }
+        void Reset() => GenerateGuid();
         
         [Button]
         void GenerateGuid() => guid = Guid.NewGuid().ToString();
+        
 #endif
         
     }
