@@ -1,24 +1,25 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using XIV.EventSystem.Events;
 
 namespace XIV.EventSystem
 {
     public static class XIVEventSystem
     {
-        static EventHelperMono helper;
-
-        static EventHelperMono Helper
-        {
-            get
-            {
-                if (helper == null) helper = new GameObject("XIVEventHelper").AddComponent<EventHelperMono>();
-                return helper;
-            }
-        }
-
         class EventHelperMono : MonoBehaviour
         {
+            static EventHelperMono instance;
+            public static EventHelperMono Instance
+            {
+                get
+                {
+                    if (instance) return instance;
+                    
+                    instance = new GameObject("XIVEventHelper").AddComponent<EventHelperMono>();
+                    DontDestroyOnLoad(instance);
+                    return instance;
+                }
+            }
+            
             public List<IEvent> events = new List<IEvent>();
 
             void Update()
@@ -37,18 +38,18 @@ namespace XIV.EventSystem
 
             void OnDestroy()
             {
-                helper = null;
+                instance = null;
             }
         }
 
         public static void SendEvent(IEvent @event)
         {
-            Helper.events.Add(@event);
+            EventHelperMono.Instance.events.Add(@event);
         }
 
         public static void CancelEvent(IEvent @event)
         {
-            List<IEvent> events = Helper.events;
+            List<IEvent> events = EventHelperMono.Instance.events;
             int index = events.IndexOf(@event);
             if (index < 0) return;
             events[index].Cancel();
@@ -57,7 +58,7 @@ namespace XIV.EventSystem
         
         public static T GetEvent<T>() where T : IEvent
         {
-            List<IEvent> events = Helper.events;
+            List<IEvent> events = EventHelperMono.Instance.events;
             int count = events.Count;
             for (int i = 0; i < count; i++)
             {
