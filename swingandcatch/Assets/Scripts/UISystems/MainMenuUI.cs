@@ -1,6 +1,4 @@
-﻿using TheGame.AudioManagement;
-using TheGame.SaveSystems;
-using TheGame.SceneManagement;
+﻿using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.ScriptableObjects.SceneManagement;
 using TheGame.UISystems.Components;
@@ -26,7 +24,7 @@ namespace TheGame.UISystems
 
         void Start()
         {
-            btn_Continue.gameObject.SetActive(SaveSystem.IsSaveExistsAny());
+            btn_Continue.gameObject.SetActive(sceneListSO.lastPlayedLevel != 0);
         }
 
         void OnEnable()
