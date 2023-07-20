@@ -59,19 +59,16 @@ namespace TheGame.EnemySystems.SawBlade
             
             health.DecreaseCurrentHealth(amount);
             heathbar.material.SetFloat(ShaderConstants.Unlit_HealthbarShader.Health_RangeID, health.normalized);
-            if (health.isDepleted)
-            {
-                base.SetCurrentState(new EmptyState(this));
-                transform.XIVTween()
-                    .Scale(transform.localScale, Vector3.one * 0.5f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
-                    .OnComplete(() => Destroy(this.gameObject))
-                    .Start();
-                
-                if (enableDrops)
-                {
-                    SpawnDrops();
-                }
-            }
+            
+            if (health.isDepleted == false) return;
+            
+            base.SetCurrentState(new EmptyState(this));
+            transform.XIVTween()
+                .Scale(transform.localScale, Vector3.one * 0.5f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
+                .OnComplete(() => Destroy(this.gameObject))
+                .Start();
+            
+            if (enableDrops) SpawnDrops();
 
         }
 
@@ -113,7 +110,9 @@ namespace TheGame.EnemySystems.SawBlade
                 .Scale(Vector3.one, Vector3.zero, 0.5f, EasingFunction.EaseOutExpo)
                 .OnComplete(() =>
                 {
-                    // TODO : Throws exception when destroyed
+                    // Check if object is alive
+                    if (this == false) return;
+                    
                     heathbar.gameObject.SetActive(false);
                     selectionIndicator.SetActive(false);
                 })
