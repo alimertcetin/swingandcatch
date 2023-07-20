@@ -1,6 +1,5 @@
 ﻿using TheGame.FSM;
 using UnityEngine;
-using XIV.Core.Extensions;
 using XIV.Core.Utils;
 using XIV.Core.TweenSystem;
 
@@ -8,24 +7,17 @@ namespace TheGame.PlayerSystems.States
 {
     public class PlayerWinState : State<PlayerFSM, PlayerStateFactory>
     {
-        public Vector3 endGatePosition;
         public PlayerWinState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
         }
 
         protected override void OnStateEnter(State comingFrom)
         {
-            var pos = stateMachine.transform.position;
-            var movePos = endGatePosition + Vector3.right * 2.5f;
             stateMachine.CancelTween();
             var renderer = stateMachine.GetComponentsInChildren<Renderer>()[0];
             stateMachine.XIVTween()
                 .Scale(Vector3.one, Vector3.one * 0.5f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
-                .And()
-                .Move(pos, endGatePosition, 0.5f, EasingFunction.Linear)
-                .Move(endGatePosition, movePos, 0.5f, EasingFunction.Linear)
-                .Wait(0.5f)
-                .Move(movePos, movePos.SetY(pos.y), 0.2f, EasingFunction.Linear)
+                .Wait(0.25f)
                 .OnComplete(() =>
                 {
                     stateMachine.playerReachedEndChannelSO.RaiseEvent(stateMachine.transform);

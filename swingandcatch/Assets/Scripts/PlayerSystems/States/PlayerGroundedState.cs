@@ -5,8 +5,6 @@ using TheGame.Scripts.InputSystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using XIV.Core.Extensions;
-using XIV.EventSystem;
-using XIV.EventSystem.Events;
 
 namespace TheGame.PlayerSystems.States
 {
@@ -58,8 +56,11 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
 
-            if (CheckWinStateTransition())
+            if (CheckWinStateTransition(out var endGate))
             {
+                var animator = endGate.GetComponentInChildren<Animator>();
+                animator.Play(AnimationConstants.EndGate.Clips.EndGate_Open);
+                ChangeRootState(factory.GetState<PlayerWinState>());
                 return;
             }
         }
@@ -100,20 +101,16 @@ namespace TheGame.PlayerSystems.States
             return hitCount > 0;
         }
 
-        bool CheckWinStateTransition()
+        bool CheckWinStateTransition(out Transform endGate)
         {
+            endGate = default;
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             int count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 0.5f, buffer, 1 << PhysicsConstants.EndGateLayer);
             ArrayPool<Collider2D>.Shared.Return(buffer);
 
             if (count == 0) return false;
-            
-            var animator = buffer[0].GetComponentInChildren<Animator>();
-            animator.Play(AnimationConstants.EndGate.Clips.EndGate_Open);
-            XIVEventSystem.SendEvent(new InvokeAfterEvent(1.5f).OnCompleted(() => { animator.Play(AnimationConstants.EndGate.Clips.EndGate_Close); }));
-            var winState = factory.GetState<PlayerWinState>();
-            winState.endGatePosition = buffer[0].transform.position;
-            ChangeRootState(winState);
+
+            endGate = buffer[0].transform;
             return true;
         }
 
