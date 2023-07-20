@@ -22,6 +22,8 @@ namespace TheGame.AudioManagement
         /// </summary>
         public readonly EasingFunction.Function easingFunc;
 
+        static readonly EasingFunction.Function linearEasing = EasingFunction.Linear;
+        
         /// <param name="audioType">Type of the audio</param>
         /// <param name="clip">Clip to play</param>
         /// <param name="isLooped">Will this <paramref name="clip"/> loop</param>
@@ -31,7 +33,7 @@ namespace TheGame.AudioManagement
             this.audioType = audioType;
             this.clip = clip;
             this.isLooped = isLooped;
-            this.easingFunc = easingFunc;
+            this.easingFunc = easingFunc ?? linearEasing;
         }
 
         /// <summary>

@@ -1,22 +1,20 @@
-﻿using TheGame.AudioManagement;
-using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 
 namespace TheGame.Managers
 {
     public class MainMenuManager : MonoBehaviour
     {
-        [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
-        [SerializeField] AudioClip elevatorMusicClip;
+        [SerializeField] AudioPlayerSO mainMenuMusicAudioPlayer;
 
         void Start()
         {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(elevatorMusicClip));
+            mainMenuMusicAudioPlayer.Play();
         }
 
         void OnDestroy()
         {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(null));
+            mainMenuMusicAudioPlayer.Stop();
         }
     }
 }

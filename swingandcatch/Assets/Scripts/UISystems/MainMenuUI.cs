@@ -21,9 +21,8 @@ namespace TheGame.UISystems
         [SerializeField] CustomButton btn_Exit;
 
         [Header("Audio")]
-        [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
-        [SerializeField] AudioClip buttonPressedSound;
-        [SerializeField] AudioClip buttonSelectionSound;
+        [SerializeField] AudioPlayerSO mainMenuButtonPressAudioPlayer;
+        [SerializeField] AudioPlayerSO mainMenuButtonSelectionAudioPlayer;
 
         void Start()
         {
@@ -37,10 +36,10 @@ namespace TheGame.UISystems
             btn_Options.onClick.AddListener(ShowOptionsPage);
             btn_Exit.onClick.AddListener(ExitGame);
 
-            btn_Start.RegisterOnSelect(OnButtonSelected);
-            btn_Continue.RegisterOnSelect(OnButtonSelected);
-            btn_Options.RegisterOnSelect(OnButtonSelected);
-            btn_Exit.RegisterOnSelect(OnButtonSelected);
+            btn_Start.RegisterOnSelect(PlayButtonSelected);
+            btn_Continue.RegisterOnSelect(PlayButtonSelected);
+            btn_Options.RegisterOnSelect(PlayButtonSelected);
+            btn_Exit.RegisterOnSelect(PlayButtonSelected);
         }
 
         void OnDisable()
@@ -58,39 +57,38 @@ namespace TheGame.UISystems
 
         void StartNewGame()
         {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(null)); // stop current music
-            PlayButtonEffect(buttonPressedSound);
+            PlayButtonPress();
             sceneListSO.TryGetNextLevel(-1, out var nextLevel);
             sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(nextLevel));
         }
 
         void ContinueGame()
         {
-            PlayButtonEffect(buttonPressedSound);
+            PlayButtonPress();
             sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(sceneListSO.lastPlayedLevel));
         }
 
         void ShowOptionsPage()
         {
-            PlayButtonEffect(buttonPressedSound);
+            PlayButtonPress();
             UISystem.Hide<MainMenuUI>();
             UISystem.Show<MainMenuOptionsUI>();
         }
 
         void ExitGame()
         {
-            PlayButtonEffect(buttonPressedSound);
+            PlayButtonPress();
             Application.Quit();
         }
 
-        void OnButtonSelected()
+        void PlayButtonSelected()
         {
-            PlayButtonEffect(buttonSelectionSound);
+            mainMenuButtonSelectionAudioPlayer.Play();
         }
 
-        void PlayButtonEffect(AudioClip clip)
+        void PlayButtonPress()
         {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.EffectPlayOptions(clip));
+            mainMenuButtonPressAudioPlayer.Play();
         }
     }
 }

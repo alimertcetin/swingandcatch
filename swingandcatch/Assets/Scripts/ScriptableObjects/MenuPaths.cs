@@ -22,5 +22,8 @@
         // Health System
         public const string HEALTH_SYSTEM_MENU = BASE_MENU + "HealthSystem/";
         
+        // Audio Management
+        public const string AUDIO_MANAGEMENT_MENU = BASE_MENU + "Audio Management/";
+        
     }
 }

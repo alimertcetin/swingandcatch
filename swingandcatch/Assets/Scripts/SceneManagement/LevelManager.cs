@@ -15,9 +15,8 @@ namespace TheGame.SceneManagement
         [SerializeField] VoidChannelSO showWinUIChannel;
         [SerializeField] SceneListSO sceneListSO;
         [SerializeField] VoidChannelSO sceneActivatedChannel;
-        [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
-        [SerializeField] AudioClip levelMusic;
-        
+        [SerializeField] AudioPlayerSO levelMusicAudioPlayer;
+
         int currentLevel;
 
         void Awake()
@@ -38,14 +37,14 @@ namespace TheGame.SceneManagement
             sceneActivatedChannel.Unregister(OnSceneActivated);
         }
 
-        void OnDestroy()
-        {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(null));
-        }
-
         void OnSceneActivated()
         {
-            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(levelMusic));
+            levelMusicAudioPlayer.Play();
+        }
+
+        void OnDestroy()
+        {
+            levelMusicAudioPlayer.Stop();
         }
 
         void OnLevelCompleted(Transform playerTransform)

@@ -289,8 +289,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2a935c0007d4c5ebcdddb8791877ee3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioPlayOptionsChannel: {fileID: 11400000, guid: df684052333532344b7fe4164b6ce5a6, type: 2}
-  elevatorMusicClip: {fileID: 8300000, guid: 700a690b8719b624ab12a6133064cbe9, type: 3}
+  mainMenuMusicAudioPlayer: {fileID: 11400000, guid: aafdf29d2e629a94682a4672ab1e3283, type: 2}
 --- !u!4 &44058242
 Transform:
   m_ObjectHideFlags: 0
@@ -1221,9 +1220,8 @@ MonoBehaviour:
   btn_Continue: {fileID: 1956946682}
   btn_Options: {fileID: 756589357}
   btn_Exit: {fileID: 2096988797}
-  audioPlayOptionsChannel: {fileID: 11400000, guid: df684052333532344b7fe4164b6ce5a6, type: 2}
-  buttonPressedSound: {fileID: 8300000, guid: 444322a237b78c14cbc1481b210e9cf0, type: 3}
-  buttonSelectionSound: {fileID: 8300000, guid: 14820869fa65f234b85bcd95c8e6fb4c, type: 3}
+  mainMenuButtonPressAudioPlayer: {fileID: 11400000, guid: c1f64ac79103ee64aa37ecc65ad09242, type: 2}
+  mainMenuButtonSelectionAudioPlayer: {fileID: 11400000, guid: 5a9446a01794d614390ede8dfe1caeaa, type: 2}
 --- !u!1 &526551137
 GameObject:
   m_ObjectHideFlags: 0
@@ -5373,7 +5371,6 @@ MonoBehaviour:
   contentParent: {fileID: 91923190}
   auidoSettingPanelPrefab: {fileID: 362208846538429764, guid: 3ddce2931e101984cbae3492e0154346, type: 3}
   onAudioMixerParametersLoaded: {fileID: 11400000, guid: 993e2555f69c4b749a74490be214dc73, type: 2}
-  onAudioMixerParameterChangedChannel: {fileID: 11400000, guid: 562670c08b642c94cb939fe273718317, type: 2}
 --- !u!1 &2136906282
 GameObject:
   m_ObjectHideFlags: 0
