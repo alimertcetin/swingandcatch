@@ -13,5 +13,10 @@ namespace TheGame.Managers
         {
             audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(elevatorMusicClip));
         }
+
+        void OnDestroy()
+        {
+            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(null));
+        }
     }
 }

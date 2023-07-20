@@ -38,6 +38,11 @@ namespace TheGame.SceneManagement
             sceneActivatedChannel.Unregister(OnSceneActivated);
         }
 
+        void OnDestroy()
+        {
+            audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(null));
+        }
+
         void OnSceneActivated()
         {
             audioPlayOptionsChannel.RaiseEvent(AudioPlayOptions.MusicPlayOptions(levelMusic));
