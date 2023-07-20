@@ -3,16 +3,21 @@ using UnityEngine;
 
 namespace TheGame.UISystems.SceneLoading
 {
-    [RequireComponent(typeof(Camera))]
     public class LoadingScreenCamera : MonoBehaviour
     {
         [SerializeField] BoolChannelSO activateLoadingScreenCamera;
 
-        Camera cam;
+        [SerializeField] Camera[] cams;
         
-        void Awake() => cam = GetComponent<Camera>();
         void OnEnable() => activateLoadingScreenCamera.Register(OnActivateLoadingScreenCamera);
         void OnDisable() => activateLoadingScreenCamera.Unregister(OnActivateLoadingScreenCamera);
-        void OnActivateLoadingScreenCamera(bool value) => cam.enabled = value;
+        void OnActivateLoadingScreenCamera(bool value)
+        {
+            int length = cams.Length;
+            for (int i = 0; i < length; i++)
+            {
+                cams[i].enabled = value;
+            }
+        }
     }
 }

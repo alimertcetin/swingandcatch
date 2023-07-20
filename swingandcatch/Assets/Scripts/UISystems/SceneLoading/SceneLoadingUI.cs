@@ -37,7 +37,14 @@ namespace TheGame.UISystems.SceneLoading
 
         public override void Show()
         {
-            uiGameObject.transform.localScale = Vector3.one;
+            isActive = true;
+            uiGameObject.SetActive(true);
+            OnUIActivated();
+            activateLoadingScreenCamera.RaiseEvent(true);
+        }
+
+        protected override void OnUIActivated()
+        {
             switch (sceneLoadOptions.loadingScreenType)
             {
                 case LoadingScreenType.None:
@@ -52,24 +59,35 @@ namespace TheGame.UISystems.SceneLoading
                     throw new ArgumentOutOfRangeException();
             }
 
-            activateLoadingScreenCamera.RaiseEvent(true);
-            uiGameObject.SetActive(true);
             currentLoadingDisplay.Show();
-            isActive = true;
         }
 
         public override void Hide()
         {
-            base.Hide();
-            
-            if (currentLoadingDisplay != null && currentLoadingDisplay.isActive)
+            if (currentLoadingDisplay == null || currentLoadingDisplay.isActive == false)
             {
-                currentLoadingDisplay.Hide();
+                uiGameObject.SetActive(false);
+                isActive = false;
+                OnUIDeactivated();
+                return;
             }
-            currentLoadingDisplay = null;
-            uiGameObject.transform.XIVTween()
-                .OnComplete(() => activateLoadingScreenCamera.RaiseEvent(false))
-                .Start();
+
+            XIVEventSystem.SendEvent(new InvokeUntilEvent()
+                .AddCancelCondition(() => currentLoadingDisplay.isActive == false)
+                .OnCompleted(() =>
+                {
+                    uiGameObject.SetActive(false);
+                    isActive = false;
+                    currentLoadingDisplay = null;
+                    OnUIDeactivated();
+                }));
+
+            currentLoadingDisplay.Hide();
+        }
+
+        protected override void OnUIDeactivated()
+        {
+            activateLoadingScreenCamera.RaiseEvent(false);
         }
 
         public void SetSceneLoadingOptions(SceneLoadOptions sceneLoadOptions)
@@ -79,7 +97,7 @@ namespace TheGame.UISystems.SceneLoading
 
         void UpdateProgressBar(float value)
         {
-            if (isActive == false) return;
+            if (isActive == false || currentLoadingDisplay == false) return;
             currentLoadingDisplay.UpdateProgressBar(value);
         }
 

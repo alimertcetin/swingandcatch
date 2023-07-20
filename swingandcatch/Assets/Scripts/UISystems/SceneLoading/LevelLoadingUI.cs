@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using XIV.Core.Extensions;
+using XIV.Core.TweenSystem;
+using XIV.Core.Utils;
 
 namespace TheGame.UISystems.SceneLoading
 {
@@ -10,7 +12,8 @@ namespace TheGame.UISystems.SceneLoading
         [SerializeField] TMP_Text txt_SceneLoadStatus;
         [SerializeField] Image parallaxImage;
         [SerializeField] Image progressbarImage;
-            
+        RectTransform uiGameObjectRectTransform;
+        
         readonly string[] loadingSuffixes = new string[]
         {
             ".".ToColorRed(),
@@ -18,12 +21,41 @@ namespace TheGame.UISystems.SceneLoading
             "...".ToColor(Color.green),
         };
 
+        protected override void Awake()
+        {
+            uiGameObjectRectTransform = uiGameObject.GetComponent<RectTransform>();
+            base.Awake();
+        }
+
         public override void Show()
         {
             txt_SceneLoadStatus.text ="";
             uiGameObject.transform.localScale = Vector3.one;
             uiGameObject.SetActive(true);
-            isActive = true;
+            
+            var outOfScreenPos = Vector2.left * uiGameObjectRectTransform.rect.width;
+            uiGameObjectRectTransform.anchoredPosition = outOfScreenPos;
+            
+            var pos = outOfScreenPos;
+            uiGameObject.transform.XIVTween()
+                .RectTransformMove(pos, Vector2.zero, 1f, EasingFunction.EaseOutExpo)
+                .OnComplete(() => isActive = true)
+                .Start();
+            
+        }
+
+        public override void Hide()
+        {
+            var outOfScreenPos = Vector2.right * uiGameObjectRectTransform.rect.width;
+            var pos = uiGameObjectRectTransform.anchoredPosition;
+            uiGameObject.transform.XIVTween()
+                .RectTransformMove(pos, outOfScreenPos, 1f, EasingFunction.EaseOutExpo)
+                .OnComplete(() =>
+                {
+                    isActive = false;
+                    uiGameObject.SetActive(false);
+                })
+                .Start();
         }
 
         public override void UpdateProgressBar(float value)
