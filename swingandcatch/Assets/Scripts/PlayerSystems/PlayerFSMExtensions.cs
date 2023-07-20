@@ -100,7 +100,9 @@ namespace TheGame.PlayerSystems
                 
                 hitCount = Physics2D.RaycastNonAlloc(pStart, direction, hitBufer, distance * dot + ERROR, layerMask);
                 var color = hitCount == 0 ? Color.Lerp(Color.green, Color.white, i / (float)(testPointLength - 1)) : Color.red;
+#if UNITY_EDITOR
                 XIVDebug.DrawLine(pStart, pStart + direction * (distance * dot + ERROR), color);
+#endif
             }
             ArrayPool<RaycastHit2D>.Shared.Return(hitBufer);
             return hitCount > 0;

@@ -22,7 +22,6 @@ namespace TheGame.HazzardSystems
             var bounds = collider2D.bounds;
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
             int hitCount = Physics2D.OverlapBoxNonAlloc(transform.position, bounds.size, 0f, buffer, 1 << PhysicsConstants.PlayerLayer);
-            XIVDebug.DrawBounds(bounds);
 
             for (int i = 0; i < hitCount; i++)
             {
@@ -35,5 +34,16 @@ namespace TheGame.HazzardSystems
             
             ArrayPool<Collider2D>.Shared.Return(buffer);
         }
+
+#if UNITY_EDITOR
+        
+        void OnDrawGizmosSelected()
+        {
+            var bounds = collider2D ? collider2D.bounds : GetComponent<Collider2D>().bounds;
+            XIVDebug.DrawBounds(bounds);
+        }
+        
+#endif
+        
     }
 }
