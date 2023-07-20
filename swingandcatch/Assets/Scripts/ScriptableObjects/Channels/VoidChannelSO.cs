@@ -2,7 +2,7 @@
 
 namespace TheGame.ScriptableObjects.Channels
 {
-    [CreateAssetMenu(menuName = "Channels/VoidChannel")]
+    [CreateAssetMenu(menuName = MenuPaths.CHANNEL_BASE_MENU + nameof(VoidChannelSO))]
     public class VoidChannelSO : XIVChannelSO
     {
         

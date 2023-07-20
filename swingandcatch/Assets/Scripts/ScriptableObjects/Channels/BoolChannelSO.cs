@@ -2,7 +2,7 @@
 
 namespace TheGame.ScriptableObjects.Channels
 {
-    [CreateAssetMenu(menuName = "Channels/BoolChannelSO")]
+    [CreateAssetMenu(menuName = MenuPaths.CHANNEL_BASE_MENU + nameof(BoolChannelSO))]
     public class BoolChannelSO : XIVChannelSO<bool>
     {
         

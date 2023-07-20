@@ -2,7 +2,7 @@
 
 namespace TheGame.ScriptableObjects.Channels
 {
-    [CreateAssetMenu(menuName = "Channels/TransformChannel")]
+    [CreateAssetMenu(menuName = MenuPaths.CHANNEL_BASE_MENU + nameof(TransformChannelSO))]
     public class TransformChannelSO : XIVChannelSO<Transform>
     {
         
