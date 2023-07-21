@@ -92,7 +92,7 @@ namespace TheGame.PlayerSystems.States
 
         void SetTransformPosition()
         {
-            var dt = Time.fixedDeltaTime * Time.timeScale;
+            var dt = Time.deltaTime;
             yVelocity += Physics.gravity.y * (stateMachine.stateDatas.fallStateDataSO.fallGravityScale * dt + Mathf.Clamp(fallingTime, 0f, 10f) * dt);
             yVelocity = Mathf.Clamp(yVelocity, -18f, 0f);
 

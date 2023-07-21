@@ -32,7 +32,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateUpdate()
         {
-            var dt = Time.fixedDeltaTime * Time.timeScale;
+            var dt = Time.deltaTime;
             
             yVelocity += Physics.gravity.y * (stateMachine.stateDatas.jumpStateDataSO.jumpGravityScale * dt);
             var pos = stateMachine.transform.position;
