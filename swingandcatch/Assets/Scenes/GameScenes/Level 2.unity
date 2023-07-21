@@ -3749,7 +3749,7 @@ Transform:
   m_GameObject: {fileID: 1073639437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.64, y: 16.12, z: 14.69}
-  m_LocalScale: {x: 67.94471, y: 38.224216, z: 1}
+  m_LocalScale: {x: 67.95416, y: 38.224216, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -7080,7 +7080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   coinCollectedChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
-  coinCollectedParticlePrefab: {fileID: 0}
+  coinCollectedParticlePrefab: {fileID: 3420687967240432720, guid: 010ee0213749f2b4cb29f8d37c2c41d4, type: 3}
 --- !u!114 &1989420036
 MonoBehaviour:
   m_ObjectHideFlags: 0
