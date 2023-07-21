@@ -3,7 +3,6 @@ using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using UnityEngine;
-using XIV.Core.TweenSystem;
 using XIV.EventSystem;
 using XIV.EventSystem.Events;
 

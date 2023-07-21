@@ -1,7 +1,4 @@
-﻿using System;
-using TheGame.AudioManagement;
-using TheGame.SaveSystems;
-using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.ScriptableObjects.Channels;
 using TheGame.ScriptableObjects.SceneManagement;
 using TheGame.UISystems;
 using TheGame.UISystems.Core;
@@ -9,32 +6,34 @@ using UnityEngine;
 
 namespace TheGame.SceneManagement
 {
-    public class LevelManager : MonoBehaviour, ISavable
+    public class LevelManager : MonoBehaviour
     {
+        [SerializeField] LevelDataChannelSO levelDataLoadedChannel;
         [SerializeField] TransformChannelSO playerReachedEndChannelSO;
         [SerializeField] VoidChannelSO showWinUIChannel;
-        [SerializeField] SceneListSO sceneListSO;
         [SerializeField] VoidChannelSO sceneActivatedChannel;
         [SerializeField] AudioPlayerSO levelMusicAudioPlayer;
 
-        int currentLevel;
-
-        void Awake()
-        {
-            currentLevel = gameObject.scene.buildIndex;
-            sceneListSO.lastPlayedLevel = currentLevel;
-        }
+        LevelData levelData;
 
         void OnEnable()
         {
             playerReachedEndChannelSO.Register(OnLevelCompleted);
             sceneActivatedChannel.Register(OnSceneActivated);
+            levelDataLoadedChannel.Register(OnSceneListDataLoaded);
         }
 
         void OnDisable()
         {
             playerReachedEndChannelSO.Unregister(OnLevelCompleted);
             sceneActivatedChannel.Unregister(OnSceneActivated);
+            levelDataLoadedChannel.Unregister(OnSceneListDataLoaded);
+        }
+
+        void OnSceneListDataLoaded(LevelData levelData)
+        {
+            this.levelData = levelData;
+            this.levelData.SetLastPlayedLevel(gameObject.scene.buildIndex);
         }
 
         void OnSceneActivated()
@@ -50,38 +49,9 @@ namespace TheGame.SceneManagement
         void OnLevelCompleted(Transform playerTransform)
         {
             var playerWinUI = UISystem.GetUI<PlayerWinUI>();
+            playerWinUI.nextLevel = levelData == null ? -1 : levelData.TryGetNextLevel(gameObject.scene.buildIndex, out var nextLevelBuildIndex) ? nextLevelBuildIndex : -1;
             
-            if (sceneListSO.TryGetNextLevel(currentLevel, out var nextLevelBuildIndex))
-            {
-                currentLevel = nextLevelBuildIndex;
-                playerWinUI.nextLevel = currentLevel;
-            }
-            else
-            {
-                playerWinUI.nextLevel = -1;
-            }
-
             showWinUIChannel.RaiseEvent();
-        }
-
-        object ISavable.GetSaveData()
-        {
-            return new SaveData
-            {
-                lastPlayedLevel = sceneListSO.lastPlayedLevel,
-            };
-        }
-
-        void ISavable.LoadSaveData(object data)
-        {
-            var saveData = (SaveData)data;
-            this.sceneListSO.lastPlayedLevel = saveData.lastPlayedLevel;
-        }
-        
-        [System.Serializable]
-        struct SaveData
-        {
-            public int lastPlayedLevel;
         }
     }
 }

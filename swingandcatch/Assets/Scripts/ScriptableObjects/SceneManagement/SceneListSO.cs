@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using TheGame.SceneManagement;
 using UnityEngine;
 using XIV.Core;
 
@@ -7,22 +9,11 @@ namespace TheGame.ScriptableObjects.SceneManagement
     [CreateAssetMenu(menuName = MenuPaths.SCENE_MANAGEMENT_MENU + nameof(SceneListSO))]
     public class SceneListSO : ScriptableObject
     {
-        [Min(1)] public int persistantManagerSceneIndex;
-        [Min(1)] public int mainMenuSceneIndex;
-
-        [HideInInspector] public int lastPlayedLevel;
+        public int persistantManagerSceneIndex = 1;
+        public int mainMenuSceneIndex = 2;
         [SerializeField] List<int> levelIndices = new List<int>();
-
-        /// <summary>
-        /// If false next level is the first level, means we came back to beginning
-        /// </summary>
-        public bool TryGetNextLevel(int currentLevel, out int nextLevelBuildIndex)
-        {
-            int index = levelIndices.IndexOf(currentLevel);
-            var nextIndex = (index + 1) % levelIndices.Count;
-            nextLevelBuildIndex = levelIndices[nextIndex];
-            return nextIndex != 0;
-        }
+        
+        public LevelData GetSceneListData() => new LevelData(levelIndices);
         
 #if UNITY_EDITOR
         [Button]

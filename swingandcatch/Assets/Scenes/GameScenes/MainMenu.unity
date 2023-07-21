@@ -1214,8 +1214,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiGameObject: {fileID: 1922190982}
   mainPageGO: {fileID: 1922190982}
+  levelDataLoadedChannel: {fileID: 11400000, guid: cab9f6fee85308f47ab6e94e7c81fbdd, type: 2}
   sceneLoadChannel: {fileID: 11400000, guid: 18619ed2ee5db4041b0034a4d69ee3b9, type: 2}
-  sceneListSO: {fileID: 11400000, guid: 6f876cd4bd8d746488389609f181a33c, type: 2}
   btn_Start: {fileID: 1653942399}
   btn_Continue: {fileID: 1956946682}
   btn_Options: {fileID: 756589357}

@@ -1597,7 +1597,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1072768704353847707}
-  - component: {fileID: 873257735839270699}
   - component: {fileID: 5186597656285656587}
   m_Layer: 0
   m_Name: LevelManager
@@ -1621,19 +1620,6 @@ Transform:
   m_Father: {fileID: 2325249256064719545}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &873257735839270699
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8030998182061790044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84c3529b84134388963c5f0e699f1e7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  guid: 7cb1d197-79f1-431c-90b3-9e1228571265
 --- !u!114 &5186597656285656587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1646,9 +1632,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3b5cf7fa2314768a90b14100c7c7667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelDataLoadedChannel: {fileID: 11400000, guid: cab9f6fee85308f47ab6e94e7c81fbdd, type: 2}
   playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
   showWinUIChannel: {fileID: 11400000, guid: 6c83f4a2b8b730449b84e84b78a92379, type: 2}
-  sceneListSO: {fileID: 11400000, guid: 6f876cd4bd8d746488389609f181a33c, type: 2}
   sceneActivatedChannel: {fileID: 11400000, guid: f9c0875b0dfc54640a2b9d721462488e, type: 2}
   levelMusicAudioPlayer: {fileID: 11400000, guid: 722df0002b44fe740a0a670e1003a9a6, type: 2}
 --- !u!1001 &5144813229798967879
