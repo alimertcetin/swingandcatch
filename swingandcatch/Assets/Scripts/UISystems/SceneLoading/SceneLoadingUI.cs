@@ -59,27 +59,27 @@ namespace TheGame.UISystems.SceneLoading
             }
 
             currentLoadingDisplay.Show();
+            currentLoadingDisplay.onUIClosed += OnLoadingDisplayClosed;
+        }
+
+        void OnLoadingDisplayClosed(LoadingUIBase obj)
+        {
+            currentLoadingDisplay.onUIClosed -= OnLoadingDisplayClosed;
+            uiGameObject.SetActive(false);
+            isActive = false;
+            currentLoadingDisplay = null;
+            OnUIDeactivated();
         }
 
         public override void Hide()
         {
-            if (currentLoadingDisplay == null || currentLoadingDisplay.isActive == false)
+            if (currentLoadingDisplay == null)
             {
                 uiGameObject.SetActive(false);
                 isActive = false;
                 OnUIDeactivated();
                 return;
             }
-
-            XIVEventSystem.SendEvent(new InvokeUntilEvent()
-                .AddCancelCondition(() => currentLoadingDisplay.isActive == false)
-                .OnCompleted(() =>
-                {
-                    uiGameObject.SetActive(false);
-                    isActive = false;
-                    currentLoadingDisplay = null;
-                    OnUIDeactivated();
-                }));
 
             currentLoadingDisplay.Hide();
         }
