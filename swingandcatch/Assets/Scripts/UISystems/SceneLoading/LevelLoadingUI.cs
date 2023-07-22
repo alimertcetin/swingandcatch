@@ -39,6 +39,7 @@ namespace TheGame.UISystems.SceneLoading
             var pos = outOfScreenPos;
             uiGameObject.transform.XIVTween()
                 .RectTransformMove(pos, Vector2.zero, 1f, EasingFunction.EaseOutExpo)
+                .UseUnscaledDeltaTime()
                 .OnComplete(() => isActive = true)
                 .Start();
             
@@ -50,6 +51,7 @@ namespace TheGame.UISystems.SceneLoading
             var pos = uiGameObjectRectTransform.anchoredPosition;
             uiGameObject.transform.XIVTween()
                 .RectTransformMove(pos, outOfScreenPos, 1f, EasingFunction.EaseOutExpo)
+                .UseUnscaledDeltaTime()
                 .OnComplete(() =>
                 {
                     isActive = false;
