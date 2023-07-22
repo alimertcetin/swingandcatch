@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace TheGame.UISystems
 {
-    public class PauseUI : GameUI
+    public class PauseUI : GameUI, DefaultGameInputs.IPauseUIActions
     {
         [SerializeField] BoolChannelSO showPauseUIChannel;
         [SerializeField] SceneLoadChannelSO sceneLoadChannel;
@@ -20,7 +20,13 @@ namespace TheGame.UISystems
         [SerializeField] BoolChannelSO gamePausedChannel;
         
         float previousTimeScale;
-        
+
+        protected override void Awake()
+        {
+            InputManager.Inputs.PauseUI.SetCallbacks(this);
+            base.Awake();
+        }
+
         void OnEnable()
         {
             btn_Resume.onClick.AddListener(Resume);
@@ -35,48 +41,49 @@ namespace TheGame.UISystems
 
         public override void Show()
         {
-            base.Show();
             InputManager.DisableAll();
-            InputManager.Inputs.PauseUI.Enable();
-            InputManager.Inputs.PauseUI.Resume.performed += OnPauseUIResumePerformed;
+            base.Show();
         }
 
         public override void Hide()
         {
-            InputManager.Inputs.InGame.Enable();
             InputManager.Inputs.PauseUI.Disable();
-            InputManager.Inputs.PauseUI.Resume.performed -= OnPauseUIResumePerformed;
             base.Hide();
         }
 
         protected override void OnUIActivated()
         {
-            gamePausedChannel.RaiseEvent(true);
+            InputManager.Inputs.PauseUI.Enable();
             previousTimeScale = Time.timeScale;
             Time.timeScale = 0;
+            gamePausedChannel.RaiseEvent(true);
         }
 
         protected override void OnUIDeactivated()
         {
+            InputManager.Inputs.InGame.Enable();
+            
             // https://docs.unity3d.com/ScriptReference/Time-timeScale.html WTF?!
             Time.timeScale = previousTimeScale;
             gamePausedChannel.RaiseEvent(false);
         }
-
-        void OnPauseUIResumePerformed(InputAction.CallbackContext obj)
+        
+        void GoToMainMenu()
         {
+            OnUIDeactivated();
+            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(sceneListSO.mainMenuSceneIndex));
+        }
+
+        void DefaultGameInputs.IPauseUIActions.OnResume(InputAction.CallbackContext context)
+        {
+            if (context.performed == false || isActive == false) return;
+
             Resume();
         }
 
         void Resume()
         {
             showPauseUIChannel.RaiseEvent(false);
-        }
-
-        void GoToMainMenu()
-        {
-            OnUIDeactivated();
-            sceneLoadChannel.RaiseEvent(SceneLoadOptions.MenuLoad(sceneListSO.mainMenuSceneIndex));
         }
     }
 }
