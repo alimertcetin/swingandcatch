@@ -16,6 +16,7 @@ namespace TheGame.UISystems.Core
             uiGameObject.transform.CancelTween();
             uiGameObject.transform.XIVTween()
                 .Scale(Vector3.zero, Vector3.one, 0.5f, EasingFunction.EaseInOutExpo)
+                .UseUnscaledDeltaTime()
                 .OnComplete(() =>
                 {
                     isActive = true;
@@ -29,6 +30,7 @@ namespace TheGame.UISystems.Core
             uiGameObject.transform.CancelTween();
             uiGameObject.transform.XIVTween()
                 .Scale(Vector3.one, Vector3.zero, 0.5f, EasingFunction.EaseInOutExpo)
+                .UseUnscaledDeltaTime()
                 .OnComplete(() =>
                 {
                     isActive = false;

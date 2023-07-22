@@ -21,6 +21,7 @@ namespace TheGame.UISystems.Core
             uiGameObject.transform.CancelTween();
             uiGameObject.transform.XIVTween()
                 .Scale(Vector3.zero, Vector3.one, 0.5f, EasingFunction.EaseInOutExpo)
+                .UseUnscaledDeltaTime()
                 .Start();
             isActive = true;
         }
