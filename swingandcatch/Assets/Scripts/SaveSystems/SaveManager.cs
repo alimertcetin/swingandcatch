@@ -45,9 +45,6 @@ namespace TheGame.SaveSystems
             for (int i = 0; i < count; i++)
             {
                 var scene = SceneManager.GetSceneAt(i);
-#if UNITY_EDITOR
-                Debug.Log("scene.name = " + scene.name);
-#endif
                 SaveSystem.Save(scene.name);
             }
         }
@@ -58,9 +55,6 @@ namespace TheGame.SaveSystems
             for (int i = 0; i < count; i++)
             {
                 var scene = SceneManager.GetSceneAt(i);
-#if UNITY_EDITOR
-                Debug.Log("scene.name = " + scene.name);
-#endif
                 SaveSystem.Load(scene.name);
             }
         }
