@@ -33,6 +33,9 @@ namespace TheGame.Editor
         bool soloDisplay;
         string soloDisplayFolder;
         
+        Color refreshButtonColor;
+        Color soloDisplayLabelColor;
+        
         [MenuItem("TheGame/Utilities/" + nameof(EasySceneLoaderWindow))]
         public static void ShowSceneLoaderWindow()
         {
@@ -42,6 +45,8 @@ namespace TheGame.Editor
         void OnEnable()
         {
             isInitialized = false;
+            ColorUtility.TryParseHtmlString("#F3AA60", out refreshButtonColor);
+            ColorUtility.TryParseHtmlString("#EF6262", out soloDisplayLabelColor);
         }
 
         void Initialize()
@@ -97,9 +102,9 @@ namespace TheGame.Editor
             foreach (string folderPath in scenes.Keys)
             {
                 var folderName = folderPath.Split('/')[^1];
-                if (GUILayout.Button(folderName))
+                bool isDisplayingSolo = soloDisplay && soloDisplayFolder == folderPath;
+                if (DrawButton(folderName, isDisplayingSolo ? soloDisplayLabelColor : default))
                 {
-                    bool isDisplayingSolo = soloDisplay && soloDisplayFolder == folderPath;
                     var genericMenu = new GenericMenu();
                     genericMenu.AddItem(new GUIContent("Highlight Folder"), false, () => EditorUtils.Highlight(folderPath));
                     genericMenu.AddItem(new GUIContent("Display Solo"), isDisplayingSolo, () =>
@@ -117,7 +122,6 @@ namespace TheGame.Editor
             }
             
             EditorGUILayout.EndHorizontal();
-            ColorUtility.TryParseHtmlString("#F3AA60", out var refreshButtonColor);
             if (scenes.Count > 0 && DrawButton("Refresh", refreshButtonColor))
             {
                 OnProjectChange();
@@ -144,7 +148,6 @@ namespace TheGame.Editor
             scenesScrollPos = EditorGUILayout.BeginScrollView(scenesScrollPos, false, false, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
             if (soloDisplay)
             {
-                ColorUtility.TryParseHtmlString("#EF6262", out var soloDisplayLabelColor);
                 DrawLabel("SOLO : " + soloDisplayFolder.Split('/')[^1], labelStyle, soloDisplayLabelColor);
                 DisplayScenes(scenes[soloDisplayFolder]);
             }
