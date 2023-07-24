@@ -19,7 +19,7 @@ namespace TheGame.Editor
         bool additiveLoadToggle;
         Color additiveLoadToggleColor => additiveLoadToggle ? Color.white : Color.gray;
 
-        Dictionary<string, List<SceneAsset>> scenes = new Dictionary<string, List<SceneAsset>>();
+        readonly Dictionary<string, List<SceneAsset>> scenes = new Dictionary<string, List<SceneAsset>>();
 
         const string sceneFolderPathSearchLiteral = nameof(EasySceneLoaderWindow) + "_SceneFolder_{0}";
         const string sceneFolderCountKey = nameof(EasySceneLoaderWindow) + "_SceneFolderCount";
@@ -30,11 +30,10 @@ namespace TheGame.Editor
         string searchStr;
         bool isSearching;
 
-        bool soloDisplay;
-        string soloDisplayFolder;
-        
+        readonly List<string> filteredFolderDisplayList = new List<string>();
+
         Color refreshButtonColor;
-        Color soloDisplayLabelColor;
+        Color filteredDisplayColor;
         
         [MenuItem("TheGame/Utilities/" + nameof(EasySceneLoaderWindow))]
         public static void ShowSceneLoaderWindow()
@@ -46,7 +45,7 @@ namespace TheGame.Editor
         {
             isInitialized = false;
             ColorUtility.TryParseHtmlString("#F3AA60", out refreshButtonColor);
-            ColorUtility.TryParseHtmlString("#EF6262", out soloDisplayLabelColor);
+            ColorUtility.TryParseHtmlString("#EF6262", out filteredDisplayColor);
         }
 
         void Initialize()
@@ -102,30 +101,29 @@ namespace TheGame.Editor
             foreach (string folderPath in scenes.Keys)
             {
                 var folderName = folderPath.Split('/')[^1];
-                bool isDisplayingSolo = soloDisplay && soloDisplayFolder == folderPath;
+                bool isFilteredDisplaying = filteredFolderDisplayList.Contains(folderPath);
                 
-                if (DrawButton(folderName, isDisplayingSolo ? soloDisplayLabelColor : default) == false) continue;
+                if (DrawButton(folderName, isFilteredDisplaying ? filteredDisplayColor : default) == false) continue;
                 
                 // Display Solo if clicked
                 if (Event.current.button == 0) // 0 -> LMB, 1 -> RMB
                 {
-                    if (isDisplayingSolo) soloDisplay = false;
-                    else DisplaySolo(folderPath);
+                    if (isFilteredDisplaying) filteredFolderDisplayList.Remove(folderPath);
+                    else filteredFolderDisplayList.Add(folderPath);
                     continue;
                 }
 
                 // Show Context menu if right clicked
                 var genericMenu = new GenericMenu();
                 genericMenu.AddItem(new GUIContent("Highlight Folder"), false, () => EditorUtils.Highlight(folderPath));
-                genericMenu.AddItem(new GUIContent("Display Solo"), isDisplayingSolo, () =>
+                genericMenu.AddItem(new GUIContent("Display Solo"), isFilteredDisplaying, () =>
                 {
-                    if (isDisplayingSolo)
+                    if (isFilteredDisplaying)
                     {
-                        soloDisplay = false;
+                        filteredFolderDisplayList.Remove(folderPath);
                         return;
                     }
-
-                    DisplaySolo(folderPath);
+                    filteredFolderDisplayList.Add(folderPath);
                 });
                 genericMenu.AddItem(new GUIContent("Remove Folder"), false, () =>
                 {
@@ -134,7 +132,7 @@ namespace TheGame.Editor
                     var result = EditorUtility.DisplayDialog(title, message, "Yes", "Cancel");
                     if (!result) return;
                     RemoveFolder(folderPath);
-                    if (isDisplayingSolo) soloDisplay = false;
+                    if (isFilteredDisplaying) filteredFolderDisplayList.Remove(folderPath);
                 });
                 genericMenu.ShowAsContext();
             }
@@ -164,10 +162,16 @@ namespace TheGame.Editor
             }
 
             scenesScrollPos = EditorGUILayout.BeginScrollView(scenesScrollPos, false, false, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
-            if (soloDisplay)
+            if (filteredFolderDisplayList.Count > 0)
             {
-                DrawLabel("SOLO : " + soloDisplayFolder.Split('/')[^1], labelStyle, soloDisplayLabelColor);
-                DisplayScenes(scenes[soloDisplayFolder]);
+                int filteredDisplayCount = filteredFolderDisplayList.Count;
+                for (int i = 0; i < filteredDisplayCount; i++)
+                {
+                    var displayFolder = filteredFolderDisplayList[i];
+                    if (i > 0) GUILayout.Space(10);
+                    DrawLabel("Filtered : " + displayFolder.Split('/')[^1], labelStyle, filteredDisplayColor);
+                    DisplayScenes(scenes[displayFolder]);
+                }
             }
             else
             {
@@ -332,8 +336,7 @@ namespace TheGame.Editor
 
         void DisplaySolo(string folderPath)
         {
-            soloDisplay = true;
-            soloDisplayFolder = folderPath;
+            filteredFolderDisplayList.Add(folderPath);
         }
 
         void AddFolder(string folderPath)
