@@ -116,7 +116,15 @@ namespace TheGame.Editor
                         }
                         DisplaySolo(folderPath);
                     });
-                    genericMenu.AddItem(new GUIContent("Remove Folder"), false, () => RemoveFolder(folderPath));
+                    genericMenu.AddItem(new GUIContent("Remove Folder"), false, () =>
+                    {
+                        var title = "Remove Selected Folder?";
+                        var message = "You can always re-add the folder by drag and drop";
+                        var result = EditorUtility.DisplayDialog(title, message, "Yes", "Cancel");
+                        if (!result) return;
+                        RemoveFolder(folderPath);
+                        if (isDisplayingSolo) soloDisplay = false;
+                    });
                     genericMenu.ShowAsContext();
                 }
             }
