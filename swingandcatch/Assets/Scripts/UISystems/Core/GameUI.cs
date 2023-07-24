@@ -7,8 +7,16 @@ namespace TheGame.UISystems.Core
     public abstract class GameUI : MonoBehaviour
     {
         [SerializeField] protected GameObject uiGameObject;
+        protected RectTransform uiGameObjectRectTransform;
+        
         public bool isActive { get; protected set; }
-        protected virtual void Awake() => UISystem.AddUI(this);
+        
+        protected virtual void Awake()
+        {
+            UISystem.AddUI(this);
+            uiGameObjectRectTransform = uiGameObject.transform.GetComponent<RectTransform>();
+        }
+
         public virtual void Show()
         {
             uiGameObject.transform.localScale = Vector3.zero;

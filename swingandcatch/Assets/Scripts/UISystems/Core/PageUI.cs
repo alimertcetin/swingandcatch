@@ -22,8 +22,12 @@ namespace TheGame.UISystems.Core
             uiGameObject.transform.XIVTween()
                 .Scale(Vector3.zero, Vector3.one, 0.5f, EasingFunction.EaseInOutExpo)
                 .UseUnscaledDeltaTime()
+                .OnComplete(() =>
+                {
+                    isActive = true;
+                    OnUIActivated();
+                })
                 .Start();
-            isActive = true;
         }
 
         public virtual void Hide()
@@ -31,6 +35,10 @@ namespace TheGame.UISystems.Core
             uiGameObject.SetActive(false);
             isActive = false;
         }
+
+        protected virtual void OnUIActivated() { }
+        protected virtual void OnUIDeactivated() { }
+        
     }
 
 }

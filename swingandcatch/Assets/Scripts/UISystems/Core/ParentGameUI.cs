@@ -26,6 +26,7 @@ namespace TheGame.UISystems.Core
                 {
                     mainPageGO.SetActive(false);
                     uiGameObject.SetActive(false);
+                    OnUIDeactivated();
                 })
                 .Start();
             isActive = false;
