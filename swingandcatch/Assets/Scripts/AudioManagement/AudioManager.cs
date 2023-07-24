@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using TheGame.SaveSystems;
 using TheGame.ScriptableObjects.Channels;
+using TheGame.SettingSystems;
 using UnityEngine;
 using UnityEngine.Audio;
-using UnityEngine.Pool;
 using XIV.Core.Utils;
 
 namespace TheGame.AudioManagement
 {
-    public class AudioManager : MonoBehaviour, ISavable
+    public class AudioManager : MonoBehaviour, ISettingsListener
     {
-        [SerializeField] AudioMixerParameterCollectionChannelSO onAudioMixerParametersLoadedChannel;
-        [SerializeField] VoidChannelSO onSceneLoaded;
+        [SerializeField] SettingsChannelSO settingsLoaded;
         [SerializeField] AudioPlayOptionsChannelSO audioPlayOptionsChannel;
         [SerializeField] AudioMixer audioMixer;
 
@@ -23,31 +21,46 @@ namespace TheGame.AudioManagement
         readonly List<AudioSource> musicSources = new List<AudioSource>(DEFAULT_MUSIC_SOURCE_COUNT);
         readonly List<AudioSource> effectSources = new List<AudioSource>(DEFAULT_EFFECT_SOURCE_COUNT);
 
-        AudioMixerParameterCollection parameterCollection;
+        Settings settings;
 
         void Awake()
         {
-            parameterCollection = new AudioMixerParameterCollection(audioMixer);
             CreateAudioSources();
         }
-
-        void Start() => onAudioMixerParametersLoadedChannel.RaiseEvent(parameterCollection);
 
         void OnEnable()
         {
             audioPlayOptionsChannel.Register(OnPlayAudio);
-            onSceneLoaded.Register(OnSceneLoaded);
+            settingsLoaded.Register(OnSettingsLoaded);
+            this.settings?.AddListener(this);
         }
 
         void OnDisable()
         {
             audioPlayOptionsChannel.Unregister(OnPlayAudio);
-            onSceneLoaded.Unregister(OnSceneLoaded);
+            settingsLoaded.Unregister(OnSettingsLoaded);
+            this.settings?.RemoveListener(this);
         }
 
-        void OnSceneLoaded()
+        void OnSettingsLoaded(Settings settings)
         {
-            onAudioMixerParametersLoadedChannel.RaiseEvent(parameterCollection);
+            this.settings = settings;
+            this.settings.AddListener(this);
+            SetMixerParameters();
+        }
+
+        void SetMixerParameters()
+        {
+            var masterVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.masterVolumeHash).ReadValue<float>();
+            masterVolume = masterVolume < 0.01f ? 0.01f : masterVolume;
+            var musicVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.musicVolumeHash).ReadValue<float>();
+            musicVolume = musicVolume < 0.01f ? 0.01f : musicVolume;
+            var effectVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.effectsVolumeHash).ReadValue<float>();
+            effectVolume = effectVolume < 0.01f ? 0.01f : effectVolume;
+            
+            audioMixer.SetFloat(AudioMixerConstants.DefaultMixer.Parameters.MasterVolume, GetLogarithmicValue(masterVolume));
+            audioMixer.SetFloat(AudioMixerConstants.DefaultMixer.Parameters.MusicVolume, GetLogarithmicValue(musicVolume));
+            audioMixer.SetFloat(AudioMixerConstants.DefaultMixer.Parameters.EffectsVolume, GetLogarithmicValue(effectVolume));
         }
 
         void CreateAudioSources()
@@ -177,53 +190,41 @@ namespace TheGame.AudioManagement
             return newSource;
         }
 
-        [System.Serializable]
-        struct SaveData
+        void ISettingsListener.OnSettingsChanged(SettingParameter changedParameter)
         {
-            public string[] keys;
-            public float[] values; // 0-1 values
+            if (changedParameter.settingParameterType != SettingParameterType.Audio) return;
+
+            var value01 = changedParameter.ReadValue<float>();
+            value01 = value01 < 0.01f ? 0.01f : value01;
+            var logarithmicValue = GetLogarithmicValue(value01);
+#if UNITY_EDITOR
+            if (audioMixer.SetFloat(changedParameter.name, logarithmicValue) == false)
+            {
+                Debug.LogError(changedParameter.name + " is not found in audio mixer");
+            }
+#else
+            audioMixer.SetFloat(changedParameter.name, logarithmicValue);
+#endif
         }
 
-        object ISavable.GetSaveData()
+        /// <summary>
+        /// This may return <see cref="float.NegativeInfinity"/> if value equals to 0
+        /// </summary>
+        /// <param name="value01">Value between 0 and 1</param>
+        /// <returns>A logarithmic value to use in <see cref="UnityEngine.Audio.AudioMixer"/></returns>
+        public static float GetLogarithmicValue(float value01)
         {
-            List<AudioMixerParameter> parameterList = ListPool<AudioMixerParameter>.Get();
-
-            foreach (AudioMixerParameter parameter in parameterCollection.GetParameters())
-            {
-                parameterList.Add(parameter);
-            }
-
-            int count = parameterList.Count;
-            var keys = new string[count];
-            var values = new float[count];
-
-            for (int i = 0; i < count; i++)
-            {
-                keys[i] = parameterList[i].parameterName;
-                values[i] = parameterList[i].value01;
-            }
-            
-            ListPool<AudioMixerParameter>.Release(parameterList);
-            
-            return new SaveData
-            {
-                keys = keys,
-                values = values,
-            };
+            return Mathf.Log(value01) * 20f;
         }
 
-        void ISavable.LoadSaveData(object data)
+        /// <summary>
+        /// Returns a value between 0 and 1
+        /// </summary>
+        /// <param name="logarithmicValue">Value that used in <see cref="UnityEngine.Audio.AudioMixer"/></param>
+        /// <returns>A value between 0 and 1</returns>
+        public static float GetValue01(float logarithmicValue)
         {
-            var saveData = (SaveData)data;
-            var keys = saveData.keys;
-            var values = saveData.values;
-            var length = keys.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                parameterCollection.UpdateParameter(keys[i], values[i]);
-            }
-
+            return Mathf.Exp(logarithmicValue / 20f);
         }
     }
 }
