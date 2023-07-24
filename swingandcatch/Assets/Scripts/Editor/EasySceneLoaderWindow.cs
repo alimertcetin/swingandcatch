@@ -103,30 +103,40 @@ namespace TheGame.Editor
             {
                 var folderName = folderPath.Split('/')[^1];
                 bool isDisplayingSolo = soloDisplay && soloDisplayFolder == folderPath;
-                if (DrawButton(folderName, isDisplayingSolo ? soloDisplayLabelColor : default))
+                
+                if (DrawButton(folderName, isDisplayingSolo ? soloDisplayLabelColor : default) == false) continue;
+                
+                // Display Solo if clicked
+                if (Event.current.button == 0) // 0 -> LMB, 1 -> RMB
                 {
-                    var genericMenu = new GenericMenu();
-                    genericMenu.AddItem(new GUIContent("Highlight Folder"), false, () => EditorUtils.Highlight(folderPath));
-                    genericMenu.AddItem(new GUIContent("Display Solo"), isDisplayingSolo, () =>
-                    {
-                        if (isDisplayingSolo)
-                        {
-                            soloDisplay = false;
-                            return;
-                        }
-                        DisplaySolo(folderPath);
-                    });
-                    genericMenu.AddItem(new GUIContent("Remove Folder"), false, () =>
-                    {
-                        var title = "Remove Selected Folder?";
-                        var message = "You can always re-add the folder by drag and drop";
-                        var result = EditorUtility.DisplayDialog(title, message, "Yes", "Cancel");
-                        if (!result) return;
-                        RemoveFolder(folderPath);
-                        if (isDisplayingSolo) soloDisplay = false;
-                    });
-                    genericMenu.ShowAsContext();
+                    if (isDisplayingSolo) soloDisplay = false;
+                    else DisplaySolo(folderPath);
+                    continue;
                 }
+
+                // Show Context menu if right clicked
+                var genericMenu = new GenericMenu();
+                genericMenu.AddItem(new GUIContent("Highlight Folder"), false, () => EditorUtils.Highlight(folderPath));
+                genericMenu.AddItem(new GUIContent("Display Solo"), isDisplayingSolo, () =>
+                {
+                    if (isDisplayingSolo)
+                    {
+                        soloDisplay = false;
+                        return;
+                    }
+
+                    DisplaySolo(folderPath);
+                });
+                genericMenu.AddItem(new GUIContent("Remove Folder"), false, () =>
+                {
+                    var title = "Remove Selected Folder?";
+                    var message = "You can always re-add the folder by drag and drop";
+                    var result = EditorUtility.DisplayDialog(title, message, "Yes", "Cancel");
+                    if (!result) return;
+                    RemoveFolder(folderPath);
+                    if (isDisplayingSolo) soloDisplay = false;
+                });
+                genericMenu.ShowAsContext();
             }
             
             EditorGUILayout.EndHorizontal();
