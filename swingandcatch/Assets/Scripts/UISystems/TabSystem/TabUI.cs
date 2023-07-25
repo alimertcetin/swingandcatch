@@ -1,6 +1,6 @@
-﻿using System;
-using TheGame.UISystems.Core;
+﻿using TheGame.UISystems.Core;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using XIV.Core;
 using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
@@ -18,7 +18,7 @@ namespace TheGame.UISystems.TabSystem
     
     public class TabUI : GameUI
     {
-        [SerializeField] PageData[] pages;
+        [SerializeField] protected PageData[] pages;
         int pagesLength;
         int currentPageIndex;
 
@@ -28,7 +28,7 @@ namespace TheGame.UISystems.TabSystem
             base.Awake();
         }
 
-        void OnEnable()
+        protected virtual void OnEnable()
         {
             for (int i = 0; i < pagesLength; i++)
             {
@@ -36,7 +36,7 @@ namespace TheGame.UISystems.TabSystem
             }
         }
 
-        void OnDisable()
+        protected virtual void OnDisable()
         {
             for (int i = 0; i < pagesLength; i++)
             {
@@ -87,6 +87,7 @@ namespace TheGame.UISystems.TabSystem
 
         protected override void OnUIActivated()
         {
+            EventSystem.current.SetSelectedGameObject(pages[0].tabButton.gameObject);
             currentPageIndex = -1;
             OpenPage(0);
         }
@@ -98,7 +99,7 @@ namespace TheGame.UISystems.TabSystem
             currentPage.tabButton.ReleaseToggle();
         }
 
-        void OpenPage(int index)
+        protected virtual void OpenPage(int index)
         {
             var targetPage = pages[index];
 
@@ -116,7 +117,7 @@ namespace TheGame.UISystems.TabSystem
             currentPageIndex = index;
         }
 
-        void ClosePage(int targetPageIndex)
+        protected virtual void ClosePage(int targetPageIndex)
         {
             var targetPage = pages[targetPageIndex];
             var currentPage = pages[currentPageIndex];
@@ -133,14 +134,14 @@ namespace TheGame.UISystems.TabSystem
             currentPage.tabButton.ReleaseToggle();
         }
 
-        void OnTabButtonPressed(TabButton tabButton)
+        protected virtual void OnTabButtonPressed(TabButton tabButton)
         {
             var pageIndex = IndexOfPageData(tabButton);
             if (pageIndex == currentPageIndex) return;
             OpenPage(pageIndex);
         }
 
-        int IndexOfPageData(TabButton tabButton)
+        protected int IndexOfPageData(TabButton tabButton)
         {
             for (int i = 0; i < pagesLength; i++)
             {

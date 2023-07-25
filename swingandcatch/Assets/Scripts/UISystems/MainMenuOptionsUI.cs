@@ -1,36 +1,24 @@
 ﻿using TheGame.UISystems.Components;
 using TheGame.UISystems.Core;
+using TheGame.UISystems.TabSystem;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace TheGame.UISystems
 {
-    public class MainMenuOptionsUI : ParentGameUI
+    public class MainMenuOptionsUI : TabUI
     {
-        [SerializeField] AudioOptionsUI audioOptionsUI;
         [SerializeField] CustomButton btn_back;
 
-        void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             btn_back.onClick.AddListener(GoBackToMainPage);
         }
 
-        void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             btn_back.onClick.RemoveAllListeners();
-        }
-
-        public override void Show()
-        {
-            EventSystem.current.SetSelectedGameObject(btn_back.gameObject);
-            audioOptionsUI.Show();
-            base.Show();
-        }
-
-        public override void Hide()
-        {
-            audioOptionsUI.Hide();
-            base.Hide();
         }
 
         void GoBackToMainPage()

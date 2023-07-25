@@ -9,7 +9,7 @@ using XIV.Core.Utils;
 namespace TheGame.UISystems.TabSystem
 {
     [RequireComponent(typeof(Image))]
-    public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+    public class TabButton : Selectable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
     {
         [SerializeField] Color pointerEnterColor;
         [SerializeField] Sprite pointerEnterSprite;

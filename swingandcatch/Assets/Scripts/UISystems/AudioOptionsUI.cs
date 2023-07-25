@@ -1,12 +1,12 @@
 ﻿using TheGame.ScriptableObjects.Channels;
 using TheGame.SettingSystems;
 using TheGame.UISystems.Components;
-using TheGame.UISystems.Core;
+using TheGame.UISystems.TabSystem;
 using UnityEngine;
 
 namespace TheGame.UISystems
 {
-    public class AudioOptionsUI : GameUI, ISettingsListener
+    public class AudioOptionsUI : TabPageUI, ISettingsListener
     {
         [SerializeField] SettingsChannelSO settingsLoaded;
         
