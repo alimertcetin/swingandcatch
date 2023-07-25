@@ -12,7 +12,6 @@ namespace TheGame.UISystems.SceneLoading
         [SerializeField] TMP_Text txt_SceneLoadStatus;
         [SerializeField] Image parallaxImage;
         [SerializeField] Image progressbarImage;
-        RectTransform uiGameObjectRectTransform;
         
         readonly string[] loadingSuffixes = new string[]
         {
@@ -20,12 +19,6 @@ namespace TheGame.UISystems.SceneLoading
             "..".ToColor(Color.Lerp(Color.red, Color.green, 0.5f)),
             "...".ToColor(Color.green),
         };
-
-        protected override void Awake()
-        {
-            uiGameObjectRectTransform = uiGameObject.GetComponent<RectTransform>();
-            base.Awake();
-        }
 
         public override void Show()
         {
