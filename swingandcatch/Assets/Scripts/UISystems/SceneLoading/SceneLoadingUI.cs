@@ -118,7 +118,7 @@ namespace TheGame.UISystems.SceneLoading
                     {
                         terminate = true;
                         activateNewlyLoadedScene.RaiseEvent();
-                        if (footerUI.isActive) footerUI.Hide();
+                        footerUI.Hide();
                     }
                 })
                 .AddCancelCondition(() => terminate));
