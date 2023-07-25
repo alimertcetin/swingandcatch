@@ -27,9 +27,6 @@ namespace TheGame.SceneManagement
         [SerializeField] IntChannelSO loadSceneDataChannel;
 
         AsyncOperation currentLoadingOperation;
-        Timer sceneLoadTimer = new Timer(2f);
-        
-        int sceneToUnload;
         SceneLoadOptions currentLoadingOptions;
 
         void OnEnable()
@@ -54,35 +51,28 @@ namespace TheGame.SceneManagement
 
             currentLoadingOptions = sceneLoadOptions;
             displayLoadingScreenChannel.RaiseEvent(currentLoadingOptions);
-            sceneToUnload = SceneManager.GetActiveScene().buildIndex;
-            
-            onSaveCompletedChannel.Register(OnSaveCompleted); // wait for save completed response from save system
-            saveSceneDataChannel.RaiseEvent(sceneToUnload);
 
-            void OnSaveCompleted()
+            if (currentLoadingOptions.sceneToUnload != -1)
             {
-                onSaveCompletedChannel.Unregister(OnSaveCompleted);
-            
-                if (sceneLoadOptions.unloadActiveScene)
+                onSaveCompletedChannel.Register(OnSaveCompleted); // wait for save completed response from save system
+                saveSceneDataChannel.RaiseEvent(currentLoadingOptions.sceneToUnload);
+
+                void OnSaveCompleted()
                 {
-                    UnloadPreviousAndLoadNew();
-                    return;
+                    onSaveCompletedChannel.Unregister(OnSaveCompleted);
+                    SceneManager.UnloadSceneAsync(currentLoadingOptions.sceneToUnload).completed += (_) => LoadNewScene();
                 }
-            
+            }
+            else
+            {
                 LoadNewScene();
             }
             
         }
 
-        void UnloadPreviousAndLoadNew()
-        {
-            var unloadSceneOp = SceneManager.UnloadSceneAsync(sceneToUnload);
-            unloadSceneOp.allowSceneActivation = false;
-            unloadSceneOp.completed += (_) => LoadNewScene();
-        }
-
         void LoadNewScene()
         {
+            if (currentLoadingOptions.sceneToLoad < 0) return;
             currentLoadingOperation = SceneManager.LoadSceneAsync(currentLoadingOptions.sceneToLoad, LoadSceneMode.Additive);
             currentLoadingOperation.allowSceneActivation = false;
             StartCoroutine(HandleAsyncLoading());
@@ -111,16 +101,7 @@ namespace TheGame.SceneManagement
         {
             if (currentLoadingOptions.loadingScreenType != LoadingScreenType.None)
             {
-                sceneLoadTimer.Restart(currentLoadingOptions.loadingScreenType == LoadingScreenType.MenuLoading ? 1.5f : 3f);
-                EasingFunction.Function easing = currentLoadingOptions.loadingScreenType == LoadingScreenType.MenuLoading ? EasingFunction.Linear : EasingFunction.SmoothStop3;
-
-                while (sceneLoadTimer.IsDone == false)
-                {
-                    sceneLoadTimer.Update(Time.deltaTime);
-                    var t = easing(0f, 1f, sceneLoadTimer.NormalizedTime);
-                    sceneLoadingProgressChannel.RaiseEvent(currentLoadingOperation.progress * t);
-                    yield return null;
-                }
+                yield return FakeLoad();
             }
 
             while (currentLoadingOperation.progress < 0.9f)
@@ -136,6 +117,20 @@ namespace TheGame.SceneManagement
             }
 
             sceneLoadingProgressChannel.RaiseEvent(1f);
+        }
+
+        IEnumerator FakeLoad()
+        {
+            var sceneLoadTimer = new Timer(currentLoadingOptions.loadingScreenType == LoadingScreenType.MenuLoading ? 1.5f : 3f);
+            EasingFunction.Function easing = currentLoadingOptions.loadingScreenType == LoadingScreenType.MenuLoading ? EasingFunction.Linear : EasingFunction.SmoothStop3;
+
+            while (sceneLoadTimer.IsDone == false)
+            {
+                sceneLoadTimer.Update(Time.deltaTime);
+                var t = easing(0f, 1f, sceneLoadTimer.NormalizedTime);
+                sceneLoadingProgressChannel.RaiseEvent(currentLoadingOperation.progress * t);
+                yield return null;
+            }
         }
 
         void ActivateNewScene()
