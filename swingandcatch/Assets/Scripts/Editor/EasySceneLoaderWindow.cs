@@ -32,7 +32,7 @@ namespace TheGame.Editor
 
         readonly List<string> filteredFolderDisplayList = new List<string>();
 
-        Color refreshButtonColor;
+        Color settingsButtonColor;
         Color filteredDisplayColor;
         
         [MenuItem("TheGame/Utilities/" + nameof(EasySceneLoaderWindow))]
@@ -44,7 +44,7 @@ namespace TheGame.Editor
         void OnEnable()
         {
             isInitialized = false;
-            ColorUtility.TryParseHtmlString("#F3AA60", out refreshButtonColor);
+            ColorUtility.TryParseHtmlString("#F3AA60", out settingsButtonColor);
             ColorUtility.TryParseHtmlString("#EF6262", out filteredDisplayColor);
         }
 
@@ -96,7 +96,6 @@ namespace TheGame.Editor
             
             EditorGUILayout.BeginHorizontal();
 
-            EditorGUILayout.BeginHorizontal();
             if (scenes.Count > 0) DrawLabel("Manage : ");
             foreach (string folderPath in scenes.Keys)
             {
@@ -138,11 +137,6 @@ namespace TheGame.Editor
             }
             
             EditorGUILayout.EndHorizontal();
-            if (scenes.Count > 0 && DrawButton("Refresh", refreshButtonColor))
-            {
-                OnProjectChange();
-            }
-            EditorGUILayout.EndHorizontal();
             
             EditorGUILayout.EndScrollView();
 
@@ -155,11 +149,20 @@ namespace TheGame.Editor
                 EditorGUILayout.EndHorizontal();
             }
             
-            GUILayout.Space(20f);
+            GUILayout.Space(10f);
             if (scenes.Count > 0)
             {
                 additiveLoadToggle = DrawToggle("Load additive", additiveLoadToggle, additiveLoadToggleColor);
+                
+                if (DrawButton("Settings", settingsButtonColor))
+                {
+                    var genericMenu = new GenericMenu();
+                    genericMenu.AddItem(new GUIContent("Refresh Scene List"), false, OnProjectChange);
+                    genericMenu.AddItem(new GUIContent("Clear Filter"), false, filteredFolderDisplayList.Clear);
+                    genericMenu.ShowAsContext();
+                }
             }
+            GUILayout.Space(10f);
 
             scenesScrollPos = EditorGUILayout.BeginScrollView(scenesScrollPos, false, false, GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
             if (filteredFolderDisplayList.Count > 0)
