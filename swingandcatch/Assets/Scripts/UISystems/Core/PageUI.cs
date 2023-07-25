@@ -32,6 +32,7 @@ namespace TheGame.UISystems.Core
 
         public virtual void Hide()
         {
+            uiGameObject.transform.CancelTween();
             uiGameObject.SetActive(false);
             isActive = false;
         }
