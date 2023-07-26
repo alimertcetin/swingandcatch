@@ -9,13 +9,15 @@ using XIV.Core.Utils;
 namespace TheGame.UISystems.TabSystem
 {
     [RequireComponent(typeof(Image))]
-    public class TabButton : Selectable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+    public class TabButton : Selectable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, ISubmitHandler
     {
         [SerializeField] Color pointerEnterColor;
         [SerializeField] Sprite pointerEnterSprite;
         
         [SerializeField] Color toggleColor;
         [SerializeField] Sprite toggleSprite;
+        [Tooltip("Sets the current TabButton as Active GameObject for the EventSystem")]
+        [SerializeField] bool setActiveObjectOnEnter;
         
         public event Action<TabButton> onPointerEnter = delegate {  };
         public event Action<TabButton> onPointerExit = delegate {  };
@@ -41,6 +43,7 @@ namespace TheGame.UISystems.TabSystem
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
+            if (setActiveObjectOnEnter) EventSystem.current.SetSelectedGameObject(this.gameObject);
             onPointerEnter.Invoke(this);
             if (isOn) return;
             SetImage(pointerEnterColor, pointerEnterSprite);
@@ -61,6 +64,12 @@ namespace TheGame.UISystems.TabSystem
         void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
         {
             onPointerUp.Invoke(this);
+        }
+
+        void ISubmitHandler.OnSubmit(BaseEventData eventData)
+        {
+            onPointerDown.Invoke(this); // press
+            onPointerUp.Invoke(this); // release
         }
 
         public void Toggle()
