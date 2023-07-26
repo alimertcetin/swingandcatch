@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using XIV.Core;
 using XIV.Core.Utils;
 using XIV.Core.TweenSystem;
 
@@ -17,6 +18,9 @@ namespace TheGame.UISystems.Core
             uiGameObjectRectTransform = uiGameObject.transform.GetComponent<RectTransform>();
         }
 
+#if UNITY_EDITOR
+        [Button(true)]
+#endif
         public virtual void Show()
         {
             uiGameObject.transform.localScale = Vector3.zero;
@@ -33,6 +37,10 @@ namespace TheGame.UISystems.Core
                 .Start();
         }
 
+
+#if UNITY_EDITOR
+        [Button(true)]
+#endif
         public virtual void Hide()
         {
             uiGameObject.transform.CancelTween();
