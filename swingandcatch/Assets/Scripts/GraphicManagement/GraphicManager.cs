@@ -148,9 +148,7 @@ namespace TheGame.GraphicManagement
 
         static void SetTextureQuality(SettingParameter changedParameter)
         {
-            // 0 full resolution, 1 half resolution, 2 quarter resolution
-            // 2 - inverts the value
-            QualitySettings.masterTextureLimit = 2 - changedParameter.ReadValue<int>();
+            QualitySettings.masterTextureLimit = changedParameter.ReadValue<int>();
         }
 
         void SetResolution(SettingParameter parameter)
