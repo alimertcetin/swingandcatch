@@ -65,6 +65,8 @@ namespace TheGame.UISystems.TabSystem
                 .Start();
         }
 
+        public virtual void OnFocus() { }
+
         static Vector2 GetDirectionVector2(Direction direction)
         {
             return direction switch

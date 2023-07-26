@@ -9,7 +9,7 @@ using XIV.Core.Utils;
 namespace TheGame.UISystems.TabSystem
 {
     [RequireComponent(typeof(Image))]
-    public class TabButton : Selectable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, ISubmitHandler
+    public class XIVTabButton : Selectable, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, ISubmitHandler
     {
         [SerializeField] Color pointerEnterColor;
         [SerializeField] Sprite pointerEnterSprite;
@@ -19,10 +19,10 @@ namespace TheGame.UISystems.TabSystem
         [Tooltip("Sets the current TabButton as Active GameObject for the EventSystem")]
         [SerializeField] bool setActiveObjectOnEnter;
         
-        public event Action<TabButton> onPointerEnter = delegate {  };
-        public event Action<TabButton> onPointerExit = delegate {  };
-        public event Action<TabButton> onPointerDown = delegate {  };
-        public event Action<TabButton> onPointerUp = delegate {  };
+        public event Action<XIVTabButton> onPointerEnter = delegate {  };
+        public event Action<XIVTabButton> onPointerExit = delegate {  };
+        public event Action<XIVTabButton> onPointerDown = delegate {  };
+        public event Action<XIVTabButton> onPointerUp = delegate {  };
         
         [field : SerializeField, DisplayWithoutEdit]
         public bool isOn { get; private set; }
@@ -43,17 +43,12 @@ namespace TheGame.UISystems.TabSystem
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            if (setActiveObjectOnEnter) EventSystem.current.SetSelectedGameObject(this.gameObject);
-            onPointerEnter.Invoke(this);
-            if (isOn) return;
-            SetImage(pointerEnterColor, pointerEnterSprite);
+            HandleOnSelect();
         }
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            onPointerExit.Invoke(this);
-            if (isOn) return;
-            SetImage(initialColor, initialSprite);
+            HandleOnDeselect();
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
@@ -70,6 +65,49 @@ namespace TheGame.UISystems.TabSystem
         {
             onPointerDown.Invoke(this); // press
             onPointerUp.Invoke(this); // release
+        }
+
+        public override void OnSelect(BaseEventData eventData)
+        {
+            eventData.Use();
+            HandleOnSelect();
+            base.OnSelect(eventData);
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            eventData.Use();
+            HandleOnDeselect();
+            base.OnDeselect(eventData);
+        }
+
+        void HandleOnSelect()
+        {
+            if (setActiveObjectOnEnter && EventSystem.current.currentSelectedGameObject != gameObject)
+            {
+                EventSystem.current.SetSelectedGameObject(gameObject);
+            }
+
+            onPointerEnter.Invoke(this);
+            if (isOn)
+            {
+                SetImage(Color.Lerp(toggleColor, pointerEnterColor, 0.5f), pointerEnterSprite);
+                return;
+            }
+
+            SetImage(pointerEnterColor, pointerEnterSprite);
+        }
+
+        void HandleOnDeselect()
+        {
+            onPointerExit.Invoke(this);
+            if (isOn)
+            {
+                SetImage(toggleColor, toggleSprite);
+                return;
+            }
+
+            SetImage(initialColor, initialSprite);
         }
 
         public void Toggle()

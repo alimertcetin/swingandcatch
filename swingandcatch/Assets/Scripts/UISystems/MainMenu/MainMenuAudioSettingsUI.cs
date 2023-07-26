@@ -3,10 +3,12 @@ using TheGame.SettingSystems;
 using TheGame.UISystems.Components;
 using TheGame.UISystems.TabSystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-namespace TheGame.UISystems
+namespace TheGame.UISystems.MainMenu
 {
-    public class AudioOptionsUI : TabPageUI, ISettingsListener
+    public class MainMenuAudioSettingsUI : TabPageUI, ISettingsListener
     {
         [SerializeField] SettingsChannelSO settingsLoaded;
         
@@ -32,6 +34,11 @@ namespace TheGame.UISystems
             musicVolumeSlider.slider.onValueChanged.RemoveListener(OnMusicVolumeChanged);
             effectVolumeSlider.slider.onValueChanged.RemoveListener(OnEffectVolumeChanged);
             this.settings?.RemoveListener(this);
+        }
+
+        public override void OnFocus()
+        {
+            EventSystem.current.SetSelectedGameObject(masterVolumeSlider.GetComponentInChildren<Selectable>().gameObject);
         }
 
         void OnMasterVolumeChanged(float value01)

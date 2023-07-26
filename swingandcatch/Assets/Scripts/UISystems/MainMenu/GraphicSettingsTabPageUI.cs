@@ -2,13 +2,15 @@
 using TheGame.ScriptableObjects.Channels;
 using TheGame.SettingSystems;
 using TheGame.UISystems.Components;
-using TheGame.UISystems.Core;
+using TheGame.UISystems.TabSystem;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-namespace TheGame.UISystems
+namespace TheGame.UISystems.MainMenu
 {
-    public class GraphicOptionsUI : GameUI, ISettingsListener
+    public class GraphicSettingsTabPageUI : TabPageUI, ISettingsListener
     {
         [SerializeField] SettingsChannelSO settingsLoaded;
         
@@ -50,6 +52,11 @@ namespace TheGame.UISystems
             shadowQualityDropdown.dropDown.onValueChanged.RemoveListener(OnShadowQualityValueChanged);
             textureQualityDropdown.dropDown.onValueChanged.RemoveListener(OnTextureQualityValueChanged);
             this.settings?.RemoveListener(this);
+        }
+
+        public override void OnFocus()
+        {
+            EventSystem.current.SetSelectedGameObject(presetDropdown.GetComponentInChildren<Selectable>().gameObject);
         }
 
         void OnPresetValueChanged(int value)

@@ -11,7 +11,7 @@ namespace TheGame.UISystems.TabSystem
     public struct PageData
     {
         public TabPageUI tabPageUI;
-        public TabButton tabButton;
+        public XIVTabButton tabButton;
     }
 
     public class TabUI : GameUI
@@ -129,14 +129,19 @@ namespace TheGame.UISystems.TabSystem
             currentPage.tabButton.ReleaseToggle();
         }
 
-        protected virtual void OnTabButtonPressed(TabButton tabButton)
+        protected virtual void OnTabButtonPressed(XIVTabButton tabButton)
         {
             var pageIndex = IndexOfPageData(tabButton);
-            if (pageIndex == currentPageIndex) return;
+            if (pageIndex == currentPageIndex)
+            {
+                pages[pageIndex].tabPageUI.OnFocus();
+                return;
+            }
+
             OpenPage(pageIndex);
         }
 
-        protected int IndexOfPageData(TabButton tabButton)
+        protected int IndexOfPageData(XIVTabButton tabButton)
         {
             for (int i = 0; i < pagesLength; i++)
             {

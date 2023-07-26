@@ -1,4 +1,6 @@
 ﻿using TheGame.ScriptableObjects.Channels;
+using TheGame.UISystems.Core;
+using TheGame.UISystems.MainMenu;
 using UnityEngine;
 
 namespace TheGame.Managers
@@ -10,6 +12,7 @@ namespace TheGame.Managers
         void Start()
         {
             mainMenuMusicAudioPlayer.Play();
+            UISystem.Show<MainMenuUI>();
         }
 
         void OnDestroy()
