@@ -31,8 +31,9 @@ namespace TheGame.UISystems.TabSystem
         Sprite initialSprite;
         Image image;
 
-        void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             image = GetComponent<Image>();
             initialColor = image.color;
             initialSprite = image.sprite;
