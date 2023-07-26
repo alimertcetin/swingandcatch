@@ -15,10 +15,11 @@ namespace TheGame.UISystems.TabSystem
         public TabPageUI tabPageUI;
         public TabButton tabButton;
     }
-    
+
     public class TabUI : GameUI
     {
         [SerializeField] protected PageData[] pages;
+        [SerializeField] protected TabMovementDirection tabMovementDirection = TabMovementDirection.Horizontal;
         int pagesLength;
         int currentPageIndex;
 
@@ -121,12 +122,11 @@ namespace TheGame.UISystems.TabSystem
         {
             var targetPage = pages[targetPageIndex];
             var currentPage = pages[currentPageIndex];
-            
-            var targetPageX = targetPage.tabButton.rectTransform.anchoredPosition.x;
-            var currentPageX = currentPage.tabButton.rectTransform.anchoredPosition.x;
-            var targetEnterDir = targetPageX > currentPageX ? Direction.Right : Direction.Left;
-            var currentExitDir = targetPageX > currentPageX ? Direction.Left : Direction.Right;
-            
+
+            var targetPageButtonPos = targetPage.tabButton.rectTransform.anchoredPosition;
+            var currentPageButtonPos = currentPage.tabButton.rectTransform.anchoredPosition;
+            TabHelper.GetDirections(tabMovementDirection, targetPageButtonPos, currentPageButtonPos, out var targetEnterDir, out var currentExitDir);
+
             targetPage.tabPageUI.enterDirection = targetEnterDir;
             currentPage.tabPageUI.exitDirection = currentExitDir;
             
