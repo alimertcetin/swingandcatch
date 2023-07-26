@@ -1,7 +1,5 @@
 ﻿using TheGame.UISystems.Core;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using XIV.Core;
 using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
 using XIV.EventSystem;
@@ -45,7 +43,6 @@ namespace TheGame.UISystems.TabSystem
             }
         }
         
-        [Button(playModeOnly = true)]
         public override void Show()
         {
             var upPos = Vector2.up * (uiGameObjectRectTransform.rect.height + uiGameObjectRectTransform.offsetMin.y + 10f);
@@ -66,7 +63,6 @@ namespace TheGame.UISystems.TabSystem
             uiGameObject.SetActive(true);
         }
         
-        [Button(playModeOnly = true)]
         public override void Hide()
         {
             uiGameObjectRectTransform.CancelTween();
@@ -88,7 +84,6 @@ namespace TheGame.UISystems.TabSystem
 
         protected override void OnUIActivated()
         {
-            EventSystem.current.SetSelectedGameObject(pages[0].tabButton.gameObject);
             currentPageIndex = -1;
             OpenPage(0);
         }
