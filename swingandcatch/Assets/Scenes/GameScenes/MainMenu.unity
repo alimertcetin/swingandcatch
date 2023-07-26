@@ -769,8 +769,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: -17}
+  m_AnchoredPosition: {x: 35, y: 0}
+  m_SizeDelta: {x: 24, y: -17}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &243110963
 MonoBehaviour:
@@ -3106,6 +3106,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1274673565}
     m_Modifications:
+    - target: {fileID: 1428665369372210917, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1428665369372210917, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1428665369372210917, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2650565142976714912, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
       propertyPath: m_Name
       value: Brightness_Slider
@@ -3161,6 +3173,14 @@ PrefabInstance:
     - target: {fileID: 5233874386200037272, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -37.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363007483263966221, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363007483263966221, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8113454002060502489, guid: 0a0f7ea17116c1d47b7e009d4e306d1c, type: 3}
       propertyPath: m_Pivot.x
@@ -5003,6 +5023,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1274673565}
     m_Modifications:
+    - target: {fileID: 626484493696831880, guid: 5cdc7df6cea74b64a9e0ffdb5254f870, type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 626484493696831880, guid: 5cdc7df6cea74b64a9e0ffdb5254f870, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Fullscreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 626484493696831880, guid: 5cdc7df6cea74b64a9e0ffdb5254f870, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[1].m_Text
+      value: Windowed
+      objectReference: {fileID: 0}
     - target: {fileID: 837697997342434604, guid: 5cdc7df6cea74b64a9e0ffdb5254f870, type: 3}
       propertyPath: m_text
       value: Option A
@@ -5946,8 +5978,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 20, y: -17}
+  m_AnchoredPosition: {x: 35, y: 0}
+  m_SizeDelta: {x: 24, y: -17}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1758713747
 MonoBehaviour:
