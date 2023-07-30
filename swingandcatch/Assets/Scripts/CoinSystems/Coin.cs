@@ -21,31 +21,15 @@ namespace TheGame.CoinSystems
     {
         [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] CoinItemSO coinItemSO;
-        [SerializeField] InventoryChannelSO inventoryLoadedChannel;
         
         const float DISTANCE_THRESHOLD = 1.5f;
         Camera cam;
         bool isAwake;
-        Inventory inventory;
+        IInventoryContainer inventoryContainer;
         
         void Awake()
         {
             cam = Camera.main;
-        }
-
-        void OnEnable()
-        {
-            inventoryLoadedChannel.Register(OnInventoryLaoded);
-        }
-
-        void OnDisable()
-        {
-            inventoryLoadedChannel.Unregister(OnInventoryLaoded);
-        }
-
-        void OnInventoryLaoded(Inventory inventory)
-        {
-            this.inventory = inventory;
         }
 
         void Update()
@@ -59,7 +43,17 @@ namespace TheGame.CoinSystems
 
             if (count != 0)
             {
-                Collect();
+                for (int i = 0; i < count; i++)
+                {
+                    var coll = buffer[i];
+                    if (coll.TryGetComponent(out inventoryContainer))
+                    {
+                        var amount = 1;
+                        inventoryContainer.GetInventory().TryAdd(coinItemSO.GetItem(), ref amount);
+                        Collect();
+                        break;
+                    }
+                }
             }
             
             ArrayPool<Collider2D>.Shared.Return(buffer);
@@ -101,8 +95,6 @@ namespace TheGame.CoinSystems
 
         void OnCoinTweenCompleted(GameObject go)
         {
-            int amount = 1;
-            inventory?.TryAdd(coinItemSO.GetItem(), ref amount);
             if (go) Destroy(go);
         }
 
