@@ -62,7 +62,15 @@ namespace TheGame.PlayerSystems
 
         void OnGamePaused(bool value)
         {
-            ChangeState(value ? emptyState : stateBeforeEmpty);
+            if (value)
+            {
+                stateBeforeEmpty = currentState;
+                ChangeState(emptyState);
+            }
+            else
+            {
+                ChangeState(stateBeforeEmpty);
+            }
         }
 
         protected override State GetInitialState()
