@@ -1,4 +1,5 @@
-﻿using TheGame.SceneManagement;
+﻿using TheGame.SaveSystems;
+using TheGame.SceneManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Components;
 using TheGame.UISystems.Core;
@@ -109,6 +110,7 @@ namespace TheGame.UISystems.MainMenu
 
         void StartNewGame()
         {
+            SaveSystem.ClearSaveDataAll();
             PlayButtonPressSound();
             levelData.TryGetNextLevel(-1, out var nextLevel);
             sceneLoadChannel.RaiseEvent(SceneLoadOptions.LevelLoad(nextLevel));
