@@ -1490,7 +1490,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2325249256064719545}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1951633895
 MonoBehaviour:
@@ -1506,53 +1506,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectableSelectChannel: {fileID: 11400000, guid: 6883bfb1fd6c0d1449ec027c2dc7bb87, type: 2}
   selectableDeselectChannel: {fileID: 11400000, guid: 16e3fe7eb955a8047823c0cb87a95055, type: 2}
---- !u!1 &5144813229092251235
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5144813229092251237}
-  - component: {fileID: 5144813229092251236}
-  m_Layer: 0
-  m_Name: CoinCollectSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5144813229092251237
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5144813229092251235}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2325249256064719545}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5144813229092251236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5144813229092251235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74859af5389e4b9499735a5c95ba8124, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onCoinCollectedAmountChangedChannel: {fileID: 11400000, guid: d338e8a85d0bcb042aeae92eb8771506, type: 2}
-  coinTriggeredChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
-  coinCollectEase: 0
 --- !u!1 &6619350331242161688
 GameObject:
   m_ObjectHideFlags: 0
@@ -1582,7 +1535,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7672040891807306717}
-  - {fileID: 5144813229092251237}
   - {fileID: 1072768704353847707}
   - {fileID: 1951633894}
   m_Father: {fileID: 0}
@@ -1618,7 +1570,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2325249256064719545}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5186597656285656587
 MonoBehaviour:
