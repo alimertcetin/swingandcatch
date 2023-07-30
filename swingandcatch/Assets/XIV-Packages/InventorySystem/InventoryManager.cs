@@ -70,7 +70,7 @@ namespace XIV.InventorySystem
         void ISavable.LoadSaveData(object state)
         {
             SaveData saveData = (SaveData)state;
-            if (saveData.items == null) return;
+            if (saveData.items == null || saveData.items.Length == 0) return;
 
             for (int i = 0; i < inventory.SlotCount; i++)
             {
