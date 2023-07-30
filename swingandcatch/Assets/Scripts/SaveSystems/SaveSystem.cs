@@ -9,6 +9,7 @@ namespace TheGame.SaveSystems
     public static class SaveSystem
     {
         // static readonly string productName = Application.productName;
+        // TODO : we can add slot support by changing the "data" folder name
         public static readonly string saveFolder = Path.Combine(Application.persistentDataPath, "data");
         static readonly Dictionary<string, List<SavableEntity>> savableEntityLookup = new Dictionary<string, List<SavableEntity>>();
         
