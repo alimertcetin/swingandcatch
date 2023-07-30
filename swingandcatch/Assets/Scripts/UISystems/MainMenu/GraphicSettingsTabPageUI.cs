@@ -20,7 +20,6 @@ namespace TheGame.UISystems.MainMenu
         [SerializeField] SettingDropDrown displayTypeDropdown;
         [SerializeField] SettingToggle vsyncToggle;
         [SerializeField] SettingDropDrown antiAliasDropdown;
-        [SerializeField] SettingSlider brightnessSlider;
         [SerializeField] SettingDropDrown shadowQualityDropdown;
         [SerializeField] SettingDropDrown textureQualityDropdown;
 
@@ -34,7 +33,6 @@ namespace TheGame.UISystems.MainMenu
             displayTypeDropdown.dropDown.onValueChanged.AddListener(OnDisplayTypeValueChanged);
             vsyncToggle.toggle.onValueChanged.AddListener(OnVsyncValueChanged);
             antiAliasDropdown.dropDown.onValueChanged.AddListener(OnAntiAliasValuChanged);
-            brightnessSlider.slider.onValueChanged.AddListener(OnBrightnessValueChanged);
             shadowQualityDropdown.dropDown.onValueChanged.AddListener(OnShadowQualityValueChanged);
             textureQualityDropdown.dropDown.onValueChanged.AddListener(OnTextureQualityValueChanged);
             this.settings?.AddListener(this);
@@ -48,7 +46,6 @@ namespace TheGame.UISystems.MainMenu
             displayTypeDropdown.dropDown.onValueChanged.RemoveListener(OnDisplayTypeValueChanged);
             vsyncToggle.toggle.onValueChanged.RemoveListener(OnVsyncValueChanged);
             antiAliasDropdown.dropDown.onValueChanged.RemoveListener(OnAntiAliasValuChanged);
-            brightnessSlider.slider.onValueChanged.RemoveListener(OnBrightnessValueChanged);
             shadowQualityDropdown.dropDown.onValueChanged.RemoveListener(OnShadowQualityValueChanged);
             textureQualityDropdown.dropDown.onValueChanged.RemoveListener(OnTextureQualityValueChanged);
             this.settings?.RemoveListener(this);
@@ -83,11 +80,6 @@ namespace TheGame.UISystems.MainMenu
         void OnAntiAliasValuChanged(int value)
         {
             SetParameter(GraphicSettingsParameterContainer.antiAliasHash, value);
-        }
-
-        void OnBrightnessValueChanged(float value)
-        {
-            SetParameter(GraphicSettingsParameterContainer.brightnessHash, value);
         }
 
         void OnShadowQualityValueChanged(int value)
@@ -139,7 +131,6 @@ namespace TheGame.UISystems.MainMenu
             displayTypeDropdown.UpdateValue(GetParameterValue<int>(GraphicSettingsParameterContainer.displayTypeHash), true);
             vsyncToggle.UpdateValue(GetParameterValue<bool>(GraphicSettingsParameterContainer.vsyncHash), true);
             antiAliasDropdown.UpdateValue(GetParameterValue<int>(GraphicSettingsParameterContainer.antiAliasHash), true);
-            brightnessSlider.UpdateValue(GetParameterValue<float>(GraphicSettingsParameterContainer.brightnessHash), true);
             shadowQualityDropdown.UpdateValue(GetParameterValue<int>(GraphicSettingsParameterContainer.shadowQualityHash), true);
             textureQualityDropdown.UpdateValue(GetParameterValue<int>(GraphicSettingsParameterContainer.textureQualityHash), true);
         }
@@ -200,10 +191,6 @@ namespace TheGame.UISystems.MainMenu
             else if (nameHash == GraphicSettingsParameterContainer.antiAliasHash)
             {
                 antiAliasDropdown.UpdateValue(changedParameter.ReadValue<int>(), true);
-            }
-            else if (nameHash == GraphicSettingsParameterContainer.brightnessHash)
-            {
-                brightnessSlider.UpdateValue(changedParameter.ReadValue<float>(), true);
             }
             else if (nameHash == GraphicSettingsParameterContainer.shadowQualityHash)
             {

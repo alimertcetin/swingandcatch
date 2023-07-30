@@ -20,9 +20,6 @@ namespace TheGame.SettingSystems
         public const string ANTI_ALIAS = "AntiAlias";
         public static readonly int antiAliasHash = ANTI_ALIAS.GetHashCode();
         
-        public const string BRIGHTNESS = "Brightness";
-        public static readonly int brightnessHash = BRIGHTNESS.GetHashCode();
-        
         public const string SHADOW_QUALITY = "ShadowQuality";
         public static readonly int shadowQualityHash = SHADOW_QUALITY.GetHashCode();
         
@@ -42,7 +39,6 @@ namespace TheGame.SettingSystems
                 new SettingParameter(SETTING_PARAMETER_TYPE, DISPLAY_TYPE, Screen.fullScreen ? 0 : 1), // Dropdown
                 new SettingParameter(SETTING_PARAMETER_TYPE, VSYNC, false), // Toggle
                 new SettingParameter(SETTING_PARAMETER_TYPE, ANTI_ALIAS, QualitySettings.antiAliasing / 2), // Dropdown
-                new SettingParameter(SETTING_PARAMETER_TYPE, BRIGHTNESS, Screen.brightness), // Slider 0-1
                 new SettingParameter(SETTING_PARAMETER_TYPE, SHADOW_QUALITY, 0), // Dropdown
                 new SettingParameter(SETTING_PARAMETER_TYPE, TEXTURE_QUALITY, 0), // Dropdown
             };
@@ -101,7 +97,6 @@ namespace TheGame.SettingSystems
                 displayType = GetParameter(displayTypeHash).ReadValue<int>(),
                 vsync = GetParameter(vsyncHash).ReadValue<bool>(),
                 antiAlias = GetParameter(antiAliasHash).ReadValue<int>(),
-                brightness = GetParameter(brightnessHash).ReadValue<float>(),
                 shadowQuality = GetParameter(shadowQualityHash).ReadValue<int>(),
                 textureQuality = GetParameter(textureQualityHash).ReadValue<int>(),
             };
@@ -115,7 +110,6 @@ namespace TheGame.SettingSystems
             SetParameter(displayTypeHash, saveData.displayType);
             SetParameter(vsyncHash, saveData.vsync);
             SetParameter(antiAliasHash, saveData.antiAlias);
-            SetParameter(brightnessHash, saveData.brightness);
             SetParameter(shadowQualityHash, saveData.shadowQuality);
             SetParameter(textureQualityHash, saveData.textureQuality);
         }

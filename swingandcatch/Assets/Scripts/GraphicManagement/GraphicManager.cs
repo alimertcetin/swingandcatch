@@ -46,7 +46,6 @@ namespace TheGame.GraphicManagement
             UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.displayTypeHash));
             UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.vsyncHash));
             UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.antiAliasHash));
-            UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.brightnessHash));
             UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.shadowQualityHash));
             UpdateSettings(settings.GetParameter(SettingParameterType.Graphic, GraphicSettingsParameterContainer.textureQualityHash));
             
@@ -110,10 +109,6 @@ namespace TheGame.GraphicManagement
             else if (GraphicSettingsParameterContainer.antiAliasHash == nameHash)
             {
                 SetAntiAliasing(changedParameter);
-            }
-            else if (GraphicSettingsParameterContainer.brightnessHash == nameHash)
-            {
-                SetBrightness(changedParameter);
             }
             else if (GraphicSettingsParameterContainer.shadowQualityHash == nameHash)
             {
