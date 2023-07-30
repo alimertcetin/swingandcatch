@@ -10,7 +10,7 @@ namespace TheGame.AbilitySystems.Tests
     {
         [SerializeField] AbilitySO abilityToUnlock;
         [SerializeField] bool useImmediate;
-        [SerializeField] float radius;
+        [SerializeField] float radius = 0.8f;
 
         void Update()
         {
