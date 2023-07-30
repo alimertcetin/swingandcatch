@@ -3,7 +3,10 @@ guid: 43eae5431c36156418359012b7e598cc
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - coinCollectedParticlePrefab: {instanceID: 0}
+  - coinItemSO: {fileID: 11400000, guid: 90172353b2c618048aa8ca87a043d43c, type: 2}
+  - inventoryLoadedChannel: {fileID: 11400000, guid: 3b467d0e0196e854f84a09da7a41a561, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

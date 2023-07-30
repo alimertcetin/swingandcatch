@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7972c6e9c62b4a498959d46e41c723d4, type: 3}
-  m_Name: CoinCollectedChannel
+  m_Script: {fileID: 11500000, guid: 3c4baff6d2364a008a7769e6cb88656b, type: 3}
+  m_Name: InventoryLoadedChannel
   m_EditorClassIdentifier: 
-  description: 

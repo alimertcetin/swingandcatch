@@ -1,21 +1,59 @@
-﻿using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.InventorySystems.Items;
+using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using TMPro;
 using UnityEngine;
 using XIV.Core.Utils;
 using XIV.Core.TweenSystem;
+using XIV.InventorySystem;
+using XIV.InventorySystem.ScriptableObjects.ChannelSOs;
 
 namespace TheGame.UISystems
 {
     public class HudCoinPageUI : PageUI
     {
-        [SerializeField] IntChannelSO onChangeDisplayAmountChannel;
         [SerializeField] RectTransform coinUIItemRect;
         [SerializeField] TMP_Text coinText;
+        [SerializeField] InventoryChannelSO inventoryLoadedChannel;
+        [SerializeField] InventoryChangeChannelSO inventoryChangedChannel;
         public Vector3 coinUIItemRectPosition => coinUIItemRect.position;
+        int totalCoins;
+        Inventory inventory;
 
-        void OnEnable() => onChangeDisplayAmountChannel.Register(ChangeDisplayAmount);
-        void OnDisable() => onChangeDisplayAmountChannel.Unregister(ChangeDisplayAmount);
+        void OnEnable()
+        {
+            inventoryLoadedChannel.Register(OnInventoryLoaded);
+            inventoryChangedChannel.Register(OnInventoryChanged);
+        }
+
+        void OnDisable()
+        {
+            inventoryLoadedChannel.Unregister(OnInventoryLoaded);
+            inventoryChangedChannel.Unregister(OnInventoryChanged);
+        }
+
+        void OnInventoryLoaded(Inventory inventory)
+        {
+            this.inventory = inventory;
+            RefreshCoinDisplay();
+        }
+
+        void OnInventoryChanged(InventoryChange inventoryChange)
+        {
+            RefreshCoinDisplay();
+        }
+
+        void RefreshCoinDisplay()
+        {
+            int amount = 0;
+            var coinItems = inventory.GetItemsOfType<CoinItem>((_) => true);
+            for (var i = 0; i < coinItems.Count; i++)
+            {
+                ReadOnlyInventoryItem readOnlyInventoryItem = coinItems[i];
+                amount += readOnlyInventoryItem.Amount;
+            }
+            ChangeDisplayAmount(amount);
+        }
 
         void ChangeDisplayAmount(int newAmount)
         {

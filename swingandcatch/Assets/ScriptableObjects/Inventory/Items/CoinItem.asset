@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2253a00250864086b6decd59cc213292, type: 3}
+  m_Name: CoinItem
+  m_EditorClassIdentifier: 
+  item:
+    id: b6be8e2f-f6bd-49f4-bff2-8d600cad2aec
+    title: Coin
+    description: Buy something nice for yourself
+    StackableAmount: 2147483647
