@@ -141,7 +141,7 @@ namespace TheGame.EnemySystems.SawBlade.States
 
         static void OnReleaseParticle(GameObject go)
         {
-            go.SetActive(false);
+            if (go) go.SetActive(false);
         }
     }
 }
