@@ -396,6 +396,11 @@ GameObject:
   - component: {fileID: 4617712201470520609}
   - component: {fileID: 1328107783}
   - component: {fileID: 4617712201470520611}
+  - component: {fileID: 1523891952}
+  - component: {fileID: 1523891953}
+  - component: {fileID: 1523891954}
+  - component: {fileID: 1523891955}
+  - component: {fileID: 1523891957}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -410,7 +415,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4617712201470520602}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -420,7 +425,7 @@ Transform:
   - {fileID: 6766760071766345335}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!58 &1328107783
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -453,14 +458,10 @@ MonoBehaviour:
   textOffsetX: 0.014
   textOffsetY: -0.007
   stateDatas: {fileID: 11400000, guid: 0afc821b3ed4184428b738ba0f79d5ad, type: 2}
-  healthSO: {fileID: 11400000, guid: 91d1e8bcd5b069441bb2027a169f7075, type: 2}
-  damageImmuneDuration: 0.75
   selectableSelectChannel: {fileID: 11400000, guid: 6883bfb1fd6c0d1449ec027c2dc7bb87, type: 2}
   selectableDeselectChannel: {fileID: 11400000, guid: 16e3fe7eb955a8047823c0cb87a95055, type: 2}
   playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
   playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
-  updatePlayerHealthChannel: {fileID: 11400000, guid: 7aa4c4f0fd6c59d4291add4a7af69e0f, type: 2}
-  cameraShakeChannel: {fileID: 11400000, guid: fee34a6e5e874d1409416911bbd627fb, type: 2}
   gamePausedChannel: {fileID: 11400000, guid: 6a72d97414bf07944a04646b88aa0469, type: 2}
   playerVisualTransform: {fileID: 212991544833979011}
   playerFeet:
@@ -469,7 +470,75 @@ MonoBehaviour:
   playerSword: {fileID: 6766760071766345335}
   bottomColliderPosLocal: {x: 0, y: -0.42, z: 0}
   bottomColliderSize: {x: 0.58, y: 0.17, z: 1}
-  damageImmune: 0
+--- !u!114 &1523891952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4617712201470520602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5924f76e9fa347a8b55e990050320a7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1523891953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4617712201470520602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a648e0438004c168c364d9d45be1ad5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSO: {fileID: 11400000, guid: 91d1e8bcd5b069441bb2027a169f7075, type: 2}
+  damageImmuneDuration: 0.75
+  updatePlayerHealthChannel: {fileID: 11400000, guid: 7aa4c4f0fd6c59d4291add4a7af69e0f, type: 2}
+  cameraShakeChannel: {fileID: 11400000, guid: fee34a6e5e874d1409416911bbd627fb, type: 2}
+--- !u!114 &1523891954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4617712201470520602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd289791cba84e7092353d03750ce0b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1523891955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4617712201470520602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0e122023f08430b9acaa197a5ba370b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementCollisionMask:
+    serializedVersion: 2
+    m_Bits: 128
+  velocity: {x: 0, y: 0, z: 0}
+  previousPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &1523891957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4617712201470520602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a7d38c08a744299aaf363d463626575, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4617712201605241933
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,7 +930,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6677132251146497373}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -869,4 +938,4 @@ Transform:
   - {fileID: 4617712201605241932}
   m_Father: {fileID: 4617712201470520609}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
