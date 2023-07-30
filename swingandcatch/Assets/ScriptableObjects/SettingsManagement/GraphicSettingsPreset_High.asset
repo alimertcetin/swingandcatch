@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GraphicSettingsPreset_High
   m_EditorClassIdentifier: 
   antiAliasing: 4
-  shadowQuality: 3
-  textureQuality: 3
+  shadowQuality: 1
+  textureQuality: 1

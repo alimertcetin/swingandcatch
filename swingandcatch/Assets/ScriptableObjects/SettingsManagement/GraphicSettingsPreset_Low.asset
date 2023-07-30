@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bd67a3420d44ffafcd38718674b720, type: 3}
   m_Name: GraphicSettingsPreset_Low
   m_EditorClassIdentifier: 
-  vsync: 0
   antiAliasing: 1
-  shadowQuality: 1
-  textureQuality: 1
+  shadowQuality: 3
+  textureQuality: 3

@@ -1,7 +1,7 @@
 ﻿using TheGame.ScriptableObjects;
 using UnityEngine;
 
-namespace TheGame.AudioManagement
+namespace TheGame.GraphicManagement
 {
     [CreateAssetMenu(menuName = MenuPaths.GRAPHIC_BASE_MENU + nameof(GraphicSettingPresetSO))]
     public class GraphicSettingPresetSO : ScriptableObject
@@ -17,8 +17,11 @@ namespace TheGame.AudioManagement
         // new SettingParameter(SETTING_PARAMETER_TYPE, TEXTURE_QUALITY, 0f), // Dropdown
         
         // The ones we care about
+        [Tooltip("0 - Disabled, 1 - 2x MSA, 2 - 4x MSA, 3 - is ignored, 4 - 8x MSA")]
         [Min(0)] public int antiAliasing;
+        [Tooltip("0 - Very High, 1 - High, 2 - Medium, 3 - Low, 4 Very Low")]
         [Min(0)] public int shadowQuality;
+        [Tooltip("0 - Very High, 1 - High, 2 - Medium, 3 - Low, 4 Very Low")]
         [Min(0)] public int textureQuality;
     }
 }
