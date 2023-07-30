@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43eae5431c36156418359012b7e598cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinCollectedChannelSO: {fileID: 11400000, guid: 8055edfa09044f44d9547f6d8878efc0, type: 2}
   coinCollectedParticlePrefab: {fileID: 3420687967240432720, guid: 010ee0213749f2b4cb29f8d37c2c41d4, type: 3}
+  coinItemSO: {fileID: 11400000, guid: 90172353b2c618048aa8ca87a043d43c, type: 2}
 --- !u!58 &2424682350495815122
 CircleCollider2D:
   m_ObjectHideFlags: 0
