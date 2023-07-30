@@ -16,13 +16,13 @@ namespace XIV.InventorySystem.ScriptableObjects
         public abstract ItemBase GetItem();
     }
     
-    public class ItemSO<T> : ItemSO where T : ItemBase, new()
+    public class ItemSO<T> : ItemSO where T : ItemBase
     {
         [SerializeField] T item;
      
         public override ItemBase GetItem()
         {
-            return new T();
+            return item;
         }
     }
 }
