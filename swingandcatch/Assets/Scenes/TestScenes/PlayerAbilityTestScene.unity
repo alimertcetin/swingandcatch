@@ -2052,10 +2052,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1523891953, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
-      propertyPath: damageImmuneDuration
-      value: 0.75
-      objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520602, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2074,6 +2070,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
       propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
+      propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4617712201470520609, guid: efc0f9e9013211a4a8c8aaf876638a7f, type: 3}
