@@ -256,15 +256,21 @@ namespace TheGame.Editor
 
         void DisplayScenes(List<SceneAsset> sceneList)
         {
+            ColorUtility.TryParseHtmlString("#D8D9DA", out var c1);
+            ColorUtility.TryParseHtmlString("#FFF6E0", out var c2);
+            var tempColor = GUI.backgroundColor;
             int sceneListCount = sceneList.Count;
             for (int i = 0; i < sceneListCount; i++)
             {
                 SceneAsset sceneAsset = sceneList[i];
                 GUILayout.Space(10);
+                GUI.backgroundColor = i % 2 == 0 ? c1 : c2;
                 if (GUILayout.Button(sceneAsset.name, GUILayout.Height(50)) == false) continue;
 
                 LoadScene(sceneAsset, additiveLoadToggle);
             }
+
+            GUI.backgroundColor = tempColor;
         }
 
         static bool DrawToggle(string text, bool value, Color color = default)
