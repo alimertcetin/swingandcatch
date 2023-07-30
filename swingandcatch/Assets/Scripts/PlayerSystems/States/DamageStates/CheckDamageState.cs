@@ -11,8 +11,8 @@ namespace TheGame.PlayerSystems.States.DamageStates
         {
         }
 
-        protected override void OnStateEnter(State comingFrom) => stateMachine.health.AddListener(this);
-        protected override void OnStateExit() => stateMachine.health.RemoveListener(this);
+        protected override void OnStateEnter(State comingFrom) => stateMachine.damageHandler.GetHealth().AddListener(this);
+        protected override void OnStateExit() => stateMachine.damageHandler.GetHealth().RemoveListener(this);
 
         protected override void CheckTransitions()
         {
@@ -23,7 +23,7 @@ namespace TheGame.PlayerSystems.States.DamageStates
                 return;
             }
 
-            if (stateMachine.damageImmune)
+            if (stateMachine.damageHandler.IsImmune())
             {
                 ChangeChildState(factory.GetState<DamageImmuneState>());
                 return;
@@ -31,7 +31,7 @@ namespace TheGame.PlayerSystems.States.DamageStates
             
         }
 
-        public void OnHealthChanged(ref HealthChange _) => stateMachine.damageImmune = true;
+        public void OnHealthChanged(ref HealthChange _) => stateMachine.damageHandler.SetImmuneState(true);
         public void OnHealthDepleted(ref HealthChange _) => isDead = true;
     }
 }

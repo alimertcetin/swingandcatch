@@ -27,5 +27,9 @@
         
         // Audio Management
         public const string AUDIO_MANAGEMENT_MENU = BASE_MENU + "Audio Management/";
+        
+        // Ability System
+        public const string ABILITY_SYSTEM_MENU = BASE_MENU + "Ability System/";
+        public const string ABILITY_MENU = ABILITY_SYSTEM_MENU + "Abilities/";
     }
 }

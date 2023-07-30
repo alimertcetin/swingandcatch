@@ -24,6 +24,8 @@ namespace TheGame.PlayerSystems
             AddState(new DamageImmuneState(stateMachine, this));
             AddState(new PlayerWinState(stateMachine, this));
             AddState(new PlayerAttackState(stateMachine, this));
+            
+            AddState(new PlayerAbilityDrivenState(stateMachine, this));
         }
     }
 }

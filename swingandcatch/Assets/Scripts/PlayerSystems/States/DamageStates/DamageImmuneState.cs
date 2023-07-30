@@ -17,10 +17,12 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
         protected override void OnStateEnter(State comingFrom)
         {
-            stateMachine.damageImmune = true;
+            stateMachine.damageHandler.SetImmuneState(true);
+
+            var immuneDuration = stateMachine.damageHandler.GetImmuneDuration();
             
-            float colorFlashDuration = (stateMachine.damageImmuneDuration / (COLOR_FLASH_COUNT + 1));
-            timer = new Timer(stateMachine.damageImmuneDuration);
+            float colorFlashDuration = (immuneDuration / (COLOR_FLASH_COUNT + 1));
+            timer = new Timer(immuneDuration);
             stateMachine.CancelTween();
             playerRenderers = stateMachine.GetComponentsInChildren<Renderer>();
             EasingFunction.Function easing = EasingFunction.EaseInOutCirc;
@@ -44,7 +46,7 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
         protected override void OnStateExit()
         {
-            stateMachine.damageImmune = false;
+            stateMachine.damageHandler.SetImmuneState(false);
         }
 
         protected override void CheckTransitions()

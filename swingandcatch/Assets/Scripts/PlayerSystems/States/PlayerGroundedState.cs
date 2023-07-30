@@ -1,4 +1,7 @@
 ﻿using System.Buffers;
+using TheGame.AbilitySystems;
+using TheGame.AbilitySystems.Abilities;
+using TheGame.AbilitySystems.Core;
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using TheGame.Scripts.InputSystems;
@@ -22,6 +25,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void OnStateEnter(State comingFrom)
         {
+            stateMachine.playerVisualTransform.gameObject.SetActive(true);
             InputManager.Inputs.PlayerGrounded.Enable();
             
             if (SetGroundedPosition()) return;
@@ -44,7 +48,7 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer) == false)
+            if (stateMachine.movementHandler.CheckIsTouching(1 << PhysicsConstants.GroundLayer) == false)
             {
                 ChangeRootState(factory.GetState<PlayerFallingState>());
                 return;
@@ -63,12 +67,25 @@ namespace TheGame.PlayerSystems.States
                 ChangeRootState(factory.GetState<PlayerWinState>());
                 return;
             }
+            
+            if (Input.GetKey(KeyCode.E))
+            {
+                var dashAbility = stateMachine.abilityHandler.GetAbility<DashAbility>();
+                if (dashAbility != null && ((IAbility)dashAbility).IsAvailableToUse())
+                {
+                    stateMachine.abilityHandler.UseAbility(dashAbility);
+                    stateMachine.playerVisualTransform.gameObject.SetActive(false);
+                    ChangeRootState(factory.GetState<PlayerAbilityDrivenState>());
+                }
+
+                return;
+            }
         }
 
         bool SetGroundedPosition()
         {
             var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
-            int hitCount = stateMachine.CheckIsTouchingNonAlloc(buffer, 1 << PhysicsConstants.GroundLayer);
+            int hitCount = stateMachine.movementHandler.CheckIsTouchingNonAlloc(buffer, 1 << PhysicsConstants.GroundLayer);
 
             if (hitCount > 0)
             {
@@ -94,7 +111,7 @@ namespace TheGame.PlayerSystems.States
                 }
 
                 stateMachine.transform.position = (groundedPos - bottomMiddleLocalPosition).SetZ(stateMachineTransformPosition.z);
-                stateMachine.SyncPosition();
+                stateMachine.movementHandler.SyncPosition();
             }
             
             ArrayPool<Collider2D>.Shared.Return(buffer);

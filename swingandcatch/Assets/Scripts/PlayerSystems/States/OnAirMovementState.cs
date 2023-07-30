@@ -1,4 +1,5 @@
-﻿using TheGame.FSM;
+﻿using TheGame.AbilitySystems;
+using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using TheGame.Scripts.InputSystems;
 using UnityEngine;
@@ -26,8 +27,10 @@ namespace TheGame.PlayerSystems.States
             if (hasInput == false) return;
             Transform transform = stateMachine.transform;
             Vector3 pos = transform.position;
-            pos += Vector3.right * (movementInput * (stateMachine.stateDatas.airMovementStateDataSO.airMovementSpeed * Time.deltaTime));
-            stateMachine.Move(pos);
+            var dir = Vector3.right * movementInput;
+            pos += dir * (stateMachine.stateDatas.airMovementStateDataSO.airMovementSpeed * Time.deltaTime);
+            stateMachine.movementHandler.Move(pos);
+            stateMachine.rotationHandler.LookDirection(dir);
         }
 
         protected override void OnStateExit()

@@ -23,8 +23,10 @@ namespace TheGame.PlayerSystems.States
         protected override void OnStateUpdate()
         {
             var pos = stateMachine.transform.position;
-            pos += Vector3.right * (groundedState.horizontalMovementInput * (stateMachine.stateDatas.walkStateDataSO.walkSpeed * Time.deltaTime));
-            stateMachine.Move(pos);
+            var direction = Vector3.right * groundedState.horizontalMovementInput;
+            pos += direction * (stateMachine.stateDatas.walkStateDataSO.walkSpeed * Time.deltaTime);
+            stateMachine.movementHandler.Move(pos);
+            stateMachine.rotationHandler.LookDirection(direction);
         }
 
         protected override void InitializeChildStates()

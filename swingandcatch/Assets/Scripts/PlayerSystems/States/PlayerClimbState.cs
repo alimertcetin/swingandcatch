@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using TheGame.AbilitySystems;
 using TheGame.FSM;
 using TheGame.PlayerSystems.States.DamageStates;
 using TheGame.Scripts.InputSystems;
@@ -44,7 +45,7 @@ namespace TheGame.PlayerSystems.States
             Vector3 positionOnSegment = SplineMath.GetPoint(positionBuffer, currentT);
             stateMachine.transform.position = positionOnSegment;
             
-            currentRope.AddForce(positionOnSegment, stateMachine.velocity.normalized * stateMachine.stateDatas.climbStateDataSO.ropeSwingInitialForce);
+            currentRope.AddForce(positionOnSegment, stateMachine.movementHandler.GetCurrentVelocity().normalized * stateMachine.stateDatas.climbStateDataSO.ropeSwingInitialForce);
             
             stateMachine.playerVisualTransform.CancelTween();
             stateMachine.playerVisualTransform.XIVTween()

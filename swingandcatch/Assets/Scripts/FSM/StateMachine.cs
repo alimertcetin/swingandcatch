@@ -27,6 +27,13 @@ namespace TheGame.FSM
             OnStateChanged(from);
         }
 
+        protected void ChangeState(State newState)
+        {
+            currentState?.ExitState();
+            newState.EnterState(currentState);
+            SetCurrentState(newState);
+        }
+
         protected virtual void OnStateChanged(State from) { }
         protected abstract State GetInitialState();
 

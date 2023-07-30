@@ -1,4 +1,7 @@
 ﻿using System.Buffers;
+using TheGame.AbilitySystems;
+using TheGame.AbilitySystems.Abilities;
+using TheGame.AbilitySystems.Core;
 using TheGame.FSM;
 using TheGame.Scripts.InputSystems;
 using UnityEngine;
@@ -24,7 +27,7 @@ namespace TheGame.PlayerSystems.States
         {
             RegisterInputActions();
             
-            yVelocity = stateMachine.velocity.y;
+            yVelocity = stateMachine.movementHandler.GetCurrentVelocity().y;
             fallingTime = 0f;
             
             int feetLength = stateMachine.playerFeet.Length;
@@ -60,13 +63,13 @@ namespace TheGame.PlayerSystems.States
 
         protected override void CheckTransitions()
         {
-            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer))
+            if (stateMachine.movementHandler.CheckIsTouching(1 << PhysicsConstants.GroundLayer))
             {
                 ChangeRootState(factory.GetState<PlayerGroundedState>());
                 return;
             }
 
-            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.LavaLayer))
+            if (stateMachine.movementHandler.CheckIsTouching(1 << PhysicsConstants.LavaLayer))
             {
                 ChangeRootState(factory.GetState<PlayerDiedByLavaState>());
                 return;
@@ -81,6 +84,17 @@ namespace TheGame.PlayerSystems.States
                 {
                     ChangeRootState(factory.GetState<PlayerClimbState>());
                     return;
+                }
+            }
+            
+            var doubleJumpAbility = stateMachine.abilityHandler.GetAbility<DoubleJumpAbility>();
+            if (doubleJumpAbility != null && Input.GetKeyDown(KeyCode.Space))
+            {
+                var ability = (IAbility)doubleJumpAbility;
+                if (ability.IsAvailableToUse())
+                {
+                    stateMachine.abilityHandler.UseAbility(ability);
+                    ChangeRootState(factory.GetState<PlayerJumpState>());
                 }
             }
         }
@@ -100,9 +114,9 @@ namespace TheGame.PlayerSystems.States
             var pos = t.position;
             pos.y += yVelocity * dt;
             
-            if (hasAirMovementInput) stateMachine.SyncPosition();
+            if (hasAirMovementInput) stateMachine.movementHandler.SyncPosition();
             
-            stateMachine.Move(pos);
+            stateMachine.movementHandler.Move(pos);
         }
 
         void SetTransformScale(float normalizedFallingTime)

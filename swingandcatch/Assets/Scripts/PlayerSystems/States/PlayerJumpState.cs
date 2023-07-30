@@ -1,4 +1,7 @@
-﻿using TheGame.FSM;
+﻿using TheGame.AbilitySystems;
+using TheGame.AbilitySystems.Abilities;
+using TheGame.AbilitySystems.Core;
+using TheGame.FSM;
 using TheGame.Scripts.InputSystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,6 +13,7 @@ namespace TheGame.PlayerSystems.States
     public class PlayerJumpState : State<PlayerFSM, PlayerStateFactory>
     {
         Timer waitGroundedTimer = new Timer(0.25f);
+        Timer waitDoubleJumpTimer = new Timer(0.25f);
         float yVelocity;
         bool hasAirMovementInput;
         
@@ -38,9 +42,9 @@ namespace TheGame.PlayerSystems.States
             var pos = stateMachine.transform.position;
             pos.y += yVelocity * dt;
             
-            if (hasAirMovementInput) stateMachine.SyncPosition();
+            if (hasAirMovementInput) stateMachine.movementHandler.SyncPosition();
 
-            if (stateMachine.Move(pos) == false) yVelocity = 0f;
+            if (stateMachine.movementHandler.Move(pos) == false) yVelocity = 0f;
         }
 
         protected override void OnStateExit()
@@ -48,6 +52,7 @@ namespace TheGame.PlayerSystems.States
             UnregisterInputActions();
             
             waitGroundedTimer.Restart();
+            waitDoubleJumpTimer.Restart();
             stateMachine.playerVisualTransform.CancelTween();
         }
 
@@ -59,7 +64,7 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
             
-            if (stateMachine.CheckIsTouching(1 << PhysicsConstants.GroundLayer) && waitGroundedTimer.Update(Time.deltaTime))
+            if (stateMachine.movementHandler.CheckIsTouching(1 << PhysicsConstants.GroundLayer) && waitGroundedTimer.Update(Time.deltaTime))
             {
                 ChangeRootState(factory.GetState<PlayerGroundedState>());
                 return;
@@ -69,6 +74,17 @@ namespace TheGame.PlayerSystems.States
             {
                 ChangeRootState(factory.GetState<PlayerFallingState>());
                 return;
+            }
+            
+            var doubleJumpAbility = stateMachine.abilityHandler.GetAbility<DoubleJumpAbility>();
+            if (doubleJumpAbility != null && Input.GetKeyDown(KeyCode.Space))
+            {
+                var ability = (IAbility)doubleJumpAbility;
+                if (ability.IsAvailableToUse())
+                {
+                    stateMachine.abilityHandler.UseAbility(ability);
+                    ChangeRootState(factory.GetState<PlayerJumpState>());
+                }
             }
         }
 
