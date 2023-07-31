@@ -61,7 +61,7 @@ namespace TheGame.UISystems
 
         protected override void OnUIDeactivated()
         {
-            InputManager.Inputs.InGame.Enable();
+            InputManager.Inputs.InGameUI.Enable();
             
             // https://docs.unity3d.com/ScriptReference/Time-timeScale.html WTF?!
             Time.timeScale = previousTimeScale;

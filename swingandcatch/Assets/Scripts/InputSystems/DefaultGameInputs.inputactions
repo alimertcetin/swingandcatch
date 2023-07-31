@@ -282,7 +282,7 @@
             ]
         },
         {
-            "name": "InGame",
+            "name": "InGameUI",
             "id": "271a690a-bbd2-4a0e-82f5-809da44f8d72",
             "actions": [
                 {

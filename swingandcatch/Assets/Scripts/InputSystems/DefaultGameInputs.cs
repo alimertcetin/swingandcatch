@@ -306,7 +306,7 @@ namespace TheGame.Scripts.InputSystems
             ]
         },
         {
-            ""name"": ""InGame"",
+            ""name"": ""InGameUI"",
             ""id"": ""271a690a-bbd2-4a0e-82f5-809da44f8d72"",
             ""actions"": [
                 {
@@ -380,9 +380,9 @@ namespace TheGame.Scripts.InputSystems
             // PlayerAttack
             m_PlayerAttack = asset.FindActionMap("PlayerAttack", throwIfNotFound: true);
             m_PlayerAttack_Attack = m_PlayerAttack.FindAction("Attack", throwIfNotFound: true);
-            // InGame
-            m_InGame = asset.FindActionMap("InGame", throwIfNotFound: true);
-            m_InGame_Pause = m_InGame.FindAction("Pause", throwIfNotFound: true);
+            // InGameUI
+            m_InGameUI = asset.FindActionMap("InGameUI", throwIfNotFound: true);
+            m_InGameUI_Pause = m_InGameUI.FindAction("Pause", throwIfNotFound: true);
             // PauseUI
             m_PauseUI = asset.FindActionMap("PauseUI", throwIfNotFound: true);
             m_PauseUI_Resume = m_PauseUI.FindAction("Resume", throwIfNotFound: true);
@@ -606,29 +606,29 @@ namespace TheGame.Scripts.InputSystems
         }
         public PlayerAttackActions @PlayerAttack => new PlayerAttackActions(this);
 
-        // InGame
-        private readonly InputActionMap m_InGame;
-        private IInGameActions m_InGameActionsCallbackInterface;
-        private readonly InputAction m_InGame_Pause;
-        public struct InGameActions
+        // InGameUI
+        private readonly InputActionMap m_InGameUI;
+        private IInGameUIActions m_InGameUIActionsCallbackInterface;
+        private readonly InputAction m_InGameUI_Pause;
+        public struct InGameUIActions
         {
             private @DefaultGameInputs m_Wrapper;
-            public InGameActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Pause => m_Wrapper.m_InGame_Pause;
-            public InputActionMap Get() { return m_Wrapper.m_InGame; }
+            public InGameUIActions(@DefaultGameInputs wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Pause => m_Wrapper.m_InGameUI_Pause;
+            public InputActionMap Get() { return m_Wrapper.m_InGameUI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
             public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(InGameActions set) { return set.Get(); }
-            public void SetCallbacks(IInGameActions instance)
+            public static implicit operator InputActionMap(InGameUIActions set) { return set.Get(); }
+            public void SetCallbacks(IInGameUIActions instance)
             {
-                if (m_Wrapper.m_InGameActionsCallbackInterface != null)
+                if (m_Wrapper.m_InGameUIActionsCallbackInterface != null)
                 {
-                    @Pause.started -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
-                    @Pause.performed -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
-                    @Pause.canceled -= m_Wrapper.m_InGameActionsCallbackInterface.OnPause;
+                    @Pause.started -= m_Wrapper.m_InGameUIActionsCallbackInterface.OnPause;
+                    @Pause.performed -= m_Wrapper.m_InGameUIActionsCallbackInterface.OnPause;
+                    @Pause.canceled -= m_Wrapper.m_InGameUIActionsCallbackInterface.OnPause;
                 }
-                m_Wrapper.m_InGameActionsCallbackInterface = instance;
+                m_Wrapper.m_InGameUIActionsCallbackInterface = instance;
                 if (instance != null)
                 {
                     @Pause.started += instance.OnPause;
@@ -637,7 +637,7 @@ namespace TheGame.Scripts.InputSystems
                 }
             }
         }
-        public InGameActions @InGame => new InGameActions(this);
+        public InGameUIActions @InGameUI => new InGameUIActions(this);
 
         // PauseUI
         private readonly InputActionMap m_PauseUI;
@@ -691,7 +691,7 @@ namespace TheGame.Scripts.InputSystems
         {
             void OnAttack(InputAction.CallbackContext context);
         }
-        public interface IInGameActions
+        public interface IInGameUIActions
         {
             void OnPause(InputAction.CallbackContext context);
         }

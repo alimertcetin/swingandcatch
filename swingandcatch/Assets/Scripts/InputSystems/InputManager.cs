@@ -12,7 +12,7 @@
             inputs.PlayerAirMovement.Disable();
             inputs.PlayerGrounded.Disable();
             inputs.PlayerAttack.Disable();
-            inputs.InGame.Disable();
+            inputs.InGameUI.Disable();
             inputs.PauseUI.Disable();
         }
     }

@@ -18,24 +18,24 @@ namespace TheGame.UISystems
 
         void OnEnable()
         {
-            InputManager.Inputs.InGame.Enable();
+            InputManager.Inputs.InGameUI.Enable();
             playerDiedChannelSO.Register(OnPlayerDied);
             showWinUIChannel.Register(ShowWinUI);
             displayLoadingScreenChannel.Register(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Register(OnStopDisplayingLoadingScreen);
             showPauseUIChannel.Register(OnShowPauseUI);
-            InputManager.Inputs.InGame.Pause.performed += OnUIPauseUIPerformed;
+            InputManager.Inputs.InGameUI.Pause.performed += OnUIPauseUIPerformed;
         }
 
         void OnDisable()
         {
-            InputManager.Inputs.InGame.Disable();
+            InputManager.Inputs.InGameUI.Disable();
             playerDiedChannelSO.Unregister(OnPlayerDied);
             showWinUIChannel.Unregister(ShowWinUI);
             displayLoadingScreenChannel.Unregister(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Unregister(OnStopDisplayingLoadingScreen);
             showPauseUIChannel.Unregister(OnShowPauseUI);
-            InputManager.Inputs.InGame.Pause.performed -= OnUIPauseUIPerformed;
+            InputManager.Inputs.InGameUI.Pause.performed -= OnUIPauseUIPerformed;
         }
 
         void OnUIPauseUIPerformed(InputAction.CallbackContext obj)
