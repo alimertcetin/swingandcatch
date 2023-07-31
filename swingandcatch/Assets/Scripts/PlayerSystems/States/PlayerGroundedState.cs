@@ -60,10 +60,8 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
 
-            if (CheckWinStateTransition(out var endGate))
+            if (stateMachine.isReachedEndGate)
             {
-                var animator = endGate.GetComponentInChildren<Animator>();
-                animator.Play(AnimationConstants.EndGate.Clips.EndGate_Open);
                 ChangeRootState(factory.GetState<PlayerWinState>());
                 return;
             }
@@ -116,19 +114,6 @@ namespace TheGame.PlayerSystems.States
             
             ArrayPool<Collider2D>.Shared.Return(buffer);
             return hitCount > 0;
-        }
-
-        bool CheckWinStateTransition(out Transform endGate)
-        {
-            endGate = default;
-            var buffer = ArrayPool<Collider2D>.Shared.Rent(2);
-            int count = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 0.5f, buffer, 1 << PhysicsConstants.EndGateLayer);
-            ArrayPool<Collider2D>.Shared.Return(buffer);
-
-            if (count == 0) return false;
-
-            endGate = buffer[0].transform;
-            return true;
         }
 
         void DefaultGameInputs.IPlayerGroundedActions.OnHorizontalMovement(InputAction.CallbackContext context)

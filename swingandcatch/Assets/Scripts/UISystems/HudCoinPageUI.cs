@@ -1,5 +1,4 @@
 ﻿using TheGame.InventorySystems.Items;
-using TheGame.ScriptableObjects.Channels;
 using TheGame.UISystems.Core;
 using TMPro;
 using UnityEngine;
@@ -17,7 +16,6 @@ namespace TheGame.UISystems
         [SerializeField] InventoryChannelSO inventoryLoadedChannel;
         [SerializeField] InventoryChangeChannelSO inventoryChangedChannel;
         public Vector3 coinUIItemRectPosition => coinUIItemRect.position;
-        int totalCoins;
         Inventory inventory;
 
         void OnEnable()

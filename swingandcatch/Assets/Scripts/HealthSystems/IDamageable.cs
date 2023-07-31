@@ -4,5 +4,6 @@
     {
         bool CanReceiveDamage();
         void ReceiveDamage(float amount);
+        Health GetHealth();
     }
 }

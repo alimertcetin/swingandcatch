@@ -72,6 +72,8 @@ namespace TheGame.EnemySystems.SawBlade
 
         }
 
+        Health IDamageable.GetHealth() => health;
+
         void SpawnDrops()
         {
             var coinAmount = Mathf.RoundToInt(Random.value * 5f);

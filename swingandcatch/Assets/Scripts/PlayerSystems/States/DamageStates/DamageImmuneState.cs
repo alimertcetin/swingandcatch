@@ -9,7 +9,6 @@ namespace TheGame.PlayerSystems.States.DamageStates
     {
         const int COLOR_FLASH_COUNT = 2;
         Renderer[] playerRenderers;
-        Timer timer;
 
         public DamageImmuneState(PlayerFSM stateMachine, PlayerStateFactory stateFactory) : base(stateMachine, stateFactory)
         {
@@ -17,12 +16,8 @@ namespace TheGame.PlayerSystems.States.DamageStates
 
         protected override void OnStateEnter(State comingFrom)
         {
-            stateMachine.damageHandler.SetImmuneState(true);
-
-            var immuneDuration = stateMachine.damageHandler.GetImmuneDuration();
+            float colorFlashDuration = 1f / (COLOR_FLASH_COUNT + 1);
             
-            float colorFlashDuration = (immuneDuration / (COLOR_FLASH_COUNT + 1));
-            timer = new Timer(immuneDuration);
             stateMachine.CancelTween();
             playerRenderers = stateMachine.GetComponentsInChildren<Renderer>();
             EasingFunction.Function easing = EasingFunction.EaseInOutCirc;
@@ -39,19 +34,9 @@ namespace TheGame.PlayerSystems.States.DamageStates
                 .Start();
         }
 
-        protected override void OnStateUpdate()
-        {
-            timer.Update(Time.deltaTime);
-        }
-
-        protected override void OnStateExit()
-        {
-            stateMachine.damageHandler.SetImmuneState(false);
-        }
-
         protected override void CheckTransitions()
         {
-            if (timer.IsDone)
+            if (stateMachine.damageable.CanReceiveDamage())
             {
                 ChangeChildState(previousState);
             }

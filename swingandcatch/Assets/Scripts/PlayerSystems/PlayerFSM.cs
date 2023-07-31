@@ -1,7 +1,6 @@
-﻿using System;
-using TheGame.AbilitySystems;
-using TheGame.AbilitySystems.Core;
+﻿using TheGame.AbilitySystems.Core;
 using TheGame.FSM;
+using TheGame.HealthSystems;
 using TheGame.Interfaces;
 using TheGame.PlayerSystems.States;
 using TheGame.ScriptableObjects.Channels;
@@ -17,8 +16,6 @@ namespace TheGame.PlayerSystems
         [Header("Channels")]
         public TransformChannelSO selectableSelectChannel;
         public TransformChannelSO selectableDeselectChannel;
-        public TransformChannelSO playerDiedChannelSO;
-        public TransformChannelSO playerReachedEndChannelSO;
         [SerializeField] BoolChannelSO gamePausedChannel;
 
         public Transform playerVisualTransform;
@@ -32,18 +29,18 @@ namespace TheGame.PlayerSystems
         // TODO : Remove this states from here
         State stateBeforeEmpty;
         EmptyState emptyState;
-        PlayerStateFactory factory;
 
+        [HideInInspector] public bool isReachedEndGate;
         public IMovementHandler movementHandler { get; private set; }
         public IRotationHandler rotationHandler { get; private set; }
-        public IDamageHandler damageHandler { get; private set; }
+        public IDamageable damageable { get; private set; }
         public IAbilityHandler abilityHandler { get; private set; }
 
         protected override void Awake()
         {
             movementHandler = GetComponent<IMovementHandler>();
             rotationHandler = GetComponent<IRotationHandler>();
-            damageHandler = GetComponent<IDamageHandler>();
+            damageable = GetComponent<IDamageable>();
             abilityHandler = GetComponent<IAbilityHandler>();
             
             emptyState = new EmptyState(this);
@@ -75,8 +72,7 @@ namespace TheGame.PlayerSystems
 
         protected override State GetInitialState()
         {
-            factory = new PlayerStateFactory(this);
-            return factory.GetState<PlayerGroundedState>();
+            return new PlayerStateFactory(this).GetState<PlayerGroundedState>();
         }
 
         void IAbilityUser.BeginUse(IAbility ability)

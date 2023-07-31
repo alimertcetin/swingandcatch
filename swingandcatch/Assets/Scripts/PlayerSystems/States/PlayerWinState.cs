@@ -18,10 +18,6 @@ namespace TheGame.PlayerSystems.States
             stateMachine.XIVTween()
                 .Scale(Vector3.one, Vector3.one * 0.5f, 0.5f, EasingFunction.EaseInOutBounce, true, 1)
                 .Wait(0.25f)
-                .OnComplete(() =>
-                {
-                    stateMachine.playerReachedEndChannelSO.RaiseEvent(stateMachine.transform);
-                })
                 .Start();
             renderer.XIVTween()
                 .RendererColor(renderer.material.color, Color.green, 0.5f, EasingFunction.Linear, true, 1)

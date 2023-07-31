@@ -69,9 +69,9 @@ namespace TheGame.PlayerSystems.States
                 return;
             }
 
-            if (stateMachine.movementHandler.CheckIsTouching(1 << PhysicsConstants.LavaLayer))
+            if (stateMachine.damageable.GetHealth().isDepleted)
             {
-                ChangeRootState(factory.GetState<PlayerDiedByLavaState>());
+                ChangeRootState(factory.GetState<PlayerDiedState>());
                 return;
             }
             

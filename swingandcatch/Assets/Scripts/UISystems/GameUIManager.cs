@@ -10,8 +10,6 @@ namespace TheGame.UISystems
 {
     public class GameUIManager : MonoBehaviour
     {
-        [SerializeField] TransformChannelSO playerDiedChannelSO;
-        [SerializeField] VoidChannelSO showWinUIChannel;
         [SerializeField] SceneLoadChannelSO displayLoadingScreenChannel;
         [SerializeField] VoidChannelSO stopDisplayingLoadingScreenChannel;
         [SerializeField] BoolChannelSO showPauseUIChannel;
@@ -19,8 +17,6 @@ namespace TheGame.UISystems
         void OnEnable()
         {
             InputManager.Inputs.InGameUI.Enable();
-            playerDiedChannelSO.Register(OnPlayerDied);
-            showWinUIChannel.Register(ShowWinUI);
             displayLoadingScreenChannel.Register(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Register(OnStopDisplayingLoadingScreen);
             showPauseUIChannel.Register(OnShowPauseUI);
@@ -30,8 +26,6 @@ namespace TheGame.UISystems
         void OnDisable()
         {
             InputManager.Inputs.InGameUI.Disable();
-            playerDiedChannelSO.Unregister(OnPlayerDied);
-            showWinUIChannel.Unregister(ShowWinUI);
             displayLoadingScreenChannel.Unregister(OnDisplayLoadingScreen);
             stopDisplayingLoadingScreenChannel.Unregister(OnStopDisplayingLoadingScreen);
             showPauseUIChannel.Unregister(OnShowPauseUI);
@@ -43,18 +37,6 @@ namespace TheGame.UISystems
             var pauseUI = UISystem.GetUI<PauseUI>();
             if (pauseUI == null) return;
             showPauseUIChannel.RaiseEvent(!pauseUI.isActive);
-        }
-
-        void OnPlayerDied(Transform playerTransform)
-        {
-            UISystem.Hide<HudUI>();
-            UISystem.Show<PlayerDiedUI>();
-        }
-
-        void ShowWinUI()
-        {
-            UISystem.Hide<HudUI>();
-            UISystem.Show<PlayerWinUI>();
         }
 
         void OnShowPauseUI(bool val)

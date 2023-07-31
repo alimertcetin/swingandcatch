@@ -19,7 +19,7 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerClimbState(stateMachine, this));
             AddState(new PlayerFeetMovementAnimationState(stateMachine, this));
             AddState(new PlayerBreathAnimationState(stateMachine, this));
-            AddState(new PlayerDiedByLavaState(stateMachine, this));
+            AddState(new PlayerDiedState(stateMachine, this));
             AddState(new CheckDamageState(stateMachine, this));
             AddState(new DamageImmuneState(stateMachine, this));
             AddState(new PlayerWinState(stateMachine, this));
