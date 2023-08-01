@@ -1,9 +1,8 @@
 ﻿using System;
-using TheGame.AudioManagement;
+using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
-using AudioType = TheGame.AudioManagement.AudioType;
 
-namespace TheGame.ScriptableObjects.Channels
+namespace TheGame.ScriptableObjects.AudioManagement
 {
     [CreateAssetMenu(menuName = MenuPaths.AUDIO_MANAGEMENT_MENU + nameof(AudioPlayerSO))]
     public class AudioPlayerSO : ScriptableObject

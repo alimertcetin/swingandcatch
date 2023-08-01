@@ -1,7 +1,9 @@
-﻿using TheGame.ScriptableObjects.Channels;
+﻿using TheGame.SceneManagement;
+using TheGame.ScriptableObjects.AudioManagement;
+using TheGame.ScriptableObjects.Channels;
 using UnityEngine;
 
-namespace TheGame.SceneManagement
+namespace TheGame.Managers
 {
     public class LevelManager : MonoBehaviour
     {

@@ -240,7 +240,7 @@ MonoBehaviour:
   transitionToIdleStateDataSO: {fileID: 11400000, guid: 9c3c69cdaf15b9e4db30b77d653d76c0, type: 2}
   attackStateDataSO: {fileID: 11400000, guid: 35f74c2bf377ba948b248d39c6e0f090, type: 2}
   enableDrops: 1
-  coinWithRigidbodyPrefab: {fileID: 6324905359883995263, guid: b710dc8a88b2ca045ab6a118e25549e5, type: 3}
+  collectableCoinWithRigidbodyPrefab: {fileID: 6324905359883995263, guid: b710dc8a88b2ca045ab6a118e25549e5, type: 3}
 --- !u!1001 &3840673186075390642
 PrefabInstance:
   m_ObjectHideFlags: 0

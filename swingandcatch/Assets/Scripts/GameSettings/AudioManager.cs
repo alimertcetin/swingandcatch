@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGame.ScriptableObjects.AudioManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.SettingSystems;
 using UnityEngine;
 using UnityEngine.Audio;
 using XIV.Core.Utils;
+using AudioType = TheGame.ScriptableObjects.AudioManagement.AudioType;
 
-namespace TheGame.AudioManagement
+namespace TheGame.GameSettings
 {
+    // TODO : AudioManager -> SOLID
     public class AudioManager : MonoBehaviour, ISettingsListener
     {
         [SerializeField] SettingsChannelSO settingsLoaded;

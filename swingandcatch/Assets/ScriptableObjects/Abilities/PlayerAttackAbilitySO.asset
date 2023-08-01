@@ -12,3 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bb7c3bc8f6c49dfa8570391e51b1736, type: 3}
   m_Name: PlayerAttackAbilitySO
   m_EditorClassIdentifier: 
+  item:
+    id: 917373e8-2ac3-49f0-bd1f-39ed02fdea40
+    title: 
+    description: 
+    StackableAmount: 1

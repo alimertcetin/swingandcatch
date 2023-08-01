@@ -1,9 +1,7 @@
 ﻿using System.Buffers;
 using TheGame.VerletRope;
 using UnityEngine;
-using XIV.Core;
 using XIV.Core.Extensions;
-using XIV.Core.XIVMath;
 
 namespace TheGame.PlayerSystems
 {

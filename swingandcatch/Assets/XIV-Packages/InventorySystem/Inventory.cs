@@ -226,9 +226,8 @@ namespace XIV.InventorySystem
 
         public void Remove(ItemBase item, ref int amount)
         {
-            for (var i = 0; i < SlotCount; i++)
+            for (var i = 0; i < SlotCount && amount > 0; i++)
             {
-                if (amount <= 0) break;
                 if (emptySlots[i] || items[i].Item.Equals(item) == false) continue;
                 
                 Internal_RemoveAt(i, ref amount);

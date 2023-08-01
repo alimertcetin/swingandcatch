@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97b395d8bd9d4243aab37f19721a395d, type: 3}
   m_Name: PlayerDashAbilitySO
   m_EditorClassIdentifier: 
-  abiility:
-    distance: 5
+  item:
+    id: 34ca6efc-8493-4cfc-bf4d-4a8424910978
+    title: 
+    description: 
+    StackableAmount: 1
+    distance: 4
     dashTimer:
-      duration: 0.2
+      duration: 0.5
     coolDownTimer:
-      duration: 1
+      duration: 0.5

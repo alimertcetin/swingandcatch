@@ -1,8 +1,7 @@
-using System;
 using System.Buffers;
 using TheGame.AnimationSystems;
 using TheGame.InventorySystems.Items;
-using TheGame.ScriptableObjects.Channels;
+using TheGame.InventorySystems.Items.ScriptableObjects;
 using TheGame.UISystems;
 using TheGame.UISystems.Core;
 using UnityEngine;
@@ -12,12 +11,11 @@ using XIV.Core.TweenSystem;
 using XIV.Core.Utils;
 using XIV.Core.XIVMath;
 using XIV.InventorySystem;
-using XIV.InventorySystem.ScriptableObjects.ChannelSOs;
 using Random = UnityEngine.Random;
 
-namespace TheGame.CoinSystems
+namespace TheGame.CollectableSystems
 {
-    public class Coin : MonoBehaviour
+    public class CollectableCoin : MonoBehaviour
     {
         [SerializeField] GameObject coinCollectedParticlePrefab;
         [SerializeField] CoinItemSO coinItemSO;

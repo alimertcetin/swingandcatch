@@ -1,14 +1,16 @@
 ﻿using System.Buffers;
+using TheGame.AbilitySystems.Abilities;
 using TheGame.AbilitySystems.Core;
 using TheGame.ScriptableObjects.AbilitySystems;
 using UnityEngine;
 using XIV.Core;
+using XIV.InventorySystem.ScriptableObjects;
 
 namespace TheGame.AbilitySystems.Tests
 {
     public class AbilityUnlockTest : MonoBehaviour
     {
-        [SerializeField] AbilitySO abilityToUnlock;
+        [SerializeField] ItemSO abilityToUnlock;
         [SerializeField] bool useImmediate;
         [SerializeField] float radius = 0.8f;
 
@@ -22,7 +24,7 @@ namespace TheGame.AbilitySystems.Tests
                 var col = buffer[i];
                 if (col.TryGetComponent(out IAbilityHandler abilityHandler))
                 {
-                    var ability = abilityToUnlock.GetAbility();
+                    var ability = (AbilityItem)abilityToUnlock.GetItem();
                     if (abilityHandler.AddAbility(ability))
                     {
                         if (useImmediate) abilityHandler.UseAbility(ability);

@@ -3,7 +3,7 @@ using UnityEngine;
 using XIV.InventorySystem;
 using XIV.InventorySystem.ScriptableObjects;
 
-namespace TheGame.InventorySystems
+namespace TheGame.CollectableSystems
 {
     public class CollectableItem : MonoBehaviour
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using TheGame.AbilitySystems.Core;
 using TheGame.Interfaces;
 using UnityEngine;
@@ -7,36 +8,27 @@ using XIV.Core.Utils;
 namespace TheGame.AbilitySystems.Abilities
 {
     [System.Serializable]
-    public class DoubleJumpAbility : IAbility
+    public class DoubleJumpAbility : AbilityItem
     {
-        [SerializeField] Timer cooldownTimer;
+        [SerializeField, JsonIgnore] Timer cooldownTimer;
         IAbilityUser abilityUser;
         IMovementHandler movementHandler;
         AbilityState abilityState;
 
-        public DoubleJumpAbility() { }
-
-        public DoubleJumpAbility(DoubleJumpAbility other)
-        {
-            this.cooldownTimer = other.cooldownTimer;
-            this.abilityUser = other.abilityUser;
-            this.movementHandler = other.movementHandler;
-            this.abilityState = other.abilityState;
-        }
-
-        void IAbility.Initialize(IAbilityUser abilityUser)
+        public override void Initialize(IAbilityUser abilityUser)
         {
             this.abilityUser = abilityUser;
             movementHandler = abilityUser.GetComponent<IMovementHandler>();
+            abilityState = default;
         }
 
-        void IAbility.PrepareForUse()
+        public override void PrepareForUse()
         {
             this.abilityUser.BeginUse(this);
             abilityState = AbilityState.Active;
         }
 
-        void IAbility.Update()
+        public override void Update()
         {
             switch (abilityState)
             {
@@ -62,8 +54,8 @@ namespace TheGame.AbilitySystems.Abilities
             }
         }
 
-        AbilityState IAbility.GetState() => abilityState;
+        public override AbilityState GetState() => abilityState;
 
-        bool IAbility.IsAvailableToUse() => abilityState == AbilityState.None || abilityState == AbilityState.Inactive;
+        public override bool IsAvailableToUse() => abilityState == AbilityState.None || abilityState == AbilityState.Inactive;
     }
 }

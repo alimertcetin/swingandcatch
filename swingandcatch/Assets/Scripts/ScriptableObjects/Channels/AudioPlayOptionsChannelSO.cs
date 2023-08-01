@@ -1,4 +1,4 @@
-﻿using TheGame.AudioManagement;
+﻿using TheGame.ScriptableObjects.AudioManagement;
 using UnityEngine;
 
 namespace TheGame.ScriptableObjects.Channels

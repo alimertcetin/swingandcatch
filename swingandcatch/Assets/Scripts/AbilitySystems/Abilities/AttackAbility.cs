@@ -4,25 +4,27 @@ using TheGame.Interfaces;
 
 namespace TheGame.AbilitySystems.Abilities
 {
-    public class AttackAbility : IAbility
+    [System.Serializable]
+    public class AttackAbility : AbilityItem, IAbility
     {
         AbilityState abilityState;
         IAttackHandler attackHandler;
         IAbilityUser abilityUser;
         
-        void IAbility.Initialize(IAbilityUser abilityUser)
+        public override void Initialize(IAbilityUser abilityUser)
         {
             this.abilityUser = abilityUser;
             attackHandler = abilityUser.GetComponent<IAttackHandler>();
+            abilityState = default;
         }
 
-        void IAbility.PrepareForUse()
+        public override void PrepareForUse()
         {
             this.abilityUser.BeginUse(this);
             abilityState = AbilityState.Active;
         }
 
-        void IAbility.Update()
+        public override void Update()
         {
             switch (abilityState)
             {
@@ -45,8 +47,8 @@ namespace TheGame.AbilitySystems.Abilities
             }
         }
 
-        AbilityState IAbility.GetState() => abilityState;
+        public override AbilityState GetState() => abilityState;
 
-        bool IAbility.IsAvailableToUse() => abilityState == AbilityState.None || abilityState == AbilityState.Inactive || attackHandler.CanAttack();
+        public override bool IsAvailableToUse() => abilityState == AbilityState.None || abilityState == AbilityState.Inactive || attackHandler.CanAttack();
     }
 }

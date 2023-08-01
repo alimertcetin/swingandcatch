@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using XIV.InventorySystem;
 using XIV.InventorySystem.ScriptableObjects.ChannelSOs;
 
-namespace TheGame.InventorySystems
+namespace TheGame.PlayerSystems
 {
     public class PlayerFSMInventoryContainer : MonoBehaviour, IInventoryContainer
     {

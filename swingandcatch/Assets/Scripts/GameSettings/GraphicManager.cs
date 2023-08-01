@@ -1,9 +1,9 @@
-﻿using TheGame.AudioManagement;
+﻿using TheGame.GraphicManagement;
 using TheGame.ScriptableObjects.Channels;
 using TheGame.SettingSystems;
 using UnityEngine;
 
-namespace TheGame.GraphicManagement
+namespace TheGame.GameSettings
 {
     public class GraphicManager : MonoBehaviour, ISettingsListener
     {

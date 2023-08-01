@@ -1,5 +1,5 @@
 ﻿using System;
-using TheGame.CoinSystems;
+using TheGame.CollectableSystems;
 using TheGame.EnemySystems.SawBlade.States;
 using TheGame.FSM;
 using TheGame.HealthSystems;
@@ -26,7 +26,7 @@ namespace TheGame.EnemySystems.SawBlade
         
         [SerializeField] bool enableDrops = true;
         [Header("Drops")]
-        [SerializeField] Coin coinWithRigidbodyPrefab;
+        [SerializeField] CollectableCoin collectableCoinWithRigidbodyPrefab;
         
         [NonSerialized] public Vector3 idleStartPosition;
         public Vector3 idleEndPosition => idleStartPosition - idleStateDataSO.idleMovementAxis * idleStateDataSO.idleMovementDistance;
@@ -81,7 +81,7 @@ namespace TheGame.EnemySystems.SawBlade
             pos.z = 0f;
             for (int i = 0; i < coinAmount; i++)
             {
-                var coin = Instantiate(coinWithRigidbodyPrefab, pos, Quaternion.identity);
+                var coin = Instantiate(collectableCoinWithRigidbodyPrefab, pos, Quaternion.identity);
                 var force = Random.insideUnitCircle * (Random.value * 10f);
                 coin.GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
             }

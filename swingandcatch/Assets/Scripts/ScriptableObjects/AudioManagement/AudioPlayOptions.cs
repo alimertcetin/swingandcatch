@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using XIV.Core.Utils;
 
-namespace TheGame.AudioManagement
+namespace TheGame.ScriptableObjects.AudioManagement
 {
     public readonly struct AudioPlayOptions
     {

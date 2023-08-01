@@ -1,4 +1,4 @@
-﻿namespace TheGame.AudioManagement
+﻿namespace TheGame.ScriptableObjects.AudioManagement
 {
     public enum AudioType
     {

@@ -461,8 +461,6 @@ MonoBehaviour:
   stateDatas: {fileID: 11400000, guid: 0afc821b3ed4184428b738ba0f79d5ad, type: 2}
   selectableSelectChannel: {fileID: 11400000, guid: 6883bfb1fd6c0d1449ec027c2dc7bb87, type: 2}
   selectableDeselectChannel: {fileID: 11400000, guid: 16e3fe7eb955a8047823c0cb87a95055, type: 2}
-  playerDiedChannelSO: {fileID: 11400000, guid: 6f231584f7a9b24479796092ac89cd5b, type: 2}
-  playerReachedEndChannelSO: {fileID: 11400000, guid: f03ffcc1d6eb8394a8d0076ec2428a8a, type: 2}
   gamePausedChannel: {fileID: 11400000, guid: 6a72d97414bf07944a04646b88aa0469, type: 2}
   playerVisualTransform: {fileID: 212991544833979011}
   playerFeet:
@@ -471,6 +469,7 @@ MonoBehaviour:
   playerSword: {fileID: 6766760071766345335}
   bottomColliderPosLocal: {x: 0, y: -0.42, z: 0}
   bottomColliderSize: {x: 0.58, y: 0.17, z: 1}
+  isReachedEndGate: 0
 --- !u!114 &1523891952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,6 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5924f76e9fa347a8b55e990050320a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  abilityInventoryLoadedChannel: {fileID: 11400000, guid: 4bcb9885b397cd0448f74864bd49ab50, type: 2}
 --- !u!114 &1523891953
 MonoBehaviour:
   m_ObjectHideFlags: 0
