@@ -56,8 +56,13 @@ namespace TheGame.SaveSystems
         void Reset() => GenerateGuid();
         
         [Button]
-        void GenerateGuid() => guid = Guid.NewGuid().ToString();
-        
+        void GenerateGuid()
+        {
+            UnityEditor.Undo.RegisterCompleteObjectUndo(this, nameof(GenerateGuid));
+            guid = Guid.NewGuid().ToString();
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
 #endif
         
     }
