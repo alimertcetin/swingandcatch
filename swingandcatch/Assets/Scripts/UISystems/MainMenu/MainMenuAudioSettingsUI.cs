@@ -1,22 +1,35 @@
-﻿using TheGame.ScriptableObjects.Channels;
-using TheGame.SettingSystems;
+﻿using System;
+using System.Collections.Generic;
 using TheGame.UISystems.Components;
 using TheGame.UISystems.TabSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using XIV_Packages.PCSettingSystems.Core;
+using XIV_Packages.PCSettingSystems.Extras.ScriptableObjects.Channels;
+using XIV_Packages.PCSettingSystems.Extras.SettingContainers;
+using XIV_Packages.PCSettingSystems.Extras.SettingDatas.AudioDatas;
 
 namespace TheGame.UISystems.MainMenu
 {
-    public class MainMenuAudioSettingsUI : TabPageUI, ISettingsListener
+    public class MainMenuAudioSettingsUI : TabPageUI, ISettingListener
     {
-        [SerializeField] SettingsChannelSO settingsLoaded;
+        [SerializeField] XIVSettingChannelSO settingsLoaded;
         
         [SerializeField] SettingSlider masterVolumeSlider;
         [SerializeField] SettingSlider musicVolumeSlider;
         [SerializeField] SettingSlider effectVolumeSlider;
 
-        Settings settings;
+        AudioSettingContainer audioSettingContainer;
+        Dictionary<Type, Action<IAudioSetting>> onSettingChangeLookup = new Dictionary<Type, Action<IAudioSetting>>();
+
+        protected override void Awake()
+        {
+            base.Awake();
+            onSettingChangeLookup.Add(typeof(MasterAudioSetting), UpdateMasterAudioSlider);
+            onSettingChangeLookup.Add(typeof(MusicAudioSetting), UpdateMusicAudioSlider);
+            onSettingChangeLookup.Add(typeof(EffectAudioSetting), UpdateEffectAudioSlider);
+        }
 
         void OnEnable()
         {
@@ -24,7 +37,7 @@ namespace TheGame.UISystems.MainMenu
             masterVolumeSlider.slider.onValueChanged.AddListener(OnMasterVolumeChanged);
             musicVolumeSlider.slider.onValueChanged.AddListener(OnMusicVolumeChanged);
             effectVolumeSlider.slider.onValueChanged.AddListener(OnEffectVolumeChanged);
-            this.settings?.AddListener(this);
+            this.audioSettingContainer?.AddListener(this);
         }
 
         void OnDisable()
@@ -33,7 +46,7 @@ namespace TheGame.UISystems.MainMenu
             masterVolumeSlider.slider.onValueChanged.RemoveListener(OnMasterVolumeChanged);
             musicVolumeSlider.slider.onValueChanged.RemoveListener(OnMusicVolumeChanged);
             effectVolumeSlider.slider.onValueChanged.RemoveListener(OnEffectVolumeChanged);
-            this.settings?.RemoveListener(this);
+            this.audioSettingContainer?.RemoveListener(this);
         }
 
         public override void OnFocus()
@@ -41,59 +54,73 @@ namespace TheGame.UISystems.MainMenu
             EventSystem.current.SetSelectedGameObject(masterVolumeSlider.GetComponentInChildren<Selectable>().gameObject);
         }
 
+        // Update visuals when settings changed
+
+        void UpdateMasterAudioSlider(IAudioSetting setting)
+        {
+            masterVolumeSlider.UpdateValue(setting.Value01, false);
+        }
+
+        void UpdateMusicAudioSlider(IAudioSetting setting)
+        {
+            musicVolumeSlider.UpdateValue(setting.Value01, false);
+        }
+
+        void UpdateEffectAudioSlider(IAudioSetting setting)
+        {
+            effectVolumeSlider.UpdateValue(setting.Value01, false);
+        }
+
+        // Direct interaction with GraphicSettingContainer - Change settings on value change
+
         void OnMasterVolumeChanged(float value01)
         {
-            ChangeSetting(AudioSettingsParameterContainer.masterVolumeHash, value01);
+            ChangeSetting(new MasterAudioSetting(AudioMixerConstants.DefaultMixer.Parameters.MasterVolume, value01));
         }
 
         void OnMusicVolumeChanged(float value01)
         {
-            ChangeSetting(AudioSettingsParameterContainer.musicVolumeHash, value01);
+            ChangeSetting(new MusicAudioSetting(AudioMixerConstants.DefaultMixer.Parameters.MusicVolume, value01));
         }
 
         void OnEffectVolumeChanged(float value01)
         {
-            ChangeSetting(AudioSettingsParameterContainer.effectsVolumeHash, value01);
+            ChangeSetting(new EffectAudioSetting(AudioMixerConstants.DefaultMixer.Parameters.EffectsVolume, value01));
         }
 
-        void ChangeSetting(int parameterNameHash, float value01)
+        void ChangeSetting<T>(T setting) where T : struct, IAudioSetting
         {
-            settings?.SetParameter(SettingParameterType.Audio, parameterNameHash, value01);
+            audioSettingContainer.ChangeSetting(setting);
+            audioSettingContainer.ApplyChanges();
+            audioSettingContainer.ClearUndoHistory();
         }
 
-        void OnSettingsLoaded(Settings settings)
+        void OnSettingsLoaded(XIVSettings settings)
         {
-            this.settings = settings;
+            audioSettingContainer = settings.GetContainer<AudioSettingContainer>();
             InitializeUIItems();
-            this.settings.AddListener(this);
+            audioSettingContainer.AddListener(this);
         }
 
         void InitializeUIItems()
         {
-            var masterVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.masterVolumeHash).ReadValue<float>();
-            var musicVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.musicVolumeHash).ReadValue<float>();
-            var effectVolume = settings.GetParameter(SettingParameterType.Audio, AudioSettingsParameterContainer.effectsVolumeHash).ReadValue<float>();
-            
+            var masterVolume = audioSettingContainer.GetSetting<MasterAudioSetting>().Value01;
+            var musicVolume = audioSettingContainer.GetSetting<MusicAudioSetting>().Value01;
+            var effectVolume = audioSettingContainer.GetSetting<EffectAudioSetting>().Value01;
+
             masterVolumeSlider.UpdateValue(masterVolume, true);
             musicVolumeSlider.UpdateValue(musicVolume, true);
             effectVolumeSlider.UpdateValue(effectVolume, true);
         }
 
-        void ISettingsListener.OnSettingsChanged(SettingParameter changedParameter)
+        void ISettingListener.OnSettingChanged(SettingChange settingChange)
         {
-            var nameHash = changedParameter.nameHash;
-            if (nameHash == AudioSettingsParameterContainer.masterVolumeHash)
-            {
-                masterVolumeSlider.UpdateValue(changedParameter.ReadValue<float>(), true);
-            }
-            else if (nameHash == AudioSettingsParameterContainer.musicVolumeHash)
-            {
-                musicVolumeSlider.UpdateValue(changedParameter.ReadValue<float>(), true);
-            }
-            else if (nameHash == AudioSettingsParameterContainer.effectsVolumeHash)
-            {
-                effectVolumeSlider.UpdateValue(changedParameter.ReadValue<float>(), true);
-            }
+            onSettingChangeLookup.TryGetValue(settingChange.settingType, out var value);
+            value.Invoke((IAudioSetting)settingChange.to);
         }
+
+        void ISettingListener.OnBeforeApply(ISettingContainer _) { }
+
+        void ISettingListener.OnAfterApply(ISettingContainer _) { }
     }
 }

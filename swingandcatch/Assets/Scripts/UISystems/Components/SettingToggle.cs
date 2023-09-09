@@ -6,13 +6,15 @@ namespace TheGame.UISystems.Components
 {
     public class SettingToggle : MonoBehaviour
     {
-        public TMP_Text txt_Label;
+        [SerializeField] TMP_Text txt_Label;
         public Toggle toggle;
 
-        public void UpdateValue(bool newValue, bool updateWithoutNotify)
+#if UNITY_EDITOR
+        void OnValidate()
         {
-            if (updateWithoutNotify) toggle.SetIsOnWithoutNotify(newValue);
-            else toggle.isOn = newValue;
+            if (txt_Label == false) txt_Label = GetComponentInChildren<TMP_Text>();
+            if (toggle == false) toggle = GetComponentInChildren<Toggle>();
         }
+#endif
     }
 }
