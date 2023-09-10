@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TheGame.UISystems.Components;
+using TheGame.UISystems.Core;
 using TheGame.UISystems.TabSystem;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -28,7 +29,6 @@ namespace TheGame.UISystems.MainMenu
         [SerializeField] XIVSettingDropdown shadowQualityDropdown;
         [SerializeField] XIVSettingDropdown textureQualityDropdown;
         [SerializeField] Button btn_ApplyChanges;
-        [SerializeField] Button btn_RevertChanges;
         [SerializeField] Button btn_Undo;
         [SerializeField] Button btn_Redo;
 
@@ -36,6 +36,8 @@ namespace TheGame.UISystems.MainMenu
         Dictionary<Type, Action<ISetting>> onSettingChangeLookup = new Dictionary<Type, Action<ISetting>>();
 
         IEvent revertChangesEvent;
+        bool isUndoClicked;
+        bool isRedoClicked;
 
         static readonly string[] qualityOptionStrings = new string[]
         {
@@ -66,7 +68,6 @@ namespace TheGame.UISystems.MainMenu
             textureQualityDropdown.dropdown.onValueChanged.AddListener(OnTextureQualityValueChanged);
 
             btn_ApplyChanges.onClick.AddListener(OnApplyClicked);
-            btn_RevertChanges.onClick.AddListener(OnRevertClicked);
             btn_Undo.onClick.AddListener(OnUndoClicked);
             btn_Redo.onClick.AddListener(OnRedoClicked);
 
@@ -85,7 +86,6 @@ namespace TheGame.UISystems.MainMenu
             textureQualityDropdown.dropdown.onValueChanged.RemoveListener(OnTextureQualityValueChanged);
 
             btn_ApplyChanges.onClick.RemoveListener(OnApplyClicked);
-            btn_RevertChanges.onClick.RemoveListener(OnRevertClicked);
             btn_Undo.onClick.RemoveListener(OnUndoClicked);
             btn_Redo.onClick.RemoveListener(OnRedoClicked);
 
@@ -108,41 +108,69 @@ namespace TheGame.UISystems.MainMenu
             textureQualityDropdown.dropdown.interactable = val;
         }
 
-        void OnApplyClicked()
+        void SetControlElementsState()
         {
-            btn_ApplyChanges.interactable = false;
-            btn_RevertChanges.interactable = true;
-            SetInteractableSettingElements(false);
-
-            graphicSettingContainer.ApplyChanges();
-            // TODO : Display a dialog box. If ok pressed do nothing. Otherwise revert changes. If nothing clicked for x amount of seconds revert changes.
-            revertChangesEvent = new InvokeAfterEvent(10f).OnCompleted(() => 
-            {
-                btn_ApplyChanges.interactable = true;
-                btn_RevertChanges.interactable = false;
-                graphicSettingContainer.Undo();
-                SetInteractableSettingElements(true);
-            });
-            XIVEventSystem.SendEvent(revertChangesEvent);
+            btn_ApplyChanges.interactable = graphicSettingContainer.HasUnappliedChange();
+            btn_Undo.interactable = graphicSettingContainer.undoCount > 0;
+            btn_Redo.interactable = graphicSettingContainer.redoCount > 0;
         }
 
-        void OnRevertClicked()
+        void OnApplyClicked()
         {
-            btn_ApplyChanges.interactable = true;
-            btn_RevertChanges.interactable = false;
+            SetControlElementsState();
+            if (graphicSettingContainer.HasUnappliedChange() == false) return;
+
+            SetInteractableSettingElements(false);
+            HandleApplyChanges();
+            graphicSettingContainer.ApplyChanges();
+        }
+
+        void HandleApplyChanges()
+        {
+            // Set cancelation for no action has been taken for 10s state
+            revertChangesEvent = new InvokeAfterEvent(10f).OnCompleted(() => {
+                graphicSettingContainer.Undo();
+                SetInteractableSettingElements(true);
+                SetControlElementsState();
+                UISystem.Hide<MessageDialogUI>();
+            });
+            XIVEventSystem.SendEvent(revertChangesEvent);
+
+            UISystem.GetUI<MessageDialogUI>().Initialize("Keep Changes?", OnAccepted, OnRejected);
+            UISystem.Show<MessageDialogUI>();
+        }
+
+        void OnAccepted()
+        {
             XIVEventSystem.CancelEvent(revertChangesEvent);
-            graphicSettingContainer.Undo();
+            revertChangesEvent = null;
             SetInteractableSettingElements(true);
+            SetControlElementsState();
+        }
+
+        void OnRejected()
+        {
+            XIVEventSystem.CancelEvent(revertChangesEvent);
+            revertChangesEvent = null;
+            SetInteractableSettingElements(true);
+            SetControlElementsState();
+            graphicSettingContainer.Undo();
         }
 
         void OnUndoClicked()
         {
+            isUndoClicked = true;
             graphicSettingContainer.Undo();
+            isUndoClicked = false;
+            SetControlElementsState();
         }
 
         void OnRedoClicked()
         {
+            isRedoClicked = true;
             graphicSettingContainer.Redo();
+            isRedoClicked = false;
+            SetControlElementsState();
         }
 
         // Update visuals when settings changed
@@ -365,7 +393,14 @@ namespace TheGame.UISystems.MainMenu
             btn_Redo.interactable = graphicSettingContainer.redoCount > 0;
         }
 
-        void ISettingListener.OnBeforeApply(ISettingContainer _) { }
+        void ISettingListener.OnBeforeApply(ISettingContainer _) 
+        {
+            // Is ApplyChanges triggered by undo or redo command?
+            if (isUndoClicked || isRedoClicked)
+            {
+                HandleApplyChanges();
+            }
+        }
 
         void ISettingListener.OnAfterApply(ISettingContainer _) { }
     }
