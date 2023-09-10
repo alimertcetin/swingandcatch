@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace XIV.InventorySystem.ScriptableObjects.NonSerializedData
 {
-    [CreateAssetMenu(menuName = "Inventory/NonSerializedDataContainerSO")]
+    [CreateAssetMenu(menuName = MenuPaths.ITEMS_NONSERIALIZED_DATA_MENU + nameof(NonSerializedItemDataContainerSO))]
     public class NonSerializedItemDataContainerSO : ScriptableObject
     {
         public NonSerializedItemDataSO[] itemDataPairs;
