@@ -1284,6 +1284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onPlayerItemInventoryLoaded: {fileID: 11400000, guid: 3b467d0e0196e854f84a09da7a41a561, type: 2}
+  productCollectionSO: {fileID: 11400000, guid: a4fea1c5e7132ae4dbb5dd7c88bbf0e4, type: 2}
   shopKeeperInventorySO: {fileID: 11400000, guid: 6a011470d3991ea4bb2089403c5c17e1, type: 2}
 --- !u!1 &719509259
 GameObject:

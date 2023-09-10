@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d63633f8014a724e862e4b544ff7ec6, type: 3}
-  m_Name: HealthPotionItem
+  m_Script: {fileID: 11500000, guid: 33933367f67592d4da61fa3afed13b56, type: 3}
+  m_Name: ProductCollectionSO
   m_EditorClassIdentifier: 
-  item:
-    id: 4ac68e82-6d3b-4f2d-ab07-21ec8ee441dd
-    title: Health Potion
-    description: Increase your current health
-    StackableAmount: 2147483647
-    healthIncreaseAmount: 50
+  products:
+  - {fileID: 11400000, guid: 95eb0652083399f49810c100a527914b, type: 2}

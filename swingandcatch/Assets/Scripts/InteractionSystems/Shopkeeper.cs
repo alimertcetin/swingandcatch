@@ -12,6 +12,7 @@ namespace TheGame.InteractionSystems
     public class Shopkeeper : MonoBehaviour, IInteractable, IShopAnchor, IUIEventListener
     {
         [SerializeField] InventoryChannelSO onPlayerItemInventoryLoaded;
+        [SerializeField] ProductCollectionSO productCollectionSO;
         [SerializeField] InventorySO shopKeeperInventorySO;
         public bool IsInInteraction { get; private set; }
 
@@ -105,8 +106,14 @@ namespace TheGame.InteractionSystems
                 coinCount += coinItems[i].Amount;
             }
 
-            // Lets say every item worths 10 coin
-            int itemPrice = 10;
+            int itemPrice = productCollectionSO.GetPrice(readOnlyInventoryItem.Item);
+#if UNITY_EDITOR
+            if (itemPrice < 0)
+            {
+                Debug.LogError("Item Price cant be less than 0");
+                return false;
+            }
+#endif
             if (coinCount - itemPrice < 0)
             {
                 Debug.LogWarning("Not enough coin to buy" + readOnlyInventoryItem.Item.GetType().Name.Split('.')[^1]);
