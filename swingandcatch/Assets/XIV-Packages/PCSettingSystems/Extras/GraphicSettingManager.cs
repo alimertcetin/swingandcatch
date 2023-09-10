@@ -1,3 +1,4 @@
+using TheGame.SaveSystems;
 using UnityEngine;
 using XIV_Packages.PCSettingSystems.Core;
 using XIV_Packages.PCSettingSystems.Extras.ScriptableObjects;
@@ -7,7 +8,7 @@ using XIV_Packages.PCSettingSystems.Extras.SettingContainers;
 
 namespace XIV_Packages.PCSettingSystems.Extras
 {
-    public class GraphicSettingManager : SettingManager
+    public class GraphicSettingManager : SettingManager, ISavable
     {
         [SerializeField] GraphicPresetItemSO[] presets;
         [SerializeField] int defaultPresetIndex;
@@ -51,9 +52,24 @@ namespace XIV_Packages.PCSettingSystems.Extras
             return graphicPresets;
         }
 
+        object ISavable.GetSaveData()
+        {
+            var preset = graphicSettingContainer.GetSetting<SettingPreset>();
+            return preset;
+        }
+
+        void ISavable.LoadSaveData(object data)
+        {
+            var preset = (SettingPreset)data;
+            graphicSettingContainer.InitializeSettings(preset);
+            graphicSettingContainer.ApplyChanges();
+            graphicSettingContainer.ClearUndoHistory();
+        }
+
 #if UNITY_EDITOR
         void OnValidate()
         {
+            if (presets == null) return;
             defaultPresetIndex = defaultPresetIndex < 0 ? 0 : defaultPresetIndex > presets.Length - 1 ? presets.Length - 1 : defaultPresetIndex;
         }
 #endif

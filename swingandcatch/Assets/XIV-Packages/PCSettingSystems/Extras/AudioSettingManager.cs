@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TheGame.SaveSystems;
 using UnityEngine;
 using UnityEngine.Audio;
 using XIV_Packages.PCSettingSystems.Core;
@@ -9,7 +10,7 @@ using XIV_Packages.PCSettingSystems.Extras.SettingDatas.AudioDatas;
 
 namespace XIV_Packages.PCSettingSystems.Extras
 {
-    public class AudioSettingManager : SettingManager
+    public class AudioSettingManager : SettingManager, ISavable
     {
         [SerializeField] AudioMixer mixer;
 
@@ -36,6 +37,19 @@ namespace XIV_Packages.PCSettingSystems.Extras
             ISettingApplier settingApplier = new AudioSettingApplier();
             settingApplier.AddApplyCommand(new AudioSettingApplyCommand(mixer));
             return settingApplier;
+        }
+
+        object ISavable.GetSaveData()
+        {
+            return new List<ISetting>(audioSettingContainer.GetSettings());
+        }
+
+        void ISavable.LoadSaveData(object data)
+        {
+            var settingList = (List<ISetting>)data;
+            audioSettingContainer.InitializeSettings(settingList);
+            audioSettingContainer.ApplyChanges();
+            audioSettingContainer.ClearUndoHistory();
         }
     }
 }

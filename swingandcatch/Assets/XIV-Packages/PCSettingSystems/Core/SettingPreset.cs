@@ -2,10 +2,10 @@ using System.Collections.Generic;
 
 namespace XIV_Packages.PCSettingSystems.Core
 {
-    public readonly struct SettingPreset : ISetting
+    public struct SettingPreset : ISetting
     {
-        public readonly SettingQualityLevel settingQualityLevel;
-        public readonly IList<ISetting> presetSettings;
+        public SettingQualityLevel settingQualityLevel;
+        public IList<ISetting> presetSettings;
 
         bool ISetting.canIncludeInPresets => false;
         bool ISetting.IsCritical => true;

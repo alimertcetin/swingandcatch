@@ -3,17 +3,17 @@
 namespace XIV_Packages.PCSettingSystems.Extras.SettingDatas.AudioDatas
 {
     [System.Serializable]
-    public readonly struct MusicAudioSetting : IAudioSetting
+    public struct MusicAudioSetting : IAudioSetting
     {
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public readonly string MixerParameter { get; }
+        public string MixerParameter { get; set; }
 
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        public readonly float Value01 { get; }
+        public float Value01 { get; set; }
 
         bool ISetting.canIncludeInPresets => false;
 
