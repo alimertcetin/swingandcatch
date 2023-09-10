@@ -10,7 +10,7 @@ namespace TheGame.FSM
         protected State previousState;
         protected State parentState;
         List<State> childStates;
-        StateMachine stateMachine;
+        readonly StateMachine stateMachine;
 #if UNITY_EDITOR
         public IReadOnlyCollection<State> childs => childStates.AsReadOnly();
 #endif
@@ -148,13 +148,15 @@ namespace TheGame.FSM
         where TStateMachine : StateMachine 
         where TStateFactory : StateFactory<TStateMachine>
     {
-        protected TStateMachine stateMachine;
-        protected TStateFactory factory;
-        
+        protected readonly TStateMachine stateMachine;
+        protected readonly TStateFactory factory;
+        protected readonly Transform transform;
+
         public State(TStateMachine stateMachine, TStateFactory stateFactory) : base(stateMachine)
         {
             this.stateMachine = stateMachine;
             this.factory = stateFactory;
+            this.transform = stateMachine.transform;
         }
     }
 }
