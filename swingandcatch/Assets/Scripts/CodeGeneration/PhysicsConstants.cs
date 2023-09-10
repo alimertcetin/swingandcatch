@@ -34,6 +34,10 @@ public static class PhysicsConstants
 	public static readonly int PostProcessLayer = LayerMask.NameToLayer("PostProcess");
 	public const string Enemy = "Enemy";
 	public static readonly int EnemyLayer = LayerMask.NameToLayer("Enemy");
+	public const string Collectable = "Collectable";
+	public static readonly int CollectableLayer = LayerMask.NameToLayer("Collectable");
+	public const string Interactable = "Interactable";
+	public static readonly int InteractableLayer = LayerMask.NameToLayer("Interactable");
 	
 } // class PhysicsConstants
  

@@ -26,6 +26,9 @@ namespace TheGame.PlayerSystems
             AddState(new PlayerAttackState(stateMachine, this));
             
             AddState(new PlayerAbilityDrivenState(stateMachine, this));
+
+            AddState(new PlayerCheckInteractableState(stateMachine, this));
+            AddState(new PlayerInteractionState(stateMachine, this));
         }
     }
 }

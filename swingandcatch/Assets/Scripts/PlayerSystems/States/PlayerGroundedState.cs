@@ -43,6 +43,7 @@ namespace TheGame.PlayerSystems.States
             AddChildState(factory.GetState<PlayerIdleState>());
             AddChildState(factory.GetState<CheckDamageState>());
             AddChildState(factory.GetState<PlayerAttackState>());
+            AddChildState(factory.GetState<PlayerCheckInteractableState>());
         }
 
         protected override void CheckTransitions()
@@ -64,7 +65,8 @@ namespace TheGame.PlayerSystems.States
                 ChangeRootState(factory.GetState<PlayerWinState>());
                 return;
             }
-            
+
+            // TODO : Replace the input with new Input System
             if (Input.GetKey(KeyCode.E))
             {
                 var dashAbility = stateMachine.abilityHandler.GetAbility<DashAbility>();
@@ -73,6 +75,20 @@ namespace TheGame.PlayerSystems.States
                     stateMachine.abilityHandler.UseAbility(dashAbility);
                     stateMachine.playerVisualTransform.gameObject.SetActive(false);
                     ChangeRootState(factory.GetState<PlayerAbilityDrivenState>());
+                }
+
+                return;
+            }
+
+            // TODO : Replace the input with new Input System
+            if (Input.GetKey(KeyCode.F))
+            {
+                var interactable = factory.GetState<PlayerCheckInteractableState>().interactable;
+                if (interactable != default)
+                {
+                    var interactionState = factory.GetState<PlayerInteractionState>();
+                    ChangeRootState(interactionState);
+                    interactable.Interact(interactionState);
                 }
 
                 return;
