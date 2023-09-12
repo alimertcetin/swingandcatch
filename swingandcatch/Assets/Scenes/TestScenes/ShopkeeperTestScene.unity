@@ -171,6 +171,9 @@ MonoBehaviour:
   nonSerializedItemDataContainerSO: {fileID: 11400000, guid: c8a2bda96aabebe43958570a3c09e271, type: 2}
   shopUIItemPrefab: {fileID: 207283070697004126, guid: df5dcebee180dc341bbcf71d55a1bd65, type: 3}
   contentParent: {fileID: 1692443378}
+  txt_InspectHeader: {fileID: 2095833707}
+  txt_InspectDescription: {fileID: 901941181}
+  img_InspectorItemIcon: {fileID: 1038039295}
   btn_Exit: {fileID: 328001227}
 --- !u!1 &116629872
 GameObject:

@@ -1,4 +1,5 @@
 using TheGame.UISystems.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using XIV.InventorySystem;
@@ -11,6 +12,9 @@ namespace TheGame.UISystems.Shop
         [SerializeField] NonSerializedItemDataContainerSO nonSerializedItemDataContainerSO;
         [SerializeField] ShopUIItem shopUIItemPrefab;
         [SerializeField] RectTransform contentParent;
+        [SerializeField] TMP_Text txt_InspectHeader;
+        [SerializeField] TMP_Text txt_InspectDescription;
+        [SerializeField] Image img_InspectorItemIcon;
 
         // TODO : Escape to quit
         [SerializeField] Button btn_Exit;
@@ -20,6 +24,8 @@ namespace TheGame.UISystems.Shop
         public void Initialize(IShopAnchor shopAnchor)
         {
             this.shopAnchor = shopAnchor;
+            SelectItem(0);
+
         }
 
         void OnEnable()
@@ -66,6 +72,19 @@ namespace TheGame.UISystems.Shop
                 var shopUIItem = contentParent.GetChild(itemIndex).GetComponent<ShopUIItem>();
                 InitializeShopUIItem(itemIndex, shopAnchor.GetInventory(), shopUIItem);
             }
+        }
+
+        void IShopUIItemListener.OnSelect(int itemIndex)
+        {
+            SelectItem(itemIndex);
+        }
+
+        void SelectItem(int itemIndex)
+        {
+            ReadOnlyInventoryItem item = shopAnchor.GetInventory()[itemIndex];
+            txt_InspectHeader.text = item.Item.title;
+            txt_InspectDescription.text = item.Item.description;
+            img_InspectorItemIcon.sprite = nonSerializedItemDataContainerSO.GetSprite(item.Item);
         }
 
         void InitializeShopUIItem(int index, Inventory inventory, ShopUIItem shopUIItem)

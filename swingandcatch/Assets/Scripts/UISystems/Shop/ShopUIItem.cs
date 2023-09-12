@@ -8,6 +8,7 @@ namespace TheGame.UISystems.Shop
     {
         [SerializeField] Image img_Icon;
         [SerializeField] TMP_Text txt_Amount; // unlimited?
+        [SerializeField] Button btn_Selection;
         [SerializeField] Button btn_Buy;
 
         int itemIndex;
@@ -24,16 +25,23 @@ namespace TheGame.UISystems.Shop
         void OnEnable()
         {
             btn_Buy.onClick.AddListener(OnBuyClicked);
+            btn_Selection.onClick.AddListener(OnSelect);
         }
 
         void OnDisable()
         {
             btn_Buy.onClick.RemoveListener(OnBuyClicked);
+            btn_Selection.onClick.RemoveListener(OnSelect);
         }
 
         void OnBuyClicked()
         {
             shopUIItemListener.OnBuy(itemIndex);
+        }
+
+        void OnSelect()
+        {
+            shopUIItemListener.OnSelect(itemIndex);
         }
     }
 }
