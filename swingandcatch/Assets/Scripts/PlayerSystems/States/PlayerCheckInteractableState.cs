@@ -21,7 +21,11 @@ namespace TheGame.PlayerSystems.States
             int hitCount = Physics2D.OverlapCircleNonAlloc(stateMachine.transform.position, 1f, buffer, 1 << PhysicsConstants.InteractableLayer);
             ArrayPool<Collider2D>.Shared.Return(buffer);
 
-            if (hitCount == 0) return;
+            if (hitCount == 0)
+            {
+                interactable = default;
+                return;
+            }
 
             interactable = buffer.GetClosestCollider(transform.position, hitCount).GetComponent<IInteractable>();
         }
