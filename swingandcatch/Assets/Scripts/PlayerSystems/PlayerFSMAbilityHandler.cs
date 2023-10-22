@@ -33,8 +33,8 @@ namespace TheGame.PlayerSystems
 
         void Update()
         {
-            cooldownAbilities.RemoveAll(RemoveCooldownAbility);
-            activeAbilities.RemoveAll(RemoveActiveAbility);
+            RemoveCooldownAbility();
+            RemoveActiveAbility();
 
             int activeCount = activeAbilities.Count;
             for (int i = 0; i < activeCount; i++)
@@ -59,17 +59,34 @@ namespace TheGame.PlayerSystems
             }
         }
 
-        static bool RemoveCooldownAbility(IAbility ability)
+        void RemoveCooldownAbility()
         {
-            return ability.GetState() != AbilityState.Cooldown;
+            int count = cooldownAbilities.Count;
+            for (int i = count - 1; i >= 0; i--)
+            {
+                if (cooldownAbilities[i].GetState() != AbilityState.Cooldown)
+                {
+                    cooldownAbilities.RemoveAt(i);
+                }
+            }
         }
 
-        bool RemoveActiveAbility(IAbility ability)
+        void RemoveActiveAbility()
         {
-            var state = ability.GetState();
-            bool result = ability.GetState() != AbilityState.Active;
-            if (result && state == AbilityState.Cooldown) cooldownAbilities.Add(ability);
-            return result;
+            int count = activeAbilities.Count;
+            for (int i = count - 1; i >= 0; i--)
+            {
+                var ability = activeAbilities[i];
+                var state = ability.GetState();
+                if (state != AbilityState.Active)
+                {
+                    activeAbilities.RemoveAt(i);
+                    if (state == AbilityState.Cooldown)
+                    {
+                        cooldownAbilities.Add(ability);
+                    }
+                }
+            }
         }
 
         bool IAbilityHandler.HasActiveAbility()
